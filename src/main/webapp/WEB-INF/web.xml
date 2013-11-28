@@ -11,7 +11,7 @@
         <servlet-name>SystemServiceServlet</servlet-name>
         <url-pattern>/_ah/spi/*</url-pattern>
     </servlet-mapping>
-    
+
     <servlet>
         <servlet-name>TestHarness</servlet-name>
         <servlet-class>com.studio.bookings.TestHarnessServlet</servlet-class>
@@ -20,7 +20,7 @@
 		<servlet-name>TestHarness</servlet-name>
 		<url-pattern>/testharness</url-pattern>
 	</servlet-mapping>
-	
+
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>testharness</web-resource-name>
@@ -31,8 +31,8 @@
         </auth-constraint>
     </security-constraint>
 
-    
+
     <welcome-file-list>
-        <welcome-file>index.html</welcome-file>
+        <welcome-file>index_partial.html</welcome-file>
     </welcome-file-list>
 </web-app>

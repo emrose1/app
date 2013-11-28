@@ -9,14 +9,14 @@ import com.googlecode.objectify.ObjectifyService;
 import com.studio.bookings.entity.Calendar;
 
 public class CalendarDao {
-	
+
 	static{
 		ObjectifyService.register(Calendar.class);
 	}
-	
+
 	//Not a very good practice
 	public EventDao eventDao = new EventDao();
-	
+
 
 	public Calendar find(Long calendarId) {
 		Calendar cal =  new Calendar();
@@ -24,12 +24,12 @@ public class CalendarDao {
 		cal = ofy().load().key(rootKey).now();
 		return cal;
 	}
-	
+
 	public Calendar save(Calendar calendar) {
 		ofy().save().entity(calendar).now();
 		return calendar;
 	}
-	
+
 	public List<Calendar> findAll() {
 		List<Calendar> calendars = ofy().load().type(Calendar.class).list();
 /*		for(Calendar calendar:calendars){
@@ -37,10 +37,10 @@ public class CalendarDao {
 		}*/
 		return calendars;
 	}
-	
+
 /*	private void fillAllChildDetails(Calendar calendar){
 		List<Key<Event>> events = eventDao.findEventsOfCalendar(calendar);
 		calendar.setEvents(events);
-		
+
 	}*/
 }

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html ng-app="studio-booking">
 <head>
-    <title>Hello Endpoints!</title>
+    <title>Bookings</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
 	<!-- Optional theme -->
@@ -30,7 +30,7 @@
 <div class="container" data-ng-controller="bookings.controller.EventController" data-ng-init="$window = $service('$window');">
 
     <div id="outputLog"></div>
-    
+
     <form action="javascript:void(0);">
         <h2>List Event</h2>
         <div><input id="listEvent" type="submit" class="btn btn-small" value="Submit"></div>
@@ -50,10 +50,10 @@
 
       </div>
     </form>
-    
-    
+
+
     <h2>List Calendar</h2>
-    
+
     <form ng-submit="listCalendars()">
 		<button type="submit" class="btn btn-small">Submit</button>
     </form>
@@ -61,7 +61,7 @@
         <ul ng-repeat="calendar in calendars">
         	<li>{{calendar.description}}  {{calendar.id}}</li>
         </ul>
-    
+
     <form role="form" id="addEvent" ng-submit="addEvent()">
         <h2>Add Event</h2>
         <div class="form-group">
@@ -97,13 +97,13 @@
         	<input data-ng-model="endTime" bs-timepicker class="form-control" id="endTime" />
         </div>
         <button type="submit" class="btn btn-small">Submit</button>
-        
+
         <h2>Add Calendar</h2>
         <div><span style="width: 90px; display: inline-block;">Owner name: </span><input id="name" /></div>
         <div><span style="width: 90px; display: inline-block;">Calendar description: </span><input id="description" /></div>
         <div><input id="addCalendar" type="submit" class="btn btn-small" value="Submit"></div>
 	</form>
-	
+
 </div>
 
 
@@ -114,13 +114,13 @@
     <script src="js/bootstrap-timepicker.js"></script>
     <script src="js/holder.js"></script>
 
-    
+
 
     <script src="js/base.js"></script>
-    
-    
+
+
     <script type="text/javascript">
-    
+
     	$('#startDate').datepicker({
     	      format:"DD, d MM yyyy"
     	});
@@ -135,25 +135,25 @@
             showInputs: false,
             disableFocus: true
     	});
-    	
+
     	// Create a new module
     	var app = angular.module('studio-booking', ['$strap.directives']);
-    	
+
     	app.value('$strapConfig', {
     		datepicker: {
    		    format: 'M d, yyyy'
    		  }
    		});
-    		   
-    	
+
+
     	//app.controller('bookings.controller.EventController', function($scope, $window, $location) {
     	  //  $scope.datepicker = {date: new Date("2012-09-01T00:00:00.000Z")};
     	//});
-    
+
         function init() {
         	window.init();
-        	
-        	
+
+
         }
     </script>
 

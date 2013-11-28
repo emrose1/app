@@ -18,3 +18,7 @@ LICENSE
 *.launch
 
 target
+
+src/main/webapp/WEB-INF/appengine-web.xml
+
+war/WEB-INF/appengine-web.xml
