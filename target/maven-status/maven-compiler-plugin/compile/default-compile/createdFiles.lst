@@ -1,0 +1,17 @@
+com/studio/bookings/entity/Event.class
+com/studio/bookings/dao/EventDao.class
+com/studio/bookings/entity/Calendar.class
+com/studio/bookings/SignGuestbookServlet.class
+com/studio/bookings/enums/Permission.class
+com/studio/bookings/dao/UserTypeDao.class
+com/studio/bookings/dao/AccessControlListDao.class
+com/studio/bookings/service/EventService.class
+com/studio/bookings/util/OfyService.class
+com/studio/bookings/TestHarnessServlet.class
+com/studio/bookings/GuestbookServlet.class
+com/studio/bookings/util/Constants.class
+com/studio/bookings/entity/UserType.class
+com/studio/bookings/dao/UserDao.class
+com/studio/bookings/entity/User.class
+com/studio/bookings/dao/CalendarDao.class
+com/studio/bookings/entity/AccessControlList.class

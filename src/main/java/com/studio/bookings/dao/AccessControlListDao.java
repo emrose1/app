@@ -1,0 +1,36 @@
+package com.studio.bookings.dao;
+
+import static com.studio.bookings.util.OfyService.ofy;
+
+import java.util.List;
+
+import com.googlecode.objectify.Key;
+import com.googlecode.objectify.ObjectifyService;
+import com.studio.bookings.entity.AccessControlList;
+
+public class AccessControlListDao {
+	static{
+		ObjectifyService.register(AccessControlList.class);
+	}
+	
+	//Not a very good practice
+	//public AccessControlListDao accessControlListDao = new AccessControlListDao();
+	
+	public AccessControlList find(Long aclId) {
+		AccessControlList acl =  new AccessControlList();
+		Key<AccessControlList> rootKey = Key.create(AccessControlList.class,aclId);
+		acl = ofy().load().key(rootKey).now();
+		return acl;
+	}
+
+	public AccessControlList save(AccessControlList acl) {
+		ofy().save().entity(acl).now();
+		return acl;
+	}
+	
+	public List<AccessControlList> findAll() {
+		List<AccessControlList> acl = ofy().load().type(AccessControlList.class).list();
+		return acl;
+	}
+
+}
