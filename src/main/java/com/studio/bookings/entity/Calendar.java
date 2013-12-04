@@ -41,6 +41,10 @@ public class Calendar {
     	}
         return Key.create(this.getClass(), id);
     }
+	
+	public String toString() {
+		return this.description + ": " + this.id ;
+	}
 
 
 	/*public Ref<Calendar> getRef() {

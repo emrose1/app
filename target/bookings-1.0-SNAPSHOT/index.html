@@ -15,15 +15,7 @@
 <div class="navbar navbar-inverse navbar-fixed-top">
     <div class="navbar-inner">
         <div class="container">
-            <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="brand" href="#">Hello Endpoints!</a>
-            <div class="nav-collapse collapse pull-right">
-                <a href="javascript:void(0);" class="btn" id="signinButton">Sign in</a>
-            </div>
+            <a href="logout">logout</a>
         </div>
     </div>
 </div>
@@ -31,25 +23,16 @@
 
     <div id="outputLog"></div>
 
-    <form action="javascript:void(0);">
         <h2>List Event</h2>
-        <div><input id="listEvent" type="submit" class="btn btn-small" value="Submit"></div>
 
-        <div class="bs-docs-grid">
+		<form ng-submit="listEvents()">
+			<button type="submit" class="btn btn-small">Submit</button>
+	    </form>
+	    <p>I have {{events.length}} events. They are:</p>
+        <ul ng-repeat="event in events">
+        	<li>{{event.summary}}  {{event.id}}</li>
+        </ul>
 
-	        <div class="row show-grid">
-		          <div class="col-xs-3 col-md-4"><h3>17:30  18:30</h3></div>
-		          <div class="col-xs-5 col-md-4"><h3>bounce class</h3></div>
-		          <div class="col-xs-4 col-md-4"><h3>{{ organizer }}</h3></div>
-		          <!--<div class="clearfix visible-xs"></div>-->
-		          <div class="col-xs-3"></div>
-		          <div class="col-xs-9 col-md-4">
-		          		<button type="button" class="btn  btn-primary" style="margin: 0px auto; width:80% ">Book</button>
-		          </div>
-	        </div>
-
-      </div>
-    </form>
 
 
     <h2>List Calendar</h2>
@@ -75,6 +58,7 @@
         <div class="form-group">
         	<label class="col-lg-2 control-label" for="calendar">Calendar </label>
         	<input data-ng-model="summary" class="form-control" id="calendar" />
+        	<select ng-model="eventsCalendar" ng-options="c.description for c in calendars"></select>
         </div>
         <div class="form-group">
         	<label class="col-lg-2 control-label" for="maxAttendees">Max Attendees </label>
@@ -97,12 +81,16 @@
         	<input data-ng-model="endTime" bs-timepicker class="form-control" id="endTime" />
         </div>
         <button type="submit" class="btn btn-small">Submit</button>
-
+	</form>
+	
+	<form role="form" id="addEvent" ng-submit="addCalendar()">
         <h2>Add Calendar</h2>
         <div><span style="width: 90px; display: inline-block;">Owner name: </span><input id="name" /></div>
-        <div><span style="width: 90px; display: inline-block;">Calendar description: </span><input id="description" /></div>
-        <div><input id="addCalendar" type="submit" class="btn btn-small" value="Submit"></div>
-	</form>
+        <div><span style="width: 90px; display: inline-block;">Calendar description: </span>
+        <input data-ng-model="description" id="description" /></div>
+        <button type="submit" class="btn btn-small">Submit</button>
+    </form>    
+	
 
 </div>
 

@@ -1,6 +1,6 @@
 {
  "kind": "discovery#restDescription",
- "etag": "\"doS0mIKix6_L3_LoT-sZZjofha4/5ERM2R9ePO2KtniDWjpDkW6puj4\"",
+ "etag": "\"doS0mIKix6_L3_LoT-sZZjofha4/F0RNmh4Bn6gTd7u1EWBI2E9BYvU\"",
  "discoveryVersion": "v1",
  "id": "booking:v1",
  "name": "booking",
@@ -146,9 +146,9 @@
  "resources": {
   "calendar": {
    "methods": {
-    "add": {
-     "id": "booking.calendar.add",
-     "path": "calendar.add",
+    "addCalendar": {
+     "id": "booking.calendar.addCalendar",
+     "path": "calendar.addCalendar",
      "httpMethod": "POST",
      "parameters": {
       "description": {
@@ -172,6 +172,11 @@
      "path": "calendar.addEvent",
      "httpMethod": "POST",
      "parameters": {
+      "calendarId": {
+       "type": "string",
+       "required": true,
+       "location": "query"
+      },
       "endDate": {
        "type": "string",
        "required": true,
@@ -209,6 +214,7 @@
       }
      },
      "parameterOrder": [
+      "calendarId",
       "endDate",
       "endTime",
       "maxAttendees",
@@ -217,10 +223,6 @@
       "startTime",
       "summary"
      ],
-     "request": {
-      "$ref": "Calendar",
-      "parameterName": "resource"
-     },
      "response": {
       "$ref": "Event"
      },
@@ -241,8 +243,18 @@
     },
     "listEvents": {
      "id": "booking.calendar.listEvents",
-     "path": "event",
+     "path": "event/{calendarId}",
      "httpMethod": "GET",
+     "parameters": {
+      "calendarId": {
+       "type": "string",
+       "required": true,
+       "location": "path"
+      }
+     },
+     "parameterOrder": [
+      "calendarId"
+     ],
      "response": {
       "$ref": "EventCollection"
      },

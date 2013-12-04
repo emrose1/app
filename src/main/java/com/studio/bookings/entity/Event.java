@@ -93,17 +93,17 @@ public class Event {
         return Key.create(this.getClass(), id);
     }
 	
-	/*@Override
+	@Override
 	public String toString() {
 		StringBuilder tmp = new StringBuilder();
 		tmp.append(" {id:").append(id);
 		tmp.append(", summary:").append(this.summary);
-		if(this.calendar == null){
+		if(this.calendarRef == null){
 			tmp.append(", calendar is null. }");
 		}else{
 			tmp.append(", calendar is not null. } ");
 		}
 		return tmp.toString();
-	}*/
+	}
 	
 }

@@ -9,6 +9,7 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.annotation.Parent;
 
 @Entity
@@ -16,10 +17,15 @@ public class User {
 
     @Getter @Setter
 	@Id private Long id;
-
+    
+    @Index
     @Getter @Setter
     private String username;
 
+    @Index
+    @Getter @Setter
+    private String password;
+    
     @Parent
     @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
     private Ref<UserType> userType;
@@ -33,9 +39,20 @@ public class User {
     public void setUserType(Ref<UserType> userType) {
         this.userType = userType;
     }
-
-    @Getter @Setter
-    private String password;
+    
+  /*  @Parent
+    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
+    private Ref<Organisation> organisation;
+    
+    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
+    public Ref<Organisation> getOrganisation() {
+        return this.organisation;
+    }
+    
+    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
+    public void setOrganisation(Ref<Organisation> organisation) {
+        this.organisation = organisation;
+    }*/
     
     public User(){}
     

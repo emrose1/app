@@ -6,7 +6,9 @@ import java.util.List;
 
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
+import com.studio.bookings.entity.AccessControlList;
 import com.studio.bookings.entity.User;
+import com.studio.bookings.entity.UserType;
 
 public class UserDao {
 	
@@ -30,5 +32,14 @@ public class UserDao {
 		List<User> user = ofy().load().type(User.class).list();
 		return user;
 	}
-
+	
+	public List<User> getUsersByUserType(UserType userType) {
+		return ofy().load().type(User.class).ancestor(userType.getKey()).list();
+	}
+	
+	public User getByUsernamePassword(String username, String password) { //, Organisation organisation) {
+		
+		User user= ofy().load().type(User.class).filter("username", username).filter("password", password).first().now();
+		return user;
+	}
 }

@@ -1,0 +1,21 @@
+*.ass
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+doc
+
+*.zip
+
+LICENSE
+
+*.md
+
+*.discovery
+
+*.launch
+
+target
+

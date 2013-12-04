@@ -1,9 +1,14 @@
 com/studio/bookings/entity/Event.class
+com/studio/bookings/servlet/LogoutServlet.class
 com/studio/bookings/dao/EventDao.class
+com/studio/bookings/util/LoadDummyData.class
 com/studio/bookings/entity/Calendar.class
+com/studio/bookings/servlet/LoginServlet.class
 com/studio/bookings/SignGuestbookServlet.class
 com/studio/bookings/enums/Permission.class
+com/studio/bookings/entity/Organisation.class
 com/studio/bookings/dao/UserTypeDao.class
+com/studio/bookings/entity/UserSession.class
 com/studio/bookings/dao/AccessControlListDao.class
 com/studio/bookings/service/EventService.class
 com/studio/bookings/util/OfyService.class
@@ -14,4 +19,5 @@ com/studio/bookings/entity/UserType.class
 com/studio/bookings/dao/UserDao.class
 com/studio/bookings/entity/User.class
 com/studio/bookings/dao/CalendarDao.class
+com/studio/bookings/servlet/SecurityFilter.class
 com/studio/bookings/entity/AccessControlList.class

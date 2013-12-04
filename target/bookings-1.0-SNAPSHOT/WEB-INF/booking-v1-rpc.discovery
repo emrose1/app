@@ -1,6 +1,6 @@
 {
  "kind": "discovery#rpcDescription",
- "etag": "\"doS0mIKix6_L3_LoT-sZZjofha4/5ERM2R9ePO2KtniDWjpDkW6puj4\"",
+ "etag": "\"doS0mIKix6_L3_LoT-sZZjofha4/F0RNmh4Bn6gTd7u1EWBI2E9BYvU\"",
  "discoveryVersion": "v1",
  "id": "booking:v1",
  "name": "booking",
@@ -142,8 +142,8 @@
   }
  },
  "methods": {
-  "booking.calendar.add": {
-   "id": "booking.calendar.add",
+  "booking.calendar.addCalendar": {
+   "id": "booking.calendar.addCalendar",
    "parameters": {
     "description": {
      "type": "string",
@@ -163,6 +163,10 @@
   "booking.calendar.addEvent": {
    "id": "booking.calendar.addEvent",
    "parameters": {
+    "calendarId": {
+     "type": "string",
+     "required": true
+    },
     "endDate": {
      "type": "string",
      "required": true
@@ -179,9 +183,6 @@
      "type": "string",
      "required": true
     },
-    "resource": {
-     "$ref": "Calendar"
-    },
     "startDate": {
      "type": "string",
      "required": true
@@ -196,7 +197,7 @@
     }
    },
    "parameterOrder": [
-    "resource",
+    "calendarId",
     "endDate",
     "endTime",
     "maxAttendees",
@@ -225,6 +226,15 @@
   "booking.calendar.listEvents": {
    "id": "booking.calendar.listEvents",
    "allowGet": true,
+   "parameters": {
+    "calendarId": {
+     "type": "string",
+     "required": true
+    }
+   },
+   "parameterOrder": [
+    "calendarId"
+   ],
    "returns": {
     "$ref": "EventCollection"
    },

@@ -9,6 +9,7 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.annotation.Parent;
 import com.studio.bookings.enums.Permission;
 
@@ -22,8 +23,9 @@ public class AccessControlList {
     @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
     private Ref<UserType> userType;
 	
+	@Index
 	@Getter @Setter
-    private Permission permission;
+    Permission permission;
     
 	@Getter @Setter
 	private boolean canView;

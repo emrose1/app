@@ -30,6 +30,29 @@
 			<arguments>
 			</arguments>
 		</buildCommand>
+<<<<<<< HEAD
+=======
+		<buildCommand>
+			<name>com.google.gdt.eclipse.core.webAppProjectValidator</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>com.google.appengine.eclipse.core.enhancerbuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>com.google.appengine.eclipse.core.gaeProjectChangeNotifier</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>com.google.appengine.eclipse.core.projectValidator</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+>>>>>>> 899df23b3b1f1f839a8c8e411f1557f77543b694
 	</buildSpec>
 	<natures>
 		<nature>org.eclipse.jem.workbench.JavaEMFNature</nature>
@@ -38,5 +61,9 @@
 		<nature>org.eclipse.m2e.core.maven2Nature</nature>
 		<nature>org.eclipse.wst.common.project.facet.core.nature</nature>
 		<nature>org.eclipse.wst.jsdt.core.jsNature</nature>
+<<<<<<< HEAD
+=======
+		<nature>com.google.appengine.eclipse.core.gaeNature</nature>
+>>>>>>> 899df23b3b1f1f839a8c8e411f1557f77543b694
 	</natures>
 </projectDescription>
