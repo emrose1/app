@@ -99,6 +99,7 @@ bookings.init = function(apiRoot) {
   // Loads the OAuth and helloworld APIs asynchronously, and triggers login
   // when they have completed.
   var apisToLoad;
+  console.log('booking');
 
   apisToLoad = 1; 
   $scope.$apply($scope.load_guestbook_lib);

@@ -1,5 +1,7 @@
 package com.studio.bookings.entity;
 
+import java.io.Serializable;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,7 +15,7 @@ import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.annotation.Parent;
 
 @Entity
-public class User {
+public class User implements Serializable {
 
     @Getter @Setter
 	@Id private Long id;

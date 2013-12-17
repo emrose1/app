@@ -42,4 +42,6 @@ public class UserDao {
 		User user= ofy().load().type(User.class).filter("username", username).filter("password", password).first().now();
 		return user;
 	}
+	
+
 }

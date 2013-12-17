@@ -1,7 +1,5 @@
 package com.studio.bookings.service;
 
-import static com.studio.bookings.util.OfyService.ofy;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -13,11 +11,14 @@ import javax.inject.Named;
 
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
-import com.google.api.server.spi.config.Nullable;
 import com.studio.bookings.dao.CalendarDao;
+import com.studio.bookings.dao.EventAttributeDao;
+import com.studio.bookings.dao.EventCategoryDao;
 import com.studio.bookings.dao.EventDao;
 import com.studio.bookings.entity.Calendar;
 import com.studio.bookings.entity.Event;
+import com.studio.bookings.entity.EventAttribute;
+import com.studio.bookings.entity.EventCategory;
 import com.studio.bookings.util.Constants;
 
 /**
@@ -70,7 +71,13 @@ public class EventService {
 		Date eventStartDateTime = formatter.parse(startDateTime);
 		Date eventEndDateTime = formatter.parse(endDateTime);
 		Integer eventMaxAttendees = new Integer(maxAttendees);
-		Event response = new Event(organizer, summary, eventStartDateTime, eventEndDateTime, eventMaxAttendees, cal);
+		EventCategory ec1 = new EventCategory("Pilates Matwork", cal);
+		EventCategoryDao ecDao = new EventCategoryDao();
+		ecDao.save(ec1);
+		EventAttribute ea1 = new EventAttribute("Beginners", cal);
+		EventAttributeDao eaDao = new EventAttributeDao();
+		eaDao.save(ea1);
+		Event response = new Event(organizer, summary, eventStartDateTime, eventEndDateTime, eventMaxAttendees, cal, ec1, ea1);
 		
 	    eventDao.save(response);
 	    return response;

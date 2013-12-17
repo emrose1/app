@@ -1,6 +1,6 @@
 {
  "kind": "discovery#rpcDescription",
- "etag": "\"doS0mIKix6_L3_LoT-sZZjofha4/F0RNmh4Bn6gTd7u1EWBI2E9BYvU\"",
+ "etag": "\"doS0mIKix6_L3_LoT-sZZjofha4/v8npQsUoVFYxpKy8mILERKm-HLU\"",
  "discoveryVersion": "v1",
  "id": "booking:v1",
  "name": "booking",
@@ -101,9 +101,18 @@
     "allDay": {
      "type": "string"
     },
+    "calendar": {
+     "$ref": "Calendar"
+    },
     "endDate": {
      "type": "string",
      "format": "date-time"
+    },
+    "eventAttribute": {
+     "$ref": "EventAttribute"
+    },
+    "eventCategory": {
+     "$ref": "EventCategory"
     },
     "id": {
      "type": "string",
@@ -113,9 +122,6 @@
      "type": "integer",
      "format": "int32"
     },
-    "numberOfAttendees": {
-     "type": "string"
-    },
     "organizer": {
      "type": "string"
     },
@@ -124,6 +130,38 @@
      "format": "date-time"
     },
     "summary": {
+     "type": "string"
+    }
+   }
+  },
+  "EventAttribute": {
+   "id": "EventAttribute",
+   "type": "object",
+   "properties": {
+    "calendar": {
+     "$ref": "Calendar"
+    },
+    "id": {
+     "type": "string",
+     "format": "int64"
+    },
+    "name": {
+     "type": "string"
+    }
+   }
+  },
+  "EventCategory": {
+   "id": "EventCategory",
+   "type": "object",
+   "properties": {
+    "calendar": {
+     "$ref": "Calendar"
+    },
+    "id": {
+     "type": "string",
+     "format": "int64"
+    },
+    "name": {
      "type": "string"
     }
    }

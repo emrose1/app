@@ -15,7 +15,7 @@ public class CalendarDao {
 	}
 
 	//Not a very good practice
-	public EventDao eventDao = new EventDao();
+	//public EventDao eventDao = new EventDao();
 
 
 	public Calendar find(Long calendarId) {

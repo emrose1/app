@@ -1,31 +1,28 @@
 package com.studio.bookings;
 
-import static com.studio.bookings.util.OfyService.ofy;
-
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.text.ParseException;
-import java.util.Date;
 import java.util.List;
 
-import javax.inject.Named;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.studio.bookings.dao.AccessControlListDao;
+import com.studio.bookings.dao.BookingDao;
 import com.studio.bookings.dao.CalendarDao;
+import com.studio.bookings.dao.EventAttributeDao;
+import com.studio.bookings.dao.EventCategoryDao;
 import com.studio.bookings.dao.EventDao;
 import com.studio.bookings.dao.UserDao;
 import com.studio.bookings.dao.UserTypeDao;
 import com.studio.bookings.entity.AccessControlList;
+import com.studio.bookings.entity.Booking;
 import com.studio.bookings.entity.Calendar;
 import com.studio.bookings.entity.Event;
 import com.studio.bookings.entity.User;
 import com.studio.bookings.entity.UserType;
 import com.studio.bookings.enums.Permission;
-import com.studio.bookings.service.EventService;
-
 
 
 public class TestHarnessServlet extends HttpServlet {
@@ -37,22 +34,41 @@ public class TestHarnessServlet extends HttpServlet {
 	    resp.setContentType("text/plain");
 
 	  CalendarDao calendarDao = new CalendarDao();
+	  BookingDao bookingDao = new BookingDao();
 	  EventDao eventDao = new EventDao();
+	  EventAttributeDao eventAttributeDao = new EventAttributeDao();
+	  EventCategoryDao eventCategoryDao = new EventCategoryDao();
 	  UserDao userDao = new UserDao();
 	  UserTypeDao userTypeDao = new UserTypeDao();
 	  AccessControlListDao accessControlListDao = new AccessControlListDao();
-	  
 	  
 	  rw.println("EVENTS BY CALENDAR");
 	  
 	  List<Calendar> calendars = calendarDao.findAll();
 	  for (Calendar cal : calendars) {
-		  List<Event> events = ofy().load().type(Event.class).ancestor(cal.getKey()).list();
+		  List<Event> events = eventDao.findEventsByCalendar(cal);
 
 		  rw.println("calendar " + cal + ": Events");
+		  rw.println("");
 		  for (Event event : events) {
 			  rw.println(event);
+			  rw.println("calendar: " + event.getCalendar());
+			  rw.println("description: " + event.getCalendar().getDescription());
+			  
+			  rw.println("event category: " + event.getEventCategory());
+			  
+			  rw.println("");
+			  rw.println("==========");
+			  rw.println("");
+			  rw.println("Booking for " + event.getSummary());
+
+			  List<Booking> bookings = bookingDao.getBookingsByEvent(event);
+			  for (Booking b : bookings) {
+				  rw.println(b.toString());
+			  }
 		  }
+		  rw.println("");
+		  rw.println("==========");
 	  }
 	  
 	  rw.println("");
@@ -66,7 +82,17 @@ public class TestHarnessServlet extends HttpServlet {
 		  
 		  rw.println("user type " + ut + ": Users");
 		  for (User user : users) {
+			  
 			  rw.println(user.getUsername());
+			  rw.println("");
+			  rw.println("==========");
+			  rw.println("");
+			  
+			  rw.println("Booking for " + user.getUsername());
+			  List<Booking> bookings = bookingDao.getBookingsByUser(user);
+			  for (Booking b : bookings) {
+				  rw.println(b.toString());
+			  }
 		  }
 		  
 	  }
@@ -90,7 +116,9 @@ public class TestHarnessServlet extends HttpServlet {
 			rw.println(s);
 		  }
 	  }
+	  rw.println("");
 	  rw.println("==========");
+	  rw.println("");
 	  rw.println("acl list");
 	  
 	  List<AccessControlList> aclList = accessControlListDao.findAll();

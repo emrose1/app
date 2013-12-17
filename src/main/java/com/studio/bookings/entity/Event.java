@@ -17,9 +17,9 @@ import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
+import com.googlecode.objectify.annotation.Load;
 import com.googlecode.objectify.annotation.Parent;
 
-@Data
 @Entity
 public class Event {
 	
@@ -27,28 +27,56 @@ public class Event {
 	@Id Long id;
 	
 	@Parent
+	@Load
     @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
     private Ref<Calendar> calendarRef;
-    
-    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-    public Ref<Calendar> getCalendar() 
-    {
-        return this.calendarRef;
+	
+    public Calendar getCalendar() { 
+    	return calendarRef.get(); 
     }
     
+    public void setCalendar(Calendar value) { 
+    	calendarRef = Ref.create(value); 
+    }
+    
+    @Load
     @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-    public void setCalendar(Ref<Calendar> cal) 
-    {
-        this.calendarRef = cal;
+    private Ref<EventCategory> eventCategoryRef;
+	
+    public EventCategory getEventCategory() { 
+    	return eventCategoryRef.get(); 
+    }
+    
+    public void setEventCategory(EventCategory value) { 
+    	eventCategoryRef = Ref.create(value); 
+    }
+    
+    @Load
+    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
+    private Ref<EventAttribute> eventAttributeRef;
+	
+    public EventAttribute getEventAttributeRef() { 
+    	return eventAttributeRef.get(); 
+    }
+    
+    public void setEventAttribute(EventAttribute value) { 
+    	eventAttributeRef = Ref.create(value); 
     }
     
     @Getter @Setter
     @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-    @Index Set<Key<User>> attendees;
+    @Index 
+    @Load
+    private Set<Ref<Booking>> bookings;
     
     @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-    public void addAttendee(Key<User> attendee) {
-    	this.attendees.add(attendee);
+    public void addBooking(Ref<Booking> booking) {
+    	this.bookings.add(booking);
+    }
+    
+    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
+    public void removeBooking(Ref<Booking> booking) {
+    	this.bookings.remove(booking);
     }
 	
 	@Getter @Setter
@@ -69,20 +97,20 @@ public class Event {
 	@Getter @Setter
 	private Integer maxAttendees;
 	
-	@Getter @Setter
-	private String numberOfAttendees;
-	
 	public Event() {};
 	
 	public Event(String organizer, String summary, Date eventStartDate, 
-			Date eventEndDate, Integer maxAttendees, Calendar calendar) {
+			Date eventEndDate, Integer maxAttendees, Calendar calendar, 
+			EventCategory eventCategory, EventAttribute eventAttribute) {
 		this.organizer = organizer;
 		this.summary = summary;
 		this.startDate = eventStartDate;
 		this.endDate = eventEndDate;
 		this.maxAttendees = maxAttendees;
 		this.calendarRef = Ref.create(calendar);
-		this.attendees = new HashSet();
+		this.bookings = new HashSet();
+		this.eventCategoryRef = Ref.create(eventCategory);
+		this.eventAttributeRef = Ref.create(eventAttribute);
 	};
 	
 	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
