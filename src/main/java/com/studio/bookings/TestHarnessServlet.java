@@ -23,12 +23,19 @@ import com.studio.bookings.entity.Event;
 import com.studio.bookings.entity.User;
 import com.studio.bookings.entity.UserType;
 import com.studio.bookings.enums.Permission;
+import com.studio.bookings.util.LoadDummyData;
 
 
 public class TestHarnessServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest req, HttpServletResponse resp)
       throws IOException {
+	  
+	  UserDao userDao = new UserDao();
+	  	if (userDao.findAll().size() == 0) {
+	  		LoadDummyData ldd = new LoadDummyData();
+	  		ldd.initSetup();
+	  	}
 
 	  PrintWriter rw = resp.getWriter();
 	    resp.setContentType("text/plain");
@@ -38,7 +45,6 @@ public class TestHarnessServlet extends HttpServlet {
 	  EventDao eventDao = new EventDao();
 	  EventAttributeDao eventAttributeDao = new EventAttributeDao();
 	  EventCategoryDao eventCategoryDao = new EventCategoryDao();
-	  UserDao userDao = new UserDao();
 	  UserTypeDao userTypeDao = new UserTypeDao();
 	  AccessControlListDao accessControlListDao = new AccessControlListDao();
 	  

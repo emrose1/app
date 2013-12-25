@@ -1,6 +1,6 @@
 {
  "kind": "discovery#rpcDescription",
- "etag": "\"doS0mIKix6_L3_LoT-sZZjofha4/v8npQsUoVFYxpKy8mILERKm-HLU\"",
+ "etag": "\"ykhqEJ_LDFBNzs2RnXtIc2-QyAc/v8npQsUoVFYxpKy8mILERKm-HLU\"",
  "discoveryVersion": "v1",
  "id": "booking:v1",
  "name": "booking",
