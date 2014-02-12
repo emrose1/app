@@ -1,29 +1,10 @@
 package com.studio.bookings;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.studio.bookings.dao.AccessControlListDao;
-import com.studio.bookings.dao.BookingDao;
-import com.studio.bookings.dao.CalendarDao;
-import com.studio.bookings.dao.EventAttributeDao;
-import com.studio.bookings.dao.EventCategoryDao;
-import com.studio.bookings.dao.EventDao;
-import com.studio.bookings.dao.UserDao;
-import com.studio.bookings.dao.UserTypeDao;
-import com.studio.bookings.entity.AccessControlList;
-import com.studio.bookings.entity.Booking;
-import com.studio.bookings.entity.Calendar;
-import com.studio.bookings.entity.Event;
-import com.studio.bookings.entity.User;
-import com.studio.bookings.entity.UserType;
-import com.studio.bookings.enums.Permission;
-import com.studio.bookings.util.LoadDummyData;
 
 
 public class TestHarnessServlet extends HttpServlet {
@@ -31,7 +12,7 @@ public class TestHarnessServlet extends HttpServlet {
   public void doGet(HttpServletRequest req, HttpServletResponse resp)
       throws IOException {
 	  
-	  UserDao userDao = new UserDao();
+	 /* UserDao userDao = new UserDao();
 	  	if (userDao.findAll().size() == 0) {
 	  		LoadDummyData ldd = new LoadDummyData();
 	  		ldd.initSetup();
@@ -52,6 +33,7 @@ public class TestHarnessServlet extends HttpServlet {
 	  
 	  List<Calendar> calendars = calendarDao.findAll();
 	  for (Calendar cal : calendars) {
+
 		  List<Event> events = eventDao.findEventsByCalendar(cal);
 
 		  rw.println("calendar " + cal + ": Events");
@@ -61,12 +43,12 @@ public class TestHarnessServlet extends HttpServlet {
 			  rw.println("calendar: " + event.getCalendar());
 			  rw.println("description: " + event.getCalendar().getDescription());
 			  
-			  rw.println("event category: " + event.getEventCategory());
+			  //rw.println("event category: " + event.getEventCategory());
 			  
 			  rw.println("");
 			  rw.println("==========");
 			  rw.println("");
-			  rw.println("Booking for " + event.getSummary());
+			  //rw.println("Booking for " + event.getSummary());
 
 			  List<Booking> bookings = bookingDao.getBookingsByEvent(event);
 			  for (Booking b : bookings) {
@@ -130,7 +112,7 @@ public class TestHarnessServlet extends HttpServlet {
 	  List<AccessControlList> aclList = accessControlListDao.findAll();
 	  for (AccessControlList a : aclList) {
 		  rw.println(a.toString());
-	  }
+	  }*/
 	  
   }
 }

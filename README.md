@@ -1,8 +1,3 @@
-App Engine Java Guestbook
-Copyright (C) 2010-2012 Google Inc.
-
-## Sample guestbook for use with App Engine Java.
-
 Requires [Apache Maven](http://maven.apache.org) 3.0 or greater, and JDK 6+ in order to run.
 
 To build, run
@@ -22,3 +17,8 @@ For further information, consult the [Java App Engine](https://developers.google
 To see all the available goals for the App Engine plugin, run
 
     mvn help:describe -Dplugin=appengine
+
+    mvn clean install
+Run the application with mvn appengine:devserver, and ensure it's running by visiting your local server's address (by default localhost:8080.)
+Get the client library with mvn appengine:endpoints_get_client_lib (it will generate a zip file named helloworld-v1-java.zip in the root of your project.)
+Deploy your application to Google App Engine with mvn appengine:update

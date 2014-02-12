@@ -1,21 +1,14 @@
-*.ass
+build
+target
+test-output
+src/main/webapp/node_modules/*
 
-# Package Files #
-*.jar
-*.war
-*.ear
+src/main/webapp/README.md
 
-doc
+src/main/webapp/LICENSE
 
-*.zip
-
-LICENSE
+*.prefs
 
 *.md
 
-*.discovery
-
-*.launch
-
-target
-
+src/main/webapp/css/App.css

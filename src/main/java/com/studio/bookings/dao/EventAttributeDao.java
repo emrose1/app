@@ -5,9 +5,11 @@ import static com.studio.bookings.util.OfyService.ofy;
 import java.util.List;
 
 import com.googlecode.objectify.Key;
+import com.googlecode.objectify.NotFoundException;
 import com.googlecode.objectify.ObjectifyService;
 import com.studio.bookings.entity.Calendar;
 import com.studio.bookings.entity.EventAttribute;
+import com.studio.bookings.entity.Owner;
 
 public class EventAttributeDao {
 	
@@ -16,16 +18,16 @@ public class EventAttributeDao {
 	}
 
 
-	public EventAttribute find(Long eventAttributeId) {
-		EventAttribute eventAttribute;
-		Key<EventAttribute> rootKey = Key.create(EventAttribute.class, eventAttributeId);
-		eventAttribute = ofy().load().key(rootKey).now();
-		return eventAttribute;
+	public EventAttribute find(Long eventAttributeId, Calendar calendar) throws NotFoundException {
+		return ofy().load().type(EventAttribute.class).parent(calendar).id(eventAttributeId).safe();
+	}
+	
+	public EventAttribute getEventAttribute(Key<EventAttribute> eventAttributeKey) throws NotFoundException {
+		return ofy().load().key(eventAttributeKey).safe();
 	}
 
-	public EventAttribute save(EventAttribute eventAttribute) {
-		ofy().save().entity(eventAttribute).now();
-		return eventAttribute;
+	public Key<EventAttribute> save(EventAttribute eventAttribute) {
+		return ofy().save().entity(eventAttribute).now();
 	}
 
 	public List<EventAttribute> findAll() {
@@ -33,9 +35,8 @@ public class EventAttributeDao {
 		return eventAttributes;
 	}
 	
-	public List<EventAttribute> findEventsAttributesByCalendar(Calendar calendar) {
+	public List<EventAttribute> findEventAttributesByCalendar(Calendar calendar) {
 		return ofy().load().type(EventAttribute.class).ancestor(calendar.getKey()).list();
 	}
-
 
 }

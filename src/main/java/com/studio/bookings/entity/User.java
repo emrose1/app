@@ -22,6 +22,10 @@ public class User implements Serializable {
     
     @Index
     @Getter @Setter
+    private Owner owner;
+    
+    @Index
+    @Getter @Setter
     private String username;
 
     @Index

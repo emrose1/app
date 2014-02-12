@@ -1,13 +1,18 @@
 package com.studio.bookings.util;
 
-import java.util.Date;
+import org.joda.time.DateTime;
+import org.joda.time.Duration;
+import org.joda.time.Period;
 
+import com.googlecode.objectify.Key;
 import com.studio.bookings.dao.AccessControlListDao;
 import com.studio.bookings.dao.BookingDao;
 import com.studio.bookings.dao.CalendarDao;
 import com.studio.bookings.dao.EventAttributeDao;
 import com.studio.bookings.dao.EventCategoryDao;
 import com.studio.bookings.dao.EventDao;
+import com.studio.bookings.dao.OwnerDao;
+import com.studio.bookings.dao.SettingsDao;
 import com.studio.bookings.dao.UserDao;
 import com.studio.bookings.dao.UserTypeDao;
 import com.studio.bookings.entity.AccessControlList;
@@ -16,6 +21,9 @@ import com.studio.bookings.entity.Calendar;
 import com.studio.bookings.entity.Event;
 import com.studio.bookings.entity.EventAttribute;
 import com.studio.bookings.entity.EventCategory;
+import com.studio.bookings.entity.EventRepeatType;
+import com.studio.bookings.entity.Owner;
+import com.studio.bookings.entity.Settings;
 import com.studio.bookings.entity.User;
 import com.studio.bookings.entity.UserType;
 import com.studio.bookings.enums.Permission;
@@ -30,17 +38,26 @@ public class LoadDummyData {
 	public static UserTypeDao userTypeDao = new UserTypeDao();
 	public static AccessControlListDao accessControlListDao = new AccessControlListDao();
 	public static BookingDao bookingDao = new BookingDao();
+	public static SettingsDao settingsDao = new SettingsDao();
+	public static OwnerDao ownerDao = new OwnerDao();
 	
 	public void initSetup() {
 	
-		CalendarDao calendarDao = new CalendarDao();
+		/*CalendarDao calendarDao = new CalendarDao();
 		EventDao eventDao = new EventDao();
+		
+		// TODO Create new owner and Settings Service
+		Settings setting = new Settings();
+		Key<Settings> settingsKey = settingsDao.save(setting);
+		Owner owner = new Owner("Big C's", settingsKey);
+		Key<Owner> ownerKey = ownerDao.save(owner);
+		Owner ownerFetched = ownerDao.find(ownerKey);
 	
-		Calendar calendar1 = new Calendar("calendar1");
+		Calendar calendar1 = new Calendar("calendar1", ownerFetched);
 		calendarDao.save(calendar1);
 	
-		Calendar calendar2 = new Calendar("calendar2");
-		Calendar calendar3 = calendarDao.save(calendar2);
+		Calendar calendar2 = new Calendar("calendar2", ownerFetched);
+		Key<Calendar> calendar3 = calendarDao.save(calendar2);
 	
 		EventCategory ec1 = new EventCategory("Pilates Matwork", calendar1);
 		EventCategory ec2 = new EventCategory("Pilates Reformer", calendar1);
@@ -56,27 +73,42 @@ public class LoadDummyData {
 		eventAttributeDao.save(ea1); 
 		eventAttributeDao.save(ea2);
 		
+		DateTime dt = new DateTime();
+		dt = dt.plus(Period.months(1));
 	
-		Event event1 = new Event("organizer1", "event 1 of calendar 1", new Date(), new Date(), 10, calendar1, ec1, ea1);
+
+		DateTime JAN_1_1970 = new DateTime(1970, 1, 1, 0, 0);
+		Long shortDate = new Duration(JAN_1_1970, dt).getMillis();
+		
+		EventRepeatType repeatDaily  = EventRepeatType.DAILY;
+		
+		Boolean btrue = new Boolean("true");
+		
+		Event event1 = new Event(calendar1,btrue, repeatDaily);
 		eventDao.save(event1);
 	
-		Event event2 = new Event("organizer1", "event 1 of calendar 2", new Date(), new Date(), 10, calendar2, ec2, ea2);
+		Event event2 = new Event(calendar2, btrue, repeatDaily);
 		eventDao.save(event2);
 	
-		Event event3 = new Event("organizer1", "event 2 of calendar 1", new Date(), new Date(), 10, calendar1, ec1, ea1);
+		Event event3 = new Event(calendar1, btrue, repeatDaily);
 		eventDao.save(event3);
 	
-		Event event4 = new Event("organizer1", "event 2 of calendar 2", new Date(), new Date(), 10, calendar2, ec2, ea2);
+		Event event4 = new Event(calendar2, btrue, repeatDaily);
 		eventDao.save(event4);
 		
-
+		Event event5 = new Event(calendar1, btrue, repeatDaily);
+		eventDao.save(event5);
+	
+		Event event6 = new Event(calendar1,btrue, repeatDaily);
+		eventDao.save(event6);
+		
 		UserType admin = new UserType("admin");
-		UserType owner = new UserType("owner");
+		UserType owner1 = new UserType("owner");
 		UserType organizer = new UserType("organizer");
 		UserType attendee = new UserType("attendee");
 
 		userTypeDao.save(admin);
-		userTypeDao.save(owner);
+		userTypeDao.save(owner1);
 		userTypeDao.save(organizer);
 		userTypeDao.save(attendee);
 
@@ -88,9 +120,9 @@ public class LoadDummyData {
 		AccessControlList adminEvent = new AccessControlList(eventPermission, false, false, false, false, admin);
 		AccessControlList adminCalendar = new AccessControlList(calendarPermission, true, true, true, true, admin);
 
-		AccessControlList ownerBooking = new AccessControlList(bookingPermission, true, true, true, true, owner);
-		AccessControlList ownerEvent = new AccessControlList(eventPermission, true, true, true, true, owner);
-		AccessControlList ownerCalendar = new AccessControlList(calendarPermission, false, false, false, false, owner);
+		AccessControlList ownerBooking = new AccessControlList(bookingPermission, true, true, true, true, owner1);
+		AccessControlList ownerEvent = new AccessControlList(eventPermission, true, true, true, true, owner1);
+		AccessControlList ownerCalendar = new AccessControlList(calendarPermission, false, false, false, false, owner1);
 
 		AccessControlList organizerBooking = new AccessControlList(bookingPermission, true, true, true, true, organizer);
 		AccessControlList organizerEvent = new AccessControlList(eventPermission, false, false, false, false, organizer);
@@ -109,7 +141,7 @@ public class LoadDummyData {
 		accessControlListDao.save(organizerCalendar);
 
 		User user1 = new User("admin", "123", admin);
-		User user2 = new User("owner", "123", owner);
+		User user2 = new User("owner", "123", owner1);
 		User user3 = new User("organizer", "123", organizer);
 		User user4 = new User("attendee", "123", attendee);
 
@@ -126,7 +158,7 @@ public class LoadDummyData {
 		bookingDao.save(booking1);
 		bookingDao.save(booking2);
 		bookingDao.save(booking3);
-		bookingDao.save(booking4);
+		bookingDao.save(booking4);*/
 	
 	}
 }

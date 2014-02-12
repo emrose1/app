@@ -34,7 +34,7 @@ public class BookingDao {
 	}
 	
 	public List<Booking> getBookingsByUser(User user) {
-		return ofy().load().type(Booking.class).ancestor(user.getKey()).list();
+		return ofy().load().type(Booking.class).ancestor(user).list();
 	}
 	
 	public List<Booking> getBookingsByEvent(Event event) {

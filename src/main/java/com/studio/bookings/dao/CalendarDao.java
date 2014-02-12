@@ -2,11 +2,15 @@ package com.studio.bookings.dao;
 
 import static com.studio.bookings.util.OfyService.ofy;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.googlecode.objectify.Key;
+import com.googlecode.objectify.NotFoundException;
 import com.googlecode.objectify.ObjectifyService;
+import com.googlecode.objectify.Ref;
 import com.studio.bookings.entity.Calendar;
+import com.studio.bookings.entity.Owner;
 
 public class CalendarDao {
 
@@ -14,33 +18,31 @@ public class CalendarDao {
 		ObjectifyService.register(Calendar.class);
 	}
 
-	//Not a very good practice
-	//public EventDao eventDao = new EventDao();
-
-
-	public Calendar find(Long calendarId) {
-		Calendar cal =  new Calendar();
-		Key<Calendar> rootKey = Key.create(Calendar.class,calendarId);
-		cal = ofy().load().key(rootKey).now();
-		return cal;
+	public Calendar getCalendarById(Long calendarId) throws NotFoundException {
+		return ofy().load().type(Calendar.class).id(calendarId).safe();
 	}
 
-	public Calendar save(Calendar calendar) {
-		ofy().save().entity(calendar).now();
-		return calendar;
+	public Key<Calendar> save(Calendar calendar) {
+		return ofy().save().entity(calendar).now();
+	}
+	
+	public Calendar getCalendarByKey(Key<Calendar> calendarKey) throws NotFoundException {
+		return ofy().load().key(calendarKey).safe();
 	}
 
 	public List<Calendar> findAll() {
 		List<Calendar> calendars = ofy().load().type(Calendar.class).list();
-/*		for(Calendar calendar:calendars){
-			fillAllChildDetails(calendar);
-		}*/
 		return calendars;
 	}
+	
+	public List<Calendar> getCalendarsByOwner(Owner owner) {
+		List<Ref<Calendar>> calendarRefs = owner.getCalendars();
+		List<Calendar> results = new ArrayList<Calendar>();
+		for (Ref<Calendar> cal : calendarRefs) {
+			Calendar calFetched = cal.get();
+			results.add(calFetched);
+		}
+		return results;
+	}
 
-/*	private void fillAllChildDetails(Calendar calendar){
-		List<Key<Event>> events = eventDao.findEventsOfCalendar(calendar);
-		calendar.setEvents(events);
-
-	}*/
 }

@@ -11,16 +11,18 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
+import com.googlecode.objectify.annotation.Load;
+import com.googlecode.objectify.annotation.Parent;
 
 @Entity
 public class Calendar {
 	
+	@Index
 	@Getter @Setter
 	@Id Long id;
-	
-	public Long getId() {
-		return this.id;
-	}
+    
+	@Getter @Setter
+	private String description;
 	
 	@Index Date dateCreated = new Date();
 	@Index Date dateUpdated = new Date();
@@ -29,10 +31,8 @@ public class Calendar {
 	
 	public Calendar(String description) {
 		this.description = description;
-	}
+	};
 	
-	@Getter @Setter
-	private String description;
 	
 	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	public Key<Calendar> getKey() {
@@ -45,12 +45,4 @@ public class Calendar {
 	public String toString() {
 		return this.description + ": " + this.id ;
 	}
-
-
-	/*public Ref<Calendar> getRef() {
-    	if(id == null){
-    		return null;
-    	}
-        return Ref.create(this.getClass(), id);
-    }*/
 }

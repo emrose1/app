@@ -5,6 +5,7 @@ import static com.studio.bookings.util.OfyService.ofy;
 import java.util.List;
 
 import com.googlecode.objectify.Key;
+import com.googlecode.objectify.NotFoundException;
 import com.googlecode.objectify.ObjectifyService;
 import com.studio.bookings.entity.Calendar;
 import com.studio.bookings.entity.EventCategory;
@@ -15,16 +16,16 @@ public class EventCategoryDao {
 		ObjectifyService.register(EventCategory.class);
 	}
 
-	public EventCategory find(Long eventCategoryId) {
-		EventCategory eventCategory;
-		Key<EventCategory> rootKey = Key.create(EventCategory.class, eventCategoryId);
-		eventCategory = ofy().load().key(rootKey).now();
-		return eventCategory;
+	public EventCategory find(Long eventCategoryId, Calendar cal) throws NotFoundException {
+		return ofy().load().type(EventCategory.class).parent(cal).id(eventCategoryId).safe();
+	}
+	
+	public EventCategory getEventCategory(Key<EventCategory> eventCategoryKey) throws NotFoundException {
+		return ofy().load().key(eventCategoryKey).safe();
 	}
 
-	public EventCategory save(EventCategory eventCategory) {
-		ofy().save().entity(eventCategory).now();
-		return eventCategory;
+	public Key<EventCategory> save(EventCategory eventCategory) {
+		return ofy().save().entity(eventCategory).now();
 	}
 
 	public List<EventCategory> findAll() {
@@ -32,7 +33,7 @@ public class EventCategoryDao {
 		return eventCategorys;
 	}
 	
-	public List<EventCategory> findEventsCategorysByCalendar(Calendar calendar) {
+	public List<EventCategory> findEventCategorysByCalendar(Calendar calendar) {
 		return ofy().load().type(EventCategory.class).ancestor(calendar.getKey()).list();
 	}
 
