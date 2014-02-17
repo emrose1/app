@@ -92,13 +92,16 @@ controllers.controller('EventController', ['$scope', '$route', '$routeParams', '
 			    'startDate' : new Date($scope.startTime.getFullYear(), $scope.startTime.getMonth(), $scope.startTime.getDate()).getTime(),
 			    'duration' : $scope.duration.getHours() + ':' + $scope.duration.getMinutes(),
 			    'maxAttendees': $scope.maxAttendees,
+			    'categoryId' : "",
+			    'attributeId' : "",
 			    'repeatEvent' : $scope.repeatEvent,
-				'eventRepeatType' : $scope.eventRepeatType
+				'eventRepeatType' : $scope.eventRepeatType,
+				'finalRepeatEvent' : ""
 			};
 			console.log(message);
-			console.log($scope.eventsCalendar);
 			gapi.client.booking.calendar.addEvent(message).execute(function(resp) {
 				console.log(resp);
+				init();
 			});
 		};
 
@@ -116,6 +119,8 @@ controllers.controller('EventController', ['$scope', '$route', '$routeParams', '
 			gapi.client.booking.calendar.listCalendars().execute(function(resp) {
 				console.log('list calendars');
 				console.log(resp);
+
+				$scope.listOwners();
 			    $scope.calendars = resp.items;
 			    $scope.eventsCalendar = $scope.calendars[1];
 
@@ -127,6 +132,14 @@ controllers.controller('EventController', ['$scope', '$route', '$routeParams', '
 			    $scope.listEventCategories();
 			    $scope.listEventRepeatTypes();
 
+			});
+		};
+
+		$scope.listOwners = function() {
+			gapi.client.booking.calendar.listOwners().execute(function(resp) {
+				console.log(resp);
+			    /*$scope.events = resp.items;
+			    $scope.$apply();*/
 			});
 		};
 
@@ -147,7 +160,8 @@ controllers.controller('EventController', ['$scope', '$route', '$routeParams', '
 				'calendarId': $scope.eventsCalendar.id
 			};
 			gapi.client.booking.calendar.listEventAttributes(message).execute(function(resp) {
-				console.log('Event Attributes: ' + resp);
+				console.log('Event Attributes: ');
+				console.log(resp);
 			    $scope.eventAttributes = resp.items;
 			    $scope.$apply();
 			});
@@ -158,7 +172,8 @@ controllers.controller('EventController', ['$scope', '$route', '$routeParams', '
 				'calendarId': $scope.eventsCalendar.id
 			};
 			gapi.client.booking.calendar.listEventCategories(message).execute(function(resp) {
-				console.log('Event Categories: ' + resp);
+				console.log('Event Categories: ');
+				console.log(resp);
 			    $scope.eventCategories = resp.items;
 			    $scope.$apply();
 			});
@@ -168,8 +183,9 @@ controllers.controller('EventController', ['$scope', '$route', '$routeParams', '
 			var message = {
 				'calendarId' : $scope.eventsCalendar.id
 			};
-			gapi.client.booking.calendar.listEventRepeatType(message).execute(function(resp) {
-				console.log('Event Repeat Type: ' + resp);
+			gapi.client.booking.calendar.listEventRepeatTypes(message).execute(function(resp) {
+				console.log('Event Repeat Type: ');
+				console.log(resp);
 			    $scope.eventRepeatType = resp.items;
 			    $scope.$apply();
 			});

@@ -1,5 +1,7 @@
 package com.studio.bookings.service;
 
+import static com.studio.bookings.util.OfyService.ofy;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -91,11 +93,28 @@ public class EventTestingService {
 	}
 	
 	@ApiMethod(name = "calendar.listCalendars", path="calendar.listCalendars", httpMethod = "get")
-	public List<Calendar> listCalendars(@Named("owner") Long ownerId) {
-		Owner owner = getOwnerById(ownerId);
-		return calendarDao.getCalendarsByOwner(owner);
+	public List<Calendar> listCalendars() {
+		
+		// Get Owner
+		/*Owner owner = ofy().load().type(Owner.class).first().now();
+	
+		Long oId = new Long(owner.getId());
+		owner = getOwnerById(oId);*/
+		return calendarDao.findAll();
 	}
 	
+	@ApiMethod(name = "calendar.listOwners", path="calendar.listOwners", httpMethod = "get")
+	public List<Owner> listOwners() {
+		
+		// Get Owner
+		/*Owner owner = ofy().load().type(Owner.class).first().now();
+	
+		Long oId = new Long(owner.getId());
+		owner = getOwnerById(oId);*/
+		return ownerDao.findAll();
+	}
+	
+
 	@ApiMethod(name = "calendar.addEventCategory", path="calendar.addEventCategory", httpMethod = "post")
 	public EventCategory addEventCategory( 
 			@Named("description") String description,  
@@ -120,9 +139,8 @@ public class EventTestingService {
 			return eventAttribute;
 	}
 	
-	@ApiMethod(name = "calendar.addEvents", path="calendar.addEvents", httpMethod = "post")
-	public List<EventItem> addEvents(
-			@Named("owner") Long ownerId,
+	@ApiMethod(name = "calendar.addEvent", path="calendar.addEvent", httpMethod = "post")
+	public List<EventItem> addEvent(
 			@Named("organizer") String organizer, 
 			@Named("summary") String summary, 
 			@Named("calendarId") Long calendarId,
@@ -152,9 +170,9 @@ public class EventTestingService {
 		Integer eventMaxAttendees = new Integer(maxAttendees);
 		
 		// Get Owner
-		Owner owner = null;
+		Owner owner = ofy().load().type(Owner.class).first().now();
 		try {
-			Long oId = new Long(ownerId);
+			Long oId = new Long(owner.getId());
 			owner = getOwnerById(oId);
 		} catch (NumberFormatException e) {
 			errorMessage.add("Owner recognised");

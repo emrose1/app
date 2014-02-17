@@ -79,8 +79,8 @@ Event Id: {{params.eventId}}<br />
 		    	<div class="col-sm-6">
 				    <div class="form-group">
 						<label for="select-input">Event Categories</label>
-						<select id="select-input" ng-repeat="eventCategory in eventCategories" class="form-control">
-							<option>{{eventCategory.name}}</option>
+						<select id="select-input" class="form-control">
+							<option ng-repeat="eventCategory in eventCategories">{{eventCategory.name}}</option>
 						</select>
 					</div>
 				</div>
@@ -88,8 +88,8 @@ Event Id: {{params.eventId}}<br />
 				<div class="col-sm-6">
 				    <div class="form-group">
 						<label for="select-input">Event Attributes</label>
-						<select id="select-input" ng-repeat="eventAttribute in eventAttributes" class="form-control">
-							<option>{{eventAttribute.name}}</option>
+						<select id="select-input" class="form-control">
+							<option ng-repeat="eventAttribute in eventAttributes">{{eventAttribute.name}}</option>
 						</select>
 					</div>
 				</div>
@@ -110,8 +110,8 @@ Event Id: {{params.eventId}}<br />
 			   	<div class="col-sm-6">
 				    <div class="form-group">
 						<label for="select-input">Repeat Event Type</label>
-						<select id="select-input" ng-repeat="ert in eventRepeatType" class="form-control">
-						<option>{{ert}}</option>
+						<select id="select-input" class="form-control">
+						<option ng-repeat="ert in eventRepeatType">{{ert}}</option>
 						</select>
 					</div>
 				</div>
@@ -134,7 +134,7 @@ Event Id: {{params.eventId}}<br />
 	    </form>
 	    <p>I have {{events.length}} events. They are:</p>
 	    <ul ng-repeat="event in events">
-	    	<li>{{event.summary}}  {{event.id}}</li>
+	    	<li>{{event.summary}}  {{event.id}} {{event.startDate}} {{event.startDateTime}}</li>
 	    </ul>
 
 
@@ -197,7 +197,7 @@ Event Id: {{params.eventId}}<br />
 							<th>Teacher</th>
 							<th>Number of spaces</th>
 							<th>Duration</th>
-							<th></th>
+							<th>{{day.shortDate}}</th>
 						</tr>
 					</thead>
 					<tbody>

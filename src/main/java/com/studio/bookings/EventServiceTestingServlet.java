@@ -42,8 +42,8 @@ public class EventServiceTestingServlet extends HttpServlet {
 		String duration = new String ("1 hour");
 		String maxAttendees = new String ("10");
 		String repeatEvent = new String("true");
-		String eventRepeatType = new String("MONTHLY");
-		String finalRepeatEvent = new String ("2016 MAR 05 12 30");
+		String eventRepeatType = new String("DAILY");
+		String finalRepeatEvent = new String ("2014 MAR 05 12 30");
 		
 		
 		// CREATE OWNER
@@ -72,23 +72,30 @@ public class EventServiceTestingServlet extends HttpServlet {
 		Long calId1 = cal1.getId();
 		
 		// CREATE DATES
-		String start = new String("2014 MAR 05 12 30");
+		String start = new String("2014 FEB 05 12 30");
 		DateFormat formatter = new SimpleDateFormat("yyyy MMM dd HH mm");
+		
+		String startMillis = new String("2014 FEB 05");
+		DateFormat formatterMillis = new SimpleDateFormat("yyyy MMM dd");
 
 		Date eventStartDateTime = new Date();
+		Date eventStartDateTimeMillis = new Date();
+		
 		try {
 			eventStartDateTime = new DateTime(formatter.parse(start)).toDate();
+			eventStartDateTimeMillis =  new DateTime(formatterMillis.parse(startMillis)).toDate();
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		long startTime = eventStartDateTime.getTime();
+		long startTime = eventStartDateTimeMillis.getTime();
 		
 		
 		// CREATE EVENT CATEGORY
 		EventCategory category = null;
 		try {
 			category = ets.addEventCategory("Pilates Matwork", calId1);
+			category = ets.addEventCategory("Piates Reformer", calId1);
 		} catch (Exception e2) {
 			// TODO Auto-generated catch block
 			rw.println(e2);
@@ -106,7 +113,7 @@ public class EventServiceTestingServlet extends HttpServlet {
 			
 		// ADD EVENTS
 		try {
-			List<EventItem> result = ets.addEvents(ownerFetchedId, organizer, summary, calId1, start, 
+			List<EventItem> result = ets.addEvent(organizer, summary, calId1, start, 
 					startTime, duration, maxAttendees, category.getId(), 
 					attribute.getId(), repeatEvent, eventRepeatType, finalRepeatEvent);
 			for (EventItem r : result) {
@@ -120,7 +127,7 @@ public class EventServiceTestingServlet extends HttpServlet {
 		
 		
 		// List Calendars by ID
-		List<Calendar> calList = ets.listCalendars(ownerFetchedId);
+		List<Calendar> calList = ets.listCalendars();
 		
 		for(Calendar calListItem : calList) {
 			rw.println(calListItem);

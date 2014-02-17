@@ -95,7 +95,7 @@ public class Event {
 			
 			while (startDateTime.isBefore(finalRepeatDate.plus(periodBefore)) || startDateTime.isEqual(finalRepeatDate.plus(periodBefore))) {
 				startDateTime = startDateTime.plus(periodIncrement);
-				EventItem ei = new EventItem(startDateTime.toDate(), startDate, parentEvent, eventItemDetails);
+				EventItem ei = new EventItem(startDateTime.toDate(), startDateTime.toDate().getTime(), parentEvent, eventItemDetails);
 				els.add(ei);
 			}
 			
