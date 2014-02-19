@@ -79,7 +79,7 @@ Event Id: {{params.eventId}}<br />
 		    	<div class="col-sm-6">
 				    <div class="form-group">
 						<label for="select-input">Event Categories</label>
-						<select id="select-input" class="form-control">
+						<select ng-model="eventCategory" id="select-input" class="form-control">
 							<option ng-repeat="eventCategory in eventCategories">{{eventCategory.name}}</option>
 						</select>
 					</div>
@@ -88,7 +88,7 @@ Event Id: {{params.eventId}}<br />
 				<div class="col-sm-6">
 				    <div class="form-group">
 						<label for="select-input">Event Attributes</label>
-						<select id="select-input" class="form-control">
+						<select ng-model="eventAttribute" id="select-input" class="form-control">
 							<option ng-repeat="eventAttribute in eventAttributes">{{eventAttribute.name}}</option>
 						</select>
 					</div>

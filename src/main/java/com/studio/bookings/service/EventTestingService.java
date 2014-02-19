@@ -117,11 +117,11 @@ public class EventTestingService {
 
 	@ApiMethod(name = "calendar.addEventCategory", path="calendar.addEventCategory", httpMethod = "post")
 	public EventCategory addEventCategory( 
-			@Named("description") String description,  
+			@Named("name") String name,  
 			@Named("calendar") Long calendarId)  throws Exception {
 		
 			Calendar cal = calendarDao.getCalendarById(calendarId);
-			EventCategory ec = new EventCategory(description, cal);
+			EventCategory ec = new EventCategory(name, cal);
 			Key<EventCategory> ecKey = eventCategoryDao.save(ec);
 			EventCategory eventCategory = eventCategoryDao.getEventCategory(ecKey);
 			return eventCategory;
@@ -129,11 +129,11 @@ public class EventTestingService {
 	
 	@ApiMethod(name = "calendar.addEventAttribute", path="calendar.addEventAttribute", httpMethod = "post")
 	public EventAttribute addEventAttribute( 
-			@Named("description") String description,  
+			@Named("name") String name,  
 			@Named("calendar") Long calendarId)  throws Exception {
 		
 			Calendar cal = calendarDao.getCalendarById(calendarId);
-			EventAttribute ea = new EventAttribute(description, cal);
+			EventAttribute ea = new EventAttribute(name, cal);
 			Key<EventAttribute> eaKey = eventAttributeDao.save(ea);
 			EventAttribute eventAttribute = eventAttributeDao.getEventAttribute(eaKey);
 			return eventAttribute;
@@ -148,8 +148,8 @@ public class EventTestingService {
 			@Named("startDate") Long startDate,
 			@Named("duration") String duration,
 			@Named("maxAttendees") String maxAttendees,
-			@Named("categoryId") Long categoryId,
-			@Named("attributeId") Long attributeId,
+			@Named("eventCategory") String eventCategory,
+			@Named("eventAttribute") String eventAttribute,
 			@Named("repeatEvent") String repeatEvent,
 			@Named("eventRepeatType") String eventRepeatType,
 			@Named("finalRepeatEvent") String finalRepeatEvent
@@ -171,16 +171,10 @@ public class EventTestingService {
 		
 		// Get Owner
 		Owner owner = ofy().load().type(Owner.class).first().now();
-		try {
+		
 			Long oId = new Long(owner.getId());
 			owner = getOwnerById(oId);
-		} catch (NumberFormatException e) {
-			errorMessage.add("Owner recognised");
-
-		} catch (NotFoundException e) {
-			errorMessage.add("Owner not found");
-
-		}
+		
 		
 		//Format Dates
 		DateFormat formatter = new SimpleDateFormat("yyyy MMM dd HH mm");
@@ -227,22 +221,21 @@ public class EventTestingService {
 		
 				EventItemDetails eventItemDetails = new EventItemDetails(eventOrganizer, eventSummary, eventDuration, eventMaxAttendees);
 
-				if (categoryId != 0) {
+				if (!eventCategory.equals("")) {
 					try {
-						Long eventCategoryId = new Long(categoryId);
-						EventCategory eventCategory =  eventCategoryDao.find(eventCategoryId, calendar);
-						eventItemDetails.setEventCategory(eventCategory);
+						
+						EventCategory eventCategoryFetched =  eventCategoryDao.findByName(eventCategory, calendar);
+						eventItemDetails.setEventCategory(eventCategoryFetched);
 					} catch (NumberFormatException e) {
 						errorMessage.add("Event Category not recognised");
 					} catch (NotFoundException e) {
 						errorMessage.add("Event Category not found");
 					}
 				}
-				if (attributeId != 0) {
+				if (!eventAttribute.equals("")) {
 					try {
-						Long eventAttributeId = new Long(attributeId);
-						EventAttribute eventAttribute =  eventAttributeDao.find(eventAttributeId, calendar);
-						eventItemDetails.setEventAttribute(eventAttribute);
+						EventAttribute eventAttributeFetched =  eventAttributeDao.findByName(eventAttribute, calendar);
+						eventItemDetails.setEventAttribute(eventAttributeFetched);
 					} catch (NumberFormatException e) {
 						errorMessage.add("Event Attribute not recognised");
 					} catch (NotFoundException e) {

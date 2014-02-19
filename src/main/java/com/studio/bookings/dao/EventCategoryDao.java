@@ -20,6 +20,10 @@ public class EventCategoryDao {
 		return ofy().load().type(EventCategory.class).parent(cal).id(eventCategoryId).safe();
 	}
 	
+	public EventCategory findByName(String eventCategoryName, Calendar cal) throws NotFoundException {
+		return (EventCategory) ofy().load().ancestor(cal).filterKey("name", eventCategoryName).first().safe();
+	}
+	
 	public EventCategory getEventCategory(Key<EventCategory> eventCategoryKey) throws NotFoundException {
 		return ofy().load().key(eventCategoryKey).safe();
 	}

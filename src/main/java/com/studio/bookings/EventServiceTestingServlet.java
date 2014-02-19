@@ -49,7 +49,6 @@ public class EventServiceTestingServlet extends HttpServlet {
 		// CREATE OWNER
 		Owner owner = ets.createOwner("Big C's Calendar");
 		Owner ownerFetched = ets.getOwnerById(owner.getId());
-		rw.println("ownerFetched: " + ownerFetched);
 		
 		Long ownerFetchedId = ownerFetched.getId();
 
@@ -68,6 +67,8 @@ public class EventServiceTestingServlet extends HttpServlet {
 			// TODO Auto-generated catch block
 			rw.println(e3);
 		}
+		
+		rw.println("ownerFetched: " + ownerFetched);
 		
 		Long calId1 = cal1.getId();
 		
@@ -114,8 +115,8 @@ public class EventServiceTestingServlet extends HttpServlet {
 		// ADD EVENTS
 		try {
 			List<EventItem> result = ets.addEvent(organizer, summary, calId1, start, 
-					startTime, duration, maxAttendees, category.getId(), 
-					attribute.getId(), repeatEvent, eventRepeatType, finalRepeatEvent);
+					startTime, duration, maxAttendees, category.getName(), 
+					attribute.getName(), repeatEvent, eventRepeatType, finalRepeatEvent);
 			for (EventItem r : result) {
 				rw.println(r);
 			}

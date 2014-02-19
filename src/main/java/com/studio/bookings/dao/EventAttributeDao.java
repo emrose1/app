@@ -9,6 +9,7 @@ import com.googlecode.objectify.NotFoundException;
 import com.googlecode.objectify.ObjectifyService;
 import com.studio.bookings.entity.Calendar;
 import com.studio.bookings.entity.EventAttribute;
+import com.studio.bookings.entity.EventCategory;
 import com.studio.bookings.entity.Owner;
 
 public class EventAttributeDao {
@@ -20,6 +21,10 @@ public class EventAttributeDao {
 
 	public EventAttribute find(Long eventAttributeId, Calendar calendar) throws NotFoundException {
 		return ofy().load().type(EventAttribute.class).parent(calendar).id(eventAttributeId).safe();
+	}
+	
+	public EventAttribute findByName(String eventAttributeName, Calendar cal) throws NotFoundException {
+		return (EventAttribute) ofy().load().ancestor(cal).filterKey("name", eventAttributeName).first().safe();
 	}
 	
 	public EventAttribute getEventAttribute(Key<EventAttribute> eventAttributeKey) throws NotFoundException {

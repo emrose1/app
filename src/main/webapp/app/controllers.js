@@ -88,20 +88,20 @@ controllers.controller('EventController', ['$scope', '$route', '$routeParams', '
 				'organizer' : $scope.organizer,
 			    'summary': $scope.summary,
 			    'calendarId': $scope.eventsCalendar.id,
-			    'startDateTime' : $scope.startTime.toUTCString(),
+			    'startDateTime' : $scope.startTime.toString(),
 			    'startDate' : new Date($scope.startTime.getFullYear(), $scope.startTime.getMonth(), $scope.startTime.getDate()).getTime(),
 			    'duration' : $scope.duration.getHours() + ':' + $scope.duration.getMinutes(),
 			    'maxAttendees': $scope.maxAttendees,
-			    'categoryId' : "",
-			    'attributeId' : "",
+			    'eventCategory' : $scope.eventCategory,
+			    'eventAttribute' : $scope.eventAttribute,
 			    'repeatEvent' : $scope.repeatEvent,
 				'eventRepeatType' : $scope.eventRepeatType,
-				'finalRepeatEvent' : ""
+				'finalRepeatEvent' : new String()
 			};
 			console.log(message);
 			gapi.client.booking.calendar.addEvent(message).execute(function(resp) {
 				console.log(resp);
-				init();
+				//init();
 			});
 		};
 
