@@ -7,6 +7,7 @@ import java.util.List;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.NotFoundException;
 import com.googlecode.objectify.ObjectifyService;
+import com.googlecode.objectify.cmd.Query;
 import com.studio.bookings.entity.Calendar;
 import com.studio.bookings.entity.EventCategory;
 
@@ -21,7 +22,8 @@ public class EventCategoryDao {
 	}
 	
 	public EventCategory findByName(String eventCategoryName, Calendar cal) throws NotFoundException {
-		return (EventCategory) ofy().load().ancestor(cal).filterKey("name", eventCategoryName).first().safe();
+		EventCategory ec =  ofy().load().type(EventCategory.class).ancestor(cal.getKey()).filter("name", eventCategoryName).first().now();
+		return ec;
 	}
 	
 	public EventCategory getEventCategory(Key<EventCategory> eventCategoryKey) throws NotFoundException {

@@ -41,7 +41,7 @@
   </servlet>
   <servlet>
     <servlet-name>index</servlet-name>
-    <jsp-file>/index.jsp</jsp-file>
+    <jsp-file>app/index.html</jsp-file>
   </servlet>
   <servlet>
     <servlet-name>events</servlet-name>

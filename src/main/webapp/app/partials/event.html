@@ -12,7 +12,7 @@ Event Id: {{params.eventId}}<br />
 	<div class="row">
 		<div class="col-sm-12">
 			<h4>Studio Timetable</h4>
-			<select id="calendar" class="form-control"ng-model="eventsCalendar" ng-options="c.description for c in calendars">
+			<select ng-change="loadCalendar()" id="calendar" class="form-control" ng-model="eventsCalendar" ng-options="c.description for c in calendars">
 				<option>Loading</option>
 			</select>
 		</div>
@@ -48,8 +48,11 @@ Event Id: {{params.eventId}}<br />
 		        	<label for="startDate">Start Date </label>
 
 		        	<div class="input-group date ui-datepicker">
-			            <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="startTime" is-open="opened" min="minDate" max="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
-			            <span class="input-group-addon" ng-click="open($event)"><i class="fa fa-calendar"></i></span>
+			            <input  type="text" class="form-control" name="startTime" id="startTime" datepicker-popup="dd-MM-yyyy"  
+				            	ng-model="startTime"  datepicker-options="dateOptions" />
+		 				<span class="input-group-addon" ng-click="datePickerOpen('startTime')">
+		 					<i class="fa fa-calendar"></i>
+		 				</span>
 			        </div>
 			   	</div>
 
@@ -71,7 +74,7 @@ Event Id: {{params.eventId}}<br />
 					</div>
 				</div>
 
-				{{repeatEvent}}
+				{{finalRepeatEvent}}
 
 		    </div> <!-- /.row -->
 
@@ -96,7 +99,7 @@ Event Id: {{params.eventId}}<br />
 			</div>
 
 		    <div class="row">
-		    	<div class="col-sm-6">
+		    	<div class="col-sm-4">
 		        	<label for="repeatEvent">Repeat Event </label>
 
 		        	<div class="checkbox">
@@ -107,14 +110,26 @@ Event Id: {{params.eventId}}<br />
 					</div>
 			   	</div>
 
-			   	<div class="col-sm-6">
+			   	<div class="col-sm-4">
 				    <div class="form-group">
 						<label for="select-input">Repeat Event Type</label>
-						<select id="select-input" class="form-control">
-						<option ng-repeat="ert in eventRepeatType">{{ert}}</option>
+						<select id="select-input" ng-model="eventRepeatType" class="form-control">
+						<option ng-repeat="ert in eventRepeatTypes">{{ert}}</option>
 						</select>
 					</div>
 				</div>
+
+				 <div class="col-sm-4">
+					<label for="finalDate">Final Repeat Date </label>
+						<div class="input-group date ui-datepicker">
+				            <input  type="text" class="form-control" name="finalRepeatEvent" id="finalRepeatEvent" 
+				            	datepicker-popup="dd-MM-yyyy" ng-model="finalRepeatEvent"  datepicker-options="dateOptions"/>
+				            <span class="input-group-addon" ng-click="datePickerOpen('finalRepeatEvent')">
+				            	<i class="fa fa-calendar"></i>
+				            </span>
+
+				        </div>
+				 </div>
 		    </div>
 
 		    <div class="row">
@@ -133,9 +148,9 @@ Event Id: {{params.eventId}}<br />
 			<button type="submit" class="btn btn-small">Submit</button>
 	    </form>
 	    <p>I have {{events.length}} events. They are:</p>
-	    <ul ng-repeat="event in events">
+	    <!-- <ul ng-repeat="event in events">
 	    	<li>{{event.summary}}  {{event.id}} {{event.startDate}} {{event.startDateTime}}</li>
-	    </ul>
+	    </ul> -->
 
 
 			<h2>List Calendar</h2>

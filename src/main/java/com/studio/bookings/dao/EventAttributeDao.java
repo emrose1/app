@@ -24,7 +24,7 @@ public class EventAttributeDao {
 	}
 	
 	public EventAttribute findByName(String eventAttributeName, Calendar cal) throws NotFoundException {
-		return (EventAttribute) ofy().load().ancestor(cal).filterKey("name", eventAttributeName).first().safe();
+		return ofy().load().type(EventAttribute.class).ancestor(cal.getKey()).filter("name = ", eventAttributeName).first().now();
 	}
 	
 	public EventAttribute getEventAttribute(Key<EventAttribute> eventAttributeKey) throws NotFoundException {

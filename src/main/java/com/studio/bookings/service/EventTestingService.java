@@ -177,7 +177,7 @@ public class EventTestingService {
 		
 		
 		//Format Dates
-		DateFormat formatter = new SimpleDateFormat("yyyy MMM dd HH mm");
+		DateFormat formatter = new SimpleDateFormat("HH:mm dd MM yyyy");
 		Date eventStart = new Date();
 		
 		String eventStartDateTime = new String(startDateTime);

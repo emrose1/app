@@ -1,5 +1,8 @@
 package com.studio.bookings.entity;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -95,7 +98,10 @@ public class Event {
 			
 			while (startDateTime.isBefore(finalRepeatDate.plus(periodBefore)) || startDateTime.isEqual(finalRepeatDate.plus(periodBefore))) {
 				startDateTime = startDateTime.plus(periodIncrement);
-				EventItem ei = new EventItem(startDateTime.toDate(), startDateTime.toDate().getTime(), parentEvent, eventItemDetails);
+				
+				Date startTime = startDateTime.withTimeAtStartOfDay().toDate();
+
+				EventItem ei = new EventItem(startDateTime.toDate(), startTime.getTime(), parentEvent, eventItemDetails);
 				els.add(ei);
 			}
 			

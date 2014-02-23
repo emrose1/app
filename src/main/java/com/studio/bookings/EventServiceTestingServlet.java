@@ -43,7 +43,7 @@ public class EventServiceTestingServlet extends HttpServlet {
 		String maxAttendees = new String ("10");
 		String repeatEvent = new String("true");
 		String eventRepeatType = new String("DAILY");
-		String finalRepeatEvent = new String ("2014 MAR 05 12 30");
+		String finalRepeatEvent = new String ("12:20 05 03 2014");
 		
 		
 		// CREATE OWNER
@@ -73,8 +73,8 @@ public class EventServiceTestingServlet extends HttpServlet {
 		Long calId1 = cal1.getId();
 		
 		// CREATE DATES
-		String start = new String("2014 FEB 05 12 30");
-		DateFormat formatter = new SimpleDateFormat("yyyy MMM dd HH mm");
+		String start = new String("12:30 05 02 2014");
+		DateFormat formatter = new SimpleDateFormat("HH:mm dd MM yyyy");
 		
 		String startMillis = new String("2014 FEB 05");
 		DateFormat formatterMillis = new SimpleDateFormat("yyyy MMM dd");
@@ -91,12 +91,15 @@ public class EventServiceTestingServlet extends HttpServlet {
 		}
 		long startTime = eventStartDateTimeMillis.getTime();
 		
+		String pMatwork = "Event Category 1";
+		String pReformer = "Event Category 2";
+		String beginners = "Event Attribute";
 		
 		// CREATE EVENT CATEGORY
 		EventCategory category = null;
 		try {
-			category = ets.addEventCategory("Pilates Matwork", calId1);
-			category = ets.addEventCategory("Piates Reformer", calId1);
+			category = ets.addEventCategory(pMatwork, calId1);
+			category = ets.addEventCategory(pReformer, calId1);
 		} catch (Exception e2) {
 			// TODO Auto-generated catch block
 			rw.println(e2);
@@ -106,7 +109,7 @@ public class EventServiceTestingServlet extends HttpServlet {
 		// CREATE EVENT ATTRIBUTE
 		EventAttribute attribute = null;
 		try {
-			attribute = ets.addEventAttribute("Beginners", calId1);
+			attribute = ets.addEventAttribute(beginners, calId1);
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			rw.println(e1);
@@ -115,8 +118,8 @@ public class EventServiceTestingServlet extends HttpServlet {
 		// ADD EVENTS
 		try {
 			List<EventItem> result = ets.addEvent(organizer, summary, calId1, start, 
-					startTime, duration, maxAttendees, category.getName(), 
-					attribute.getName(), repeatEvent, eventRepeatType, finalRepeatEvent);
+					startTime, duration, maxAttendees, pMatwork, 
+					beginners, repeatEvent, eventRepeatType, finalRepeatEvent);
 			for (EventItem r : result) {
 				rw.println(r);
 			}
