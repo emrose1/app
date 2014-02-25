@@ -33,7 +33,7 @@ public class EventItemDetails {
     @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
     private Ref<EventAttribute> eventAttributeRef;
 	
-    public EventAttribute getEventAttributeRef() { 
+    public EventAttribute getEventAttribute() { 
     	return eventAttributeRef.get(); 
     }
     
@@ -63,7 +63,7 @@ public class EventItemDetails {
 	};
 	
 	public String toString() {
-		return ("organizer: " + organizer + ", summary: " + summary);	
+		return ("organizer: " + organizer + ", summary: " + summary + ", category; " + getEventCategory() + ", attribute: " + getEventAttribute());	
 	}
 
 }

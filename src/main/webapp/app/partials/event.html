@@ -218,7 +218,7 @@ Event Id: {{params.eventId}}<br />
 						</tr>
 					</thead>
 					<tbody>
-						<tr ng-repeat="event in events | filter : day.shortDate" >
+						<tr ng-repeat="event in events | filter : day.shortDate | orderBy:event.eventItemDetails.summary:reverse" >
 							<td>{{event.startDateTime| date: 'h:mma'}}</td>
 							<td>{{event.eventItemDetails.summary}}</td>
 							<td>{{event.eventItemDetails.organizer}}</td>
