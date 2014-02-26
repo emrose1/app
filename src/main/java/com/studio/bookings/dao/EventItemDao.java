@@ -34,7 +34,7 @@ public class EventItemDao {
 	}
 
 	public List<EventItem> findEventItemsByCalendar(Calendar calendar) {
-		return ofy().load().type(EventItem.class).ancestor(calendar.getKey()).list();
+		return ofy().load().type(EventItem.class).order("startDateTime").ancestor(calendar.getKey()).list();
 	}
 	
 	public List<EventItem> findEventItemsByCalendar(Calendar calendar, Date beginDate, Date endDate) {
