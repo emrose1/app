@@ -15,6 +15,11 @@ app.config(['$routeProvider',
                 //controller: 'UsersController',
                 templateUrl: 'partials/users.html'
             })
+        .when('/addevent',
+            {
+                //controller: 'UsersController',
+                templateUrl: 'partials/add_event.html'
+            })
         //Define a route that has a route parameter in it (:customerID)
         .when('/users/:userId',
             {

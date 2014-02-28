@@ -80,7 +80,7 @@ controllers.controller('EventController', ['$scope', '$route', '$routeParams', '
 				var curr = new Date();
 				// get Monday (first working day) of current week then add number of days 1-7
 				var dayOfWeek = curr.getDate() - curr.getDay() + i + ($scope.selectedWeekNumber * 7);
-				
+
 				// get its Date
 				var dateOfWeek = new Date(curr.setDate(dayOfWeek));
 				//onsole.log(dateOfWeek);
@@ -106,25 +106,28 @@ controllers.controller('EventController', ['$scope', '$route', '$routeParams', '
 		}
 
 		$scope.addEvent = function() {
-			var message = {
-				'organizer' : $scope.organizer,
-			    'summary': $scope.summary,
-			    'calendarId': $scope.eventsCalendar.id,
-			    'startDateTime' : formatDate($scope.startTime),
-			    'startDate' : new Date($scope.startTime.getFullYear(), $scope.startTime.getMonth(), $scope.startTime.getDate()).getTime(),
-			    'duration' : $scope.duration.getHours() + ':' + $scope.duration.getMinutes(),
-			    'maxAttendees': $scope.maxAttendees,
-			    'eventCategory' : $scope.eventCategory,
-			    'eventAttribute' : $scope.eventAttribute,
-			    'eventRepeatType' : $scope.eventRepeatType,
-				'repeatEvent' : $scope.repeatEvent,
-				'finalRepeatEvent' : formatDate($scope.finalRepeatEvent)
-			};
-			console.log(message);
-			gapi.client.booking.calendar.addEvent(message).execute(function(resp) {
-				console.log(resp);
-				$scope.loadCalendar();
-			});
+
+			if ($scope.eventForm.$valid) {
+				var message = {
+					'organizer' : $scope.organizer,
+					'summary': $scope.summary,
+					'calendarId': $scope.eventsCalendar.id,
+					'startDateTime' : formatDate($scope.startTime),
+					'startDate' : new Date($scope.startTime.getFullYear(), $scope.startTime.getMonth(), $scope.startTime.getDate()).getTime(),
+					'duration' : $scope.duration.getHours() + ':' + $scope.duration.getMinutes(),
+					'maxAttendees': $scope.maxAttendees,
+					'eventCategory' : $scope.eventCategory,
+					'eventAttribute' : $scope.eventAttribute,
+					'eventRepeatType' : $scope.eventRepeatType,
+					'repeatEvent' : $scope.repeatEvent,
+					'finalRepeatEvent' : formatDate($scope.finalRepeatEvent)
+				};
+				console.log(message);
+				gapi.client.booking.calendar.addEvent(message).execute(function(resp) {
+					console.log(resp);
+					$scope.loadCalendar();
+				});
+			}
 		};
 
 		$scope.addCalendar = function() {
