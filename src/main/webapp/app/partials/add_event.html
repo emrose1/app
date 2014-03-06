@@ -8,6 +8,7 @@
     <div class="portlet-content">
         <form role="form" id="addEvent" name="eventForm" ng-submit="addEvent()" novalidate>
 
+
             <div class="row">
                 <div class="col-sm-3">
                     <h4>Start Date </h4>
@@ -42,18 +43,20 @@
             <div class="row">
                 <div class="col-sm-3">
                     <h4>Teacher</h4>
-                    <input type="text" data-ng-model="organizer" class="form-control" id="organizer" />
+                    <input type="text" name="organizer" data-ng-model="organizer" class="form-control" id="organizer" />
                 </div>
 
                 <div class="col-sm-3">
                     <h4>Lesson</h4>
-                    <input type="text" data-ng-model="summary" class="form-control" id="summary" />
+                    <input type="text" name="summary" data-ng-model="summary" class="form-control" id="summary" />
                 </div>
 
-                <div class="col-sm-3" ng-class="{ 'has-error' : emailForm.maxAttendees.$invalid }">
+                <div class="col-sm-3 form-group" ng-class="{ 'has-error' : eventForm.maxAttendees.$invalid && !eventForm.maxAttendees.$pristine }">
                     <h4>Max Attendees</h4>
                     <input type="text" name="maxAttendees" data-ng-model="maxAttendees" class="form-control" id="maxAttendees" required />
-                    <p class="error" ng-show="emailForm.input.$error.number">Not valid number!</p>
+                    <p ng-show="eventForm.maxAttendees.$invalid && !eventForm.maxAttendees.$pristine" class="help-block">
+                        Not valid number!
+                    </p>
                 </div>
             </div>
 
@@ -63,7 +66,7 @@
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label for="select-input">Event Categories</label>
-                        <select ng-model="eventCategory" id="select-input" class="form-control">
+                        <select ng-model="eventCategory" id="select-input" class="form-control" name="eventCategory">
                             <option ng-repeat="eventCategory in eventCategories">{{eventCategory.name}}</option>
                         </select>
                     </div>
@@ -72,7 +75,7 @@
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label for="select-input">Event Attributes</label>
-                        <select ng-model="eventAttribute" id="select-input" class="form-control">
+                        <select ng-model="eventAttribute" id="select-input" class="form-control" name="eventAttribute">
                             <option ng-repeat="eventAttribute in eventAttributes">{{eventAttribute.name}}</option>
                         </select>
                     </div>
@@ -85,7 +88,7 @@
 
                     <div class="checkbox">
                         <label>
-                            <input value="false" type="checkbox" name="repeatEvent" ng-model="repeatEvent" class="" checked>
+                            <input value="false" name="repeatEvent" type="checkbox" name="repeatEvent" ng-model="repeatEvent" class="" checked>
                             Repeat Event
                         </label>
                     </div>
@@ -120,5 +123,74 @@
             </div> <!-- /.row -->
 
         </form>
+    </div>
+
+
+
+    <div class="row">
+        <div class="col-xs-3">
+            <h3>Form</h3>
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <td ng-class="{ success: eventForm.$valid, danger: eventForm.$invalid }">Valid</td>
+                    </tr>
+                    <tr>
+                        <td ng-class="{ success: eventForm.$pristine, danger: !eventForm.$pristine }">Pristine</td>
+                    </tr>
+                    <tr>
+                        <td ng-class="{ success: eventForm.$dirty }">Dirty</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-xs-3">
+            <h3>Summary</h3>
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <td ng-class="{ success: eventForm.summary.$valid, danger: eventForm.summary.$invalid }">Valid</td>
+                    </tr>
+                    <tr>
+                        <td ng-class="{ success: eventForm.summary.$pristine, danger: !eventForm.summary.$pristine }">Pristine</td>
+                    </tr>
+                    <tr>
+                        <td ng-class="{ success: eventForm.summary.$dirty }">Dirty</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-xs-3">
+            <h3>Organizer</h3>
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <td ng-class="{ success: eventForm.organizer.$valid, danger: eventForm.organizer.$invalid }">Valid</td>
+                    </tr>
+                    <tr>
+                        <td ng-class="{ success: eventForm.organizer.$pristine, danger: !eventForm.organizer.$pristine }">Pristine</td>
+                    </tr>
+                    <tr>
+                        <td ng-class="{ success: eventForm.organizer.$dirty }">Dirty</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-xs-3">
+            <h3>Max Attendees</h3>
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <td ng-class="{ success: eventForm.maxAttendees.$valid, danger: eventForm.maxAttendees.$invalid }">Valid</td>
+                    </tr>
+                    <tr>
+                        <td ng-class="{ success: eventForm.maxAttendees.$pristine, danger: !eventForm.maxAttendees.$pristine }">Pristine</td>
+                    </tr>
+                    <tr>
+                        <td ng-class="{ success: eventForm.maxAttendees.$dirty }">Dirty</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>

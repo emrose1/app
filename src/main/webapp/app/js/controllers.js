@@ -106,8 +106,10 @@ controllers.controller('EventController', ['$scope', '$route', '$routeParams', '
 		}
 
 		$scope.addEvent = function() {
+			console.log('add event');
 
 			if ($scope.eventForm.$valid) {
+				console.log('its valid');
 				var message = {
 					'organizer' : $scope.organizer,
 					'summary': $scope.summary,
@@ -127,6 +129,8 @@ controllers.controller('EventController', ['$scope', '$route', '$routeParams', '
 					console.log(resp);
 					$scope.loadCalendar();
 				});
+			} else {
+				console.log($scope.eventForm);
 			}
 		};
 
