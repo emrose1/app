@@ -1,5 +1,4 @@
 package com.studio.bookings.entity;
-import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Getter;
@@ -15,55 +14,56 @@ import com.googlecode.objectify.annotation.Index;
 
 
 @Entity
-public class Owner {
+public class Account {
 
 	@Index
 	@Getter @Setter
 	@Id Long id;
 	
-	private List<Ref<Calendar>> calendars;
+    
+    private List<Ref<Instructor>> instructors;
 	
-	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-    public List<Ref<Calendar>> getCalendars() {
-    	return calendars;
+    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
+    public List<Ref<Instructor>> getInstructors() {
+    	return instructors;
     }
 	
     @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-    public void addCalendar(Ref<Calendar> calendar) {
-    	this.calendars.add(calendar);
+    public void addInstructors(Ref<Instructor> instructor) {
+    	this.instructors.add(instructor);
     }
     
     @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-    public void removeCalendar(Ref<Calendar> calendar) {
-    	this.calendars.remove(calendar);
+    public void removeInstructors(Ref<Instructor> instructor) {
+    	this.instructors.remove(instructor);
     }
-	
+    
+    
 	@Getter @Setter
 	private String name;
 	
-	public Owner(){};
+	public Account(){};
 	
-	public Owner(String name) {
+	public Account(String name) {
 		this.name = name;
-		calendars = new ArrayList();
 	}
 	
 	public String toString() {
 		StringBuilder tmp = new StringBuilder();
 		tmp.append(" {id:").append(id);
-		if (calendars.size() > 0){
-			for (Ref<Calendar> cal : calendars){
-				tmp.append("cal: " + cal.get());
-			}
-		}
 		return tmp.toString();
 	}
 
 	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-	public Key<Owner> getKey() {
+	public Key<Account> getKey() {
     	if(id == null){
     		return null;
     	}
         return Key.create(this.getClass(), id);
     }
+
+	public void addInstructor(Ref<Instructor> create) {
+		// TODO Auto-generated method stub
+		
+	}
 }

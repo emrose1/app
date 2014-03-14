@@ -175,12 +175,13 @@ Event Id: {{params.eventId}}<br />
 	<div class="row">
 		<div class="col-md-8">
 
-			<div ng-repeat="day in calendarDates" ng-show="$first">
+			<!-- <div ng-repeat="day in calendarDates" ng-show="$first">
 
 			    <h4 class="heading">
 					Week starting {{day.fullDate | date: 'EEEE, d MMMM,y'}}
 				</h4>
-			</div>
+			</div> -->
+			<h4 class="heading">Studion Schedule</h4>
 		</div>
 
 		<div class="col-md-4">
@@ -194,14 +195,10 @@ Event Id: {{params.eventId}}<br />
 		</div>
 	</div>
 
-		<div class="row" ng-repeat="day in calendarDates | orderBy:day">
+		<div class="row">
 			<div class="col-md-12">
 
-				<h4 class="heading">
-					{{day.fullDate | date: 'EEEE'}}
-				</h4>
-
-				<table class="table table-bordered">
+			<table class="table table-bordered">
 					<thead>
 						<tr>
 							<th>Start time</th>
@@ -214,7 +211,11 @@ Event Id: {{params.eventId}}<br />
 							<th></th>
 						</tr>
 					</thead>
-					<tbody>
+
+					<tbody ng-repeat="day in calendarDates | orderBy:day">
+						<tr>
+							<td colspan="8"><h4 class="heading">{{day.fullDate | date: 'EEEE, d MMMM,y'}}</h4></td>
+						</tr>
 						<tr ng-repeat="event in events | filter : day.shortDate | orderBy:event.eventItemDetails.summary:reverse" >
 							<td>{{event.startDateTime| date: 'h:mma'}}</td>
 							<td>{{event.eventItemDetails.summary}}</td>

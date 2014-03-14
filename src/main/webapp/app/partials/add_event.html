@@ -1,17 +1,28 @@
 <div id="content-header">
-    <h1>Add Event</h1>
+    <h1>Add Studio Session</h1>
 </div> <!-- #content-header -->
 
 
 <div id="content-container">
 
     <div class="portlet-content">
+
+
+    <div class="row">
+        <div class="col-sm-12">
+            <h4>Calendar</h4>
+            <select ng-change="loadCalendar()" id="calendar" class="form-control" ng-model="eventsCalendar" ng-options="c.description for c in calendars">
+                <option>Loading</option>
+            </select>
+        </div>
+    </div>
+
         <form role="form" id="addEvent" name="eventForm" ng-submit="addEvent()" novalidate>
 
 
             <div class="row">
-                <div class="col-sm-3">
-                    <h4>Start Date </h4>
+                <div class="col-sm-5">
+                    <h4>Date </h4>
                     <div class="input-group date ui-datepicker">
                         <input  type="text" class="form-control" name="startTime" id="startTime" datepicker-popup="dd-MM-yyyy"
                                 ng-model="startTime"  datepicker-options="dateOptions" />
@@ -20,35 +31,9 @@
                         </span>
                     </div>
                 </div>
-
-                <div class="col-sm-3">
-                    <h4>Start Time </h4>
-                    <div class="col-sm-2 input-group bootstrap-timepicker">
-                        <div ng-model="startTime">
-                            <timepicker hour-step="hstep" minute-step="mstep" show-meridian="false"></timepicker>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-sm-3">
-                    <h4>Duration </h4>
-                    <div class="col-sm-2 input-group bootstrap-timepicker">
-                        <div ng-model="duration">
-                            <timepicker hour-step="hstep" minute-step="mstep" show-meridian="false"></timepicker>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-sm-3">
-                    <h4>Teacher</h4>
+                 <div class="col-sm-4">
+                    <h4>Instructor</h4>
                     <input type="text" name="organizer" data-ng-model="organizer" class="form-control" id="organizer" />
-                </div>
-
-                <div class="col-sm-3">
-                    <h4>Lesson</h4>
-                    <input type="text" name="summary" data-ng-model="summary" class="form-control" id="summary" />
                 </div>
 
                 <div class="col-sm-3 form-group" ng-class="{ 'has-error' : eventForm.maxAttendees.$invalid && !eventForm.maxAttendees.$pristine }">
@@ -58,15 +43,43 @@
                         Not valid number!
                     </p>
                 </div>
+
+
             </div>
+
+            <div class="row">
+
+                <div class="col-sm-2">
+                    <h4>Start Time </h4>
+                    <div class="col-sm-2 input-group bootstrap-timepicker">
+                        <div ng-model="startTime">
+                            <timepicker hour-step="hstep" minute-step="mstep" show-meridian="false"></timepicker>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-2">
+                    <h4>Duration </h4>
+                    <div class="col-sm-2 input-group bootstrap-timepicker">
+                        <div ng-model="duration">
+                            <timepicker hour-step="hstep" minute-step="mstep" show-meridian="false"></timepicker>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-8">
+                    <h4>Description</h4>
+                    <textarea name="textarea-input" name="summary" data-ng-model="summary" id="summary" cols="10" rows="4" class="form-control">
+                    </textarea>
+                </div>
 
             </div> <!-- /.row -->
 
             <div class="row">
                 <div class="col-sm-6">
                     <div class="form-group">
-                        <label for="select-input">Event Categories</label>
                         <select ng-model="eventCategory" id="select-input" class="form-control" name="eventCategory">
+                            <option value="" disabled selected>Session Type</option>
                             <option ng-repeat="eventCategory in eventCategories">{{eventCategory.name}}</option>
                         </select>
                     </div>
@@ -74,47 +87,50 @@
 
                 <div class="col-sm-6">
                     <div class="form-group">
-                        <label for="select-input">Event Attributes</label>
                         <select ng-model="eventAttribute" id="select-input" class="form-control" name="eventAttribute">
+                            <option value="" disabled selected>Session Category</option>
                             <option ng-repeat="eventAttribute in eventAttributes">{{eventAttribute.name}}</option>
                         </select>
                     </div>
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-sm-4">
-                    <label for="repeatEvent">Repeat Event </label>
-
+            <div class="row form-horizontal">
+                <div class="col-sm-2">
                     <div class="checkbox">
-                        <label>
-                            <input value="false" name="repeatEvent" type="checkbox" name="repeatEvent" ng-model="repeatEvent" class="" checked>
-                            Repeat Event
-                        </label>
+                        <h4>
+                            <input value="false" name="repeatEvent" type="checkbox" name="repeatEvent" 
+                                ng-model="repeatEvent" ng-click="toggleRepeat()" checked>
+                                Repeat Class
+                        </h4>
                     </div>
                 </div>
 
-                <div class="col-sm-4">
+                <div class="col-sm-4" ng-show="repeatEvent">
                     <div class="form-group">
-                        <label for="select-input">Repeat Event Type</label>
                         <select id="select-input" ng-model="eventRepeatType" class="form-control">
-                        <option ng-repeat="ert in eventRepeatTypes">{{ert}}</option>
+                            <option value="" disabled selected>Repeat Frequency</option>
+                            <option ng-repeat="ert in eventRepeatTypes">{{ert}}</option>
                         </select>
                     </div>
                 </div>
 
-                 <div class="col-sm-4">
-                    <label for="finalDate">Final Repeat Date </label>
-                        <div class="input-group date ui-datepicker">
-                            <input  type="text" class="form-control" name="finalRepeatEvent" id="finalRepeatEvent"
-                                datepicker-popup="dd-MM-yyyy" ng-model="finalRepeatEvent"  datepicker-options="dateOptions"/>
-                            <span class="input-group-addon" ng-click="datePickerOpen('finalRepeatEvent')">
-                                <i class="fa fa-calendar"></i>
-                            </span>
+                 <div class="col-sm-6" ng-show="repeatEvent">
+                    <div class="form-group">
+                        <h4 class="col-md-6" for="finalDate" style="text-align:right; line-height:35px">Final Repeat Date</h4>
 
+                        <div class="col-md-6">
+                            <div class="input-group date ui-datepicker">
+                                <input  type="text" class="form-control" name="finalRepeatEvent" id="finalRepeatEvent"
+                                    datepicker-popup="dd-MM-yyyy" ng-model="finalRepeatEvent"  datepicker-options="dateOptions"/>
+                                <span class="input-group-addon" ng-click="datePickerOpen('finalRepeatEvent')">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </div>
                         </div>
-                 </div>
-            </div>
+                    </div>
+                </div>
+            </div> <!-- /.row -->
 
             <div class="row">
                 <div class="col-sm-12">

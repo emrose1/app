@@ -2,15 +2,13 @@ package com.studio.bookings.dao;
 
 import static com.studio.bookings.util.OfyService.ofy;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.NotFoundException;
 import com.googlecode.objectify.ObjectifyService;
-import com.googlecode.objectify.Ref;
+import com.studio.bookings.entity.Account;
 import com.studio.bookings.entity.Calendar;
-import com.studio.bookings.entity.Owner;
 
 public class CalendarDao {
 
@@ -18,8 +16,8 @@ public class CalendarDao {
 		ObjectifyService.register(Calendar.class);
 	}
 
-	public Calendar getCalendarById(Long calendarId) throws NotFoundException {
-		return ofy().load().type(Calendar.class).id(calendarId).safe();
+	public Calendar getCalendarById(Long calendarId, Account account) throws NotFoundException {
+		return ofy().load().type(Calendar.class).parent(account).id(calendarId).safe();
 	}
 
 	public Key<Calendar> save(Calendar calendar) {
@@ -35,14 +33,7 @@ public class CalendarDao {
 		return calendars;
 	}
 	
-	public List<Calendar> getCalendarsByOwner(Owner owner) {
-		List<Ref<Calendar>> calendarRefs = owner.getCalendars();
-		List<Calendar> results = new ArrayList<Calendar>();
-		for (Ref<Calendar> cal : calendarRefs) {
-			Calendar calFetched = cal.get();
-			results.add(calFetched);
-		}
-		return results;
+	public List<Calendar> getCalendarsByAccount(Account account) {
+		return ofy().load().type(Calendar.class).ancestor(account.getKey()).list();
 	}
-
 }

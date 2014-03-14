@@ -40,9 +40,18 @@ public class EventItemDetails {
     public void setEventAttribute(EventAttribute value) { 
     	eventAttributeRef = Ref.create(value); 
     }
+
+	@Load
+    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
+    private Ref<Instructor> instructorRef;
 	
-	@Getter @Setter
-	private String organizer;
+    public Instructor getInstructor() { 
+    	return instructorRef.get(); 
+    }
+    
+    public void setInstructor(Instructor value) { 
+    	instructorRef = Ref.create(value); 
+    }
 	
 	@Getter @Setter (AccessLevel.PUBLIC)
 	protected String summary;
@@ -55,15 +64,14 @@ public class EventItemDetails {
 	
 	public EventItemDetails(){};
 	
-	public EventItemDetails(String organizer, String summary, String duration, Integer maxAttendees) {
-		this.organizer = organizer;
+	public EventItemDetails(String summary, String duration, Integer maxAttendees) {
 		this.summary = summary;
 		this.duration = duration;
 		this.maxAttendees = maxAttendees;
 	};
 	
 	public String toString() {
-		return ("organizer: " + organizer + ", summary: " + summary + ", category; " + getEventCategory() + ", attribute: " + getEventAttribute());	
+		return ("summary: " + summary + ", category; " + getEventCategory() + ", attribute: " + getEventAttribute());
 	}
 
 }

@@ -1,32 +1,14 @@
 package com.studio.bookings.util;
 
-import org.joda.time.DateTime;
-import org.joda.time.Duration;
-import org.joda.time.Period;
-
-import com.googlecode.objectify.Key;
 import com.studio.bookings.dao.AccessControlListDao;
 import com.studio.bookings.dao.BookingDao;
 import com.studio.bookings.dao.CalendarDao;
 import com.studio.bookings.dao.EventAttributeDao;
 import com.studio.bookings.dao.EventCategoryDao;
 import com.studio.bookings.dao.EventDao;
-import com.studio.bookings.dao.OwnerDao;
 import com.studio.bookings.dao.SettingsDao;
 import com.studio.bookings.dao.UserDao;
 import com.studio.bookings.dao.UserTypeDao;
-import com.studio.bookings.entity.AccessControlList;
-import com.studio.bookings.entity.Booking;
-import com.studio.bookings.entity.Calendar;
-import com.studio.bookings.entity.Event;
-import com.studio.bookings.entity.EventAttribute;
-import com.studio.bookings.entity.EventCategory;
-import com.studio.bookings.entity.EventRepeatType;
-import com.studio.bookings.entity.Owner;
-import com.studio.bookings.entity.Settings;
-import com.studio.bookings.entity.User;
-import com.studio.bookings.entity.UserType;
-import com.studio.bookings.enums.Permission;
 
 public class LoadDummyData {
 	
@@ -39,7 +21,6 @@ public class LoadDummyData {
 	public static AccessControlListDao accessControlListDao = new AccessControlListDao();
 	public static BookingDao bookingDao = new BookingDao();
 	public static SettingsDao settingsDao = new SettingsDao();
-	public static OwnerDao ownerDao = new OwnerDao();
 	
 	public void initSetup() {
 	

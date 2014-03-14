@@ -22,7 +22,7 @@ public class User implements Serializable {
     
     @Index
     @Getter @Setter
-    private Owner owner;
+    private Account account;
     
     @Index
     @Getter @Setter

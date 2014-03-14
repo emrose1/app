@@ -16,12 +16,12 @@ import javax.servlet.http.HttpServletResponse;
 import org.joda.time.DateTime;
 
 import com.studio.bookings.entity.Calendar;
-import com.studio.bookings.entity.Event;
 import com.studio.bookings.entity.EventAttribute;
 import com.studio.bookings.entity.EventCategory;
 import com.studio.bookings.entity.EventItem;
 import com.studio.bookings.entity.EventRepeatType;
-import com.studio.bookings.entity.Owner;
+import com.studio.bookings.entity.Instructor;
+import com.studio.bookings.entity.Account;
 import com.studio.bookings.service.EventTestingService;
 
 /**
@@ -37,32 +37,43 @@ public class EventServiceTestingServlet extends HttpServlet {
 		
 		EventTestingService ets = new EventTestingService();
 		
-		String organizer = new String("organizer1");
+		
+		// CREATE OWNER Account
+		Account owner = ets.insertAccount("Big C's Calendar");
+		Account ownerFetched = ets.getAccountById(owner.getId());
+		
+		Long ownerFetchedId = ownerFetched.getId();
+		
+		Instructor inst2 = new Instructor();
+		try {
+			inst2 = ets.addInstructor("teach", "email@email.com", "description", owner.getId());
+		} catch (Exception e3) {
+			// TODO Auto-generated catch block
+			e3.printStackTrace();
+		}
+		
+		Long instructor = new Long(inst2.getId());
 		String summary = new String("summary1");
 		String duration = new String ("1 hour");
 		String maxAttendees = new String ("10");
 		String repeatEvent = new String("true");
 		String eventRepeatType = new String("DAILY");
 		String finalRepeatEvent = new String ("12:20 05 03 2014");
-		
-		
-		// CREATE OWNER
-		Owner owner = ets.createOwner("Big C's Calendar");
-		Owner ownerFetched = ets.getOwnerById(owner.getId());
-		
-		Long ownerFetchedId = ownerFetched.getId();
 
-		
 		// CREATE CALENDARS
 		Calendar cal1 = null;
 		try {
-			cal1 = ets.addCalendar("calendar1", ownerFetchedId);
+			cal1 = ets.insertCalendar("calendar1", ownerFetchedId);
+			rw.println(cal1.getId());
+			rw.println(cal1);
 		} catch (Exception e4) {
 			// TODO Auto-generated catch block
 			rw.println(e4);
 		}
 		try {
-			Calendar cal2 = ets.addCalendar("calendar2", ownerFetchedId);
+			Calendar cal2 = ets.insertCalendar("calendar2", ownerFetchedId);
+			rw.println(cal2.getId());
+			rw.println(cal2);
 		} catch (Exception e3) {
 			// TODO Auto-generated catch block
 			rw.println(e3);
@@ -98,8 +109,8 @@ public class EventServiceTestingServlet extends HttpServlet {
 		// CREATE EVENT CATEGORY
 		EventCategory category = null;
 		try {
-			category = ets.addEventCategory(pMatwork, calId1);
-			category = ets.addEventCategory(pReformer, calId1);
+			category = ets.addEventCategory(pMatwork, calId1, ownerFetchedId);
+			category = ets.addEventCategory(pReformer, calId1, ownerFetchedId);
 		} catch (Exception e2) {
 			// TODO Auto-generated catch block
 			rw.println(e2);
@@ -109,7 +120,7 @@ public class EventServiceTestingServlet extends HttpServlet {
 		// CREATE EVENT ATTRIBUTE
 		EventAttribute attribute = null;
 		try {
-			attribute = ets.addEventAttribute(beginners, calId1);
+			attribute = ets.addEventAttribute(beginners, calId1, ownerFetchedId);
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			rw.println(e1);
@@ -117,7 +128,7 @@ public class EventServiceTestingServlet extends HttpServlet {
 			
 		// ADD EVENTS
 		try {
-			List<EventItem> result = ets.addEvent(organizer, summary, calId1, start, 
+			List<EventItem> result = ets.addEvent(ownerFetchedId, instructor, summary, calId1, start, 
 					startTime, duration, maxAttendees, pMatwork, 
 					beginners, repeatEvent, eventRepeatType, finalRepeatEvent);
 			for (EventItem r : result) {
@@ -131,38 +142,44 @@ public class EventServiceTestingServlet extends HttpServlet {
 		
 		
 		// List Calendars by ID
-		List<Calendar> calList = ets.listCalendars();
 		
-		for(Calendar calListItem : calList) {
-			rw.println(calListItem);
+		try {
+			rw.println("Calendars by  " + ownerFetchedId);
+			List<Calendar> calList = ets.listCalendars(ownerFetchedId);
 			
-			List<EventItem> eventList = ets.listEvents(calListItem.getId());
-			
-			rw.println("Event Items");
-			for(EventItem eventItem : eventList) {
-				rw.println(eventItem.getEventItemDetails());
+			for(Calendar calListItem : calList) {
+				rw.println(calListItem);
+				
+				List<EventItem> eventList = ets.listEvents(ownerFetchedId, calListItem.getId());
+				
+				rw.println("Event Items");
+				for(EventItem eventItem : eventList) {
+					rw.println(eventItem.getEventItemDetails());
+				}
+				
+				rw.println("Event Repeat Types");
+				List<EventRepeatType> ert = ets.listEventRepeatTypes();
+				for(EventRepeatType ertItem : ert) {
+					rw.println(ertItem);
+				}
+				
+				rw.println("Event Attributes");
+				List<EventAttribute> ea = ets.listEventAttributes(ownerFetchedId, calListItem.getId());
+				for(EventAttribute eaItem : ea) {
+					rw.println(eaItem);
+				}
+				
+				rw.println("Event Categories");
+				List<EventCategory> ec = ets.listEventCategories(ownerFetchedId, calListItem.getId());
+				for(EventCategory ecItem : ec) {
+					rw.println(ecItem);
+				}
+				
 			}
-			
-			rw.println("Event Repeat Types");
-			List<EventRepeatType> ert = ets.listEventRepeatTypes();
-			for(EventRepeatType ertItem : ert) {
-				rw.println(ertItem);
-			}
-			
-			rw.println("Event Attributes");
-			List<EventAttribute> ea = ets.listEventAttributes(calListItem.getId());
-			for(EventAttribute eaItem : ea) {
-				rw.println(eaItem);
-			}
-			
-			rw.println("Event Categories");
-			List<EventCategory> ec = ets.listEventCategories(calListItem.getId());
-			for(EventCategory ecItem : ec) {
-				rw.println(ecItem);
-			}
-			
+		} catch (Exception e) {
+			rw.println(e);
 		}
-		
+			
 		
 	}
 }

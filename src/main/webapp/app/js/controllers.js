@@ -23,6 +23,7 @@ controllers.controller('MainController', ['$scope', '$route', '$routeParams', '$
 				if(--apisToLoad === 0) {
 					console.log('api loaded');
 					$scope.$broadcast('EventLoaded');
+					$scope.is_backend_ready = true;
 				}
 			}
 			gapi.client.load('booking', 'v1', callback, 'http://localhost:8080/_ah/api');
@@ -30,12 +31,35 @@ controllers.controller('MainController', ['$scope', '$route', '$routeParams', '$
 	}
 ]);
 
+controllers.controller('AccountController', ['$scope',
+	function($scope) {
+		$scope.listAccounts = function() {
+			gapi.client.booking.calendar.listAccounts().execute(function(resp) {
+				console.log('listed accounts');
+				console.log(resp);
+
+			});
+		};
+
+		var init = function() {
+	    	$scope.$on('EventLoaded', function() {
+	    		console.log('list accounts');
+				$scope.listAccounts();
+			});
+	    };
+
+	    init();
+	}
+]);
+
+
 controllers.controller('EventController', ['$scope', '$route', '$routeParams', '$location', '$filter', '$timeout', '$rootScope',
 	function($scope, $route, $routeParams, $location, $filter, $timeout, $rootScope) {
 		$scope.$route = $route;
 		$scope.$location = $location;
 		$scope.$routeParams = $routeParams;
 
+		$scope.eventRepeatType = false;
 
 		// startDate settings
 
@@ -83,9 +107,6 @@ controllers.controller('EventController', ['$scope', '$route', '$routeParams', '
 
 				// get its Date
 				var dateOfWeek = new Date(curr.setDate(dayOfWeek));
-				//onsole.log(dateOfWeek);
-
-				console.log(new Date(dateOfWeek.getFullYear(), dateOfWeek.getMonth(), dateOfWeek.getDate()));
 
 				var shortDate = new Date(dateOfWeek.getFullYear(), dateOfWeek.getMonth(), dateOfWeek.getDate()).getTime();
 				$scope.calendarDates[i] = {'fullDate' : dateOfWeek, 'shortDate' : shortDate};
@@ -144,12 +165,31 @@ controllers.controller('EventController', ['$scope', '$route', '$routeParams', '
 			});
 		};
 
+
+		$scope.listAccounts = function() {
+			gapi.client.booking.calendar.listAccounts().execute(function(resp) {
+				console.log('listed accounts');
+				console.log(resp);
+
+				$scope.account = resp.items[0];
+
+				console.log($scope.account);
+				$scope.listCalendars();
+
+			});
+		};
+
 		$scope.listCalendars = function() {
-			gapi.client.booking.calendar.listCalendars().execute(function(resp) {
+			console.log('list calendars called');
+			var message = {
+				'ownerId' : $scope.account.id
+			};
+
+			gapi.client.booking.calendar.listCalendars(message).execute(function(resp) {
+				console.log(message);
 				console.log('list calendars');
 				console.log(resp);
 
-				$scope.listOwners();
 			    $scope.calendars = resp.items;
 			    $scope.eventsCalendar = $scope.calendars[1];
 
@@ -166,14 +206,6 @@ controllers.controller('EventController', ['$scope', '$route', '$routeParams', '
 		    $scope.listEventAttributes();
 		    $scope.listEventCategories();
 		    $scope.listEventRepeatTypes();
-		};
-
-		$scope.listOwners = function() {
-			gapi.client.booking.calendar.listOwners().execute(function(resp) {
-				console.log(resp);
-			    /*$scope.events = resp.items;
-			    $scope.$apply();*/
-			});
 		};
 
 		$scope.listEvents = function() {
@@ -241,8 +273,7 @@ controllers.controller('EventController', ['$scope', '$route', '$routeParams', '
 
 	    var init = function() {
 	    	$scope.$on('EventLoaded', function() {
-	    		console.log('list calendars');
-				$scope.listCalendars();
+				$scope.listAccounts();
 			});
 	    };
 

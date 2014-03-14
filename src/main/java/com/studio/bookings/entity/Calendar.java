@@ -16,33 +16,51 @@ import com.googlecode.objectify.annotation.Parent;
 
 @Entity
 public class Calendar {
-	
+
 	@Index
-	@Getter @Setter
-	@Id Long id;
-    
-	@Getter @Setter
+	@Getter
+	@Setter
+	@Id
+	Long id;
+
+	@Parent
+	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
+	private Key<Account> accountKey;
+
+	public Key<Account> getAccountKey() {
+		return this.accountKey;
+	}
+
+	public void setAccountKey(Key<Account> value) {
+		this.accountKey = value;
+	}
+
+	@Getter
+	@Setter
 	private String description;
-	
-	@Index Date dateCreated = new Date();
-	@Index Date dateUpdated = new Date();
-	
-	public Calendar(){}
-	
-	public Calendar(String description) {
+
+	@Index
+	Date dateCreated = new Date();
+	@Index
+	Date dateUpdated = new Date();
+
+	public Calendar() {
+	}
+
+	public Calendar(String description, Account account) {
 		this.description = description;
+		this.accountKey = account.getKey();
 	};
-	
-	
+
 	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	public Key<Calendar> getKey() {
-    	if(id == null){
-    		return null;
-    	}
-        return Key.create(this.getClass(), id);
-    }
-	
+		if (id == null) {
+			return null;
+		}
+		return Key.create(this.getClass(), id);
+	}
+
 	public String toString() {
-		return this.description + ": " + this.id ;
+		return this.description + ": " + this.id;
 	}
 }

@@ -1,13 +1,9 @@
 package com.studio.bookings.entity;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,11 +13,9 @@ import org.joda.time.Period;
 import com.google.api.server.spi.config.AnnotationBoolean;
 import com.google.api.server.spi.config.ApiResourceProperty;
 import com.googlecode.objectify.Key;
-import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
-import com.googlecode.objectify.annotation.Load;
 import com.googlecode.objectify.annotation.Parent;
 
 @Entity
@@ -31,7 +25,6 @@ public class Event {
 	@Getter @Setter
 	@Id Long id;
 	
-    
     @Parent
     @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
     private Key<Calendar> calendarKey;
@@ -73,6 +66,7 @@ public class Event {
 		DateTime startDateTime = new DateTime(eventStartDateTime);
 		
 		List<EventItem> els = new ArrayList<EventItem>();
+		els.add(new EventItem(startDateTime.toDate(), startDate, parentEvent, eventItemDetails));
 		
 		if (repeatBoolean) {
 			
@@ -104,10 +98,8 @@ public class Event {
 				EventItem ei = new EventItem(startDateTime.toDate(), startTime.getTime(), parentEvent, eventItemDetails);
 				els.add(ei);
 			}
-			
-		} else {
-			els.add(new EventItem(startDateTime.toDate(), startDate, parentEvent, eventItemDetails));
 		}
+		
 		return els;
 	}	
 	

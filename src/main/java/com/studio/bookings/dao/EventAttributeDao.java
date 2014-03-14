@@ -9,15 +9,12 @@ import com.googlecode.objectify.NotFoundException;
 import com.googlecode.objectify.ObjectifyService;
 import com.studio.bookings.entity.Calendar;
 import com.studio.bookings.entity.EventAttribute;
-import com.studio.bookings.entity.EventCategory;
-import com.studio.bookings.entity.Owner;
 
 public class EventAttributeDao {
 	
 	static{
 		ObjectifyService.register(EventAttribute.class);
 	}
-
 
 	public EventAttribute find(Long eventAttributeId, Calendar calendar) throws NotFoundException {
 		return ofy().load().type(EventAttribute.class).parent(calendar).id(eventAttributeId).safe();

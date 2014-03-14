@@ -1,29 +1,5 @@
 package com.studio.bookings.service;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import javax.inject.Named;
-
-import org.joda.time.DateTime;
-
-import com.google.api.server.spi.config.Api;
-import com.google.api.server.spi.config.ApiMethod;
-import com.studio.bookings.dao.CalendarDao;
-import com.studio.bookings.dao.EventAttributeDao;
-import com.studio.bookings.dao.EventCategoryDao;
-import com.studio.bookings.dao.EventDao;
-import com.studio.bookings.entity.Calendar;
-import com.studio.bookings.entity.Event;
-import com.studio.bookings.entity.EventAttribute;
-import com.studio.bookings.entity.EventCategory;
-import com.studio.bookings.entity.EventRepeatType;
-import com.studio.bookings.entity.Owner;
-import com.studio.bookings.util.Constants;
 
 /**
  * Defines v1 of a booking API, which provides simple "greeting" methods.

@@ -29,7 +29,7 @@ app.config(['$routeProvider',
         //Define a route that has a route parameter in it (:customerID)
         .when('/calendars',
             {
-                //controller: 'CalendarController',
+                controller: 'AccountController',
                 templateUrl: 'partials/calendar.html'
             })
         .when('/event/:eventId',
