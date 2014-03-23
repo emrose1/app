@@ -9,15 +9,14 @@ import com.google.api.server.spi.config.ApiResourceProperty;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Embed;
 import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.annotation.Load;
 
 @Embed
 public class EventItemDetails {
 	
-	@Getter @Setter
-	@Id Long id;
-	
 	@Load
+	@Index
     @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
     private Ref<EventCategory> eventCategoryRef;
 	
@@ -30,6 +29,7 @@ public class EventItemDetails {
     }
 	
     @Load
+    @Index
     @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
     private Ref<EventAttribute> eventAttributeRef;
 	
@@ -71,7 +71,7 @@ public class EventItemDetails {
 	};
 	
 	public String toString() {
-		return ("summary: " + summary + ", category; " + getEventCategory() + ", attribute: " + getEventAttribute());
+		return ("summary: " + summary + ", category; " + getEventCategory() + ", attribute: " + getEventAttribute() + "");
 	}
 
 }

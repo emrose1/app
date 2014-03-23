@@ -1,3 +1,4 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html ng-app="bookingsApp">
 <head>
@@ -5,13 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
 	<!-- Optional theme -->
-	<link rel="stylesheet" href="css/font-awesome.min.css" type="text/css" />
-	<link rel="stylesheet" href="css/app.css" type="text/css" />
-	<link rel="stylesheet" href="css/custom.css" type="text/css" />
+	<link rel="stylesheet" href="app/css/font-awesome.min.css" type="text/css" />
+	<link rel="stylesheet" href="app/css/app.css" type="text/css" />
+	<link rel="stylesheet" href="app/css/custom.css" type="text/css" />
 
 </head>
 <body>
+<script type="text/javascript">
+var jsAtt = '${username}';
+var jsAtt2 = '${password}';
 
+</script>
 
 <div id="wrapper">
 
@@ -196,12 +201,12 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
 	<script src="http://code.angularjs.org/1.2.4/angular.js"></script>
 	<script src="http://code.angularjs.org/1.2.4/angular-route.js"></script>
-    <script src="js/ui-bootstrap-custom-0.9.0.min.js"></script>
-    <script src="js/ui-bootstrap-custom-tpls-0.9.0.min.js"></script>
+    <script src="app/js/ui-bootstrap-custom-0.9.0.min.js"></script>
+    <script src="app/js/ui-bootstrap-custom-tpls-0.9.0.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
-    <script src="js/app.js"></script>
-    <script src="js/init.js"></script>
-    <script src="js/controllers.js"></script>
+    <script src="app/js/app.js"></script>
+    <script src="app/js/init.js"></script>
+    <script src="app/js/controllers.js"></script>
 
     <script src="https://apis.google.com/js/client.js?onload=init"></script>
 </body>

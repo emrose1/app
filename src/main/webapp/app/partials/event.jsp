@@ -1,3 +1,4 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 event
 
 controller: {{name}}<br />
@@ -186,11 +187,11 @@ Event Id: {{params.eventId}}<br />
 
 		<div class="col-md-4">
 			<span ng-click="timetableNavigation(-1)" class="fc-button fc-button-prev fc-state-default fc-corner-left" unselectable="on" >
-				<span class="fc-text-arrow">‹</span>
+				<span class="fc-text-arrow">���</span>
 			</span>
 
 			<span ng-click="timetableNavigation(1)" class="fc-button fc-button-next fc-state-default fc-corner-right" unselectable="on">
-				<span class="fc-text-arrow">›</span>
+				<span class="fc-text-arrow">���</span>
 			</span>
 		</div>
 	</div>

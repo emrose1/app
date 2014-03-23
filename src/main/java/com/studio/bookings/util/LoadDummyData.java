@@ -6,9 +6,12 @@ import com.studio.bookings.dao.CalendarDao;
 import com.studio.bookings.dao.EventAttributeDao;
 import com.studio.bookings.dao.EventCategoryDao;
 import com.studio.bookings.dao.EventDao;
-import com.studio.bookings.dao.SettingsDao;
 import com.studio.bookings.dao.UserDao;
 import com.studio.bookings.dao.UserTypeDao;
+import com.studio.bookings.entity.AccessControlList;
+import com.studio.bookings.entity.User;
+import com.studio.bookings.entity.UserType;
+import com.studio.bookings.enums.Permission;
 
 public class LoadDummyData {
 	
@@ -20,7 +23,6 @@ public class LoadDummyData {
 	public static UserTypeDao userTypeDao = new UserTypeDao();
 	public static AccessControlListDao accessControlListDao = new AccessControlListDao();
 	public static BookingDao bookingDao = new BookingDao();
-	public static SettingsDao settingsDao = new SettingsDao();
 	
 	public void initSetup() {
 	
@@ -81,7 +83,7 @@ public class LoadDummyData {
 		eventDao.save(event5);
 	
 		Event event6 = new Event(calendar1,btrue, repeatDaily);
-		eventDao.save(event6);
+		eventDao.save(event6);*/
 		
 		UserType admin = new UserType("admin");
 		UserType owner1 = new UserType("owner");
@@ -131,6 +133,7 @@ public class LoadDummyData {
 		userDao.save(user3);
 		userDao.save(user4);
 		
+		/*
 		Booking booking1 = new Booking(user1, event1);
 		Booking booking2 = new Booking(user2, event1);
 		Booking booking3 = new Booking(user3, event1);

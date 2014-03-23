@@ -21,14 +21,16 @@ public class EventCategory {
 	
 	@Parent
     @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-    private Key<Calendar> calendarKey;
+    private Key<Account> accountKey;
 	
-    public Key<Calendar> getCalendarKey() { 
-    	return this.calendarKey; 
+	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
+    public Key<Account> getAccountKey() { 
+    	return this.accountKey; 
     }
     
-    public void setCalendarKey(Key<Calendar> value) { 
-    	this.calendarKey = value; 
+	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
+    public void setAccountKey(Key<Account> value) { 
+    	this.accountKey = value; 
     }
 	
     @Index
@@ -37,8 +39,8 @@ public class EventCategory {
 	
 	public EventCategory(){}
 	
-	public EventCategory(String name, Calendar calendar) {
-		this.calendarKey = calendar.getKey();
+	public EventCategory(String name, Account account) {
+		this.accountKey = account.getKey();
 		this.name = name;
 	}
 	

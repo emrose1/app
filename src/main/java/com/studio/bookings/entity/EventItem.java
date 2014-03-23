@@ -28,14 +28,17 @@ public class EventItem {
     @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
     private Key<Event> eventKey;
 	
+    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
     public Key<Event> getEventKey() { 
     	return this.eventKey; 
     }
     
+    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
     public void setEventKey(Key<Event> value) { 
     	this.eventKey = value; 
     }
     
+    @Index
     @Getter @Setter
     EventItemDetails eventItemDetails;
 

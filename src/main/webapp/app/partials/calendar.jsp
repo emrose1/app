@@ -1,3 +1,4 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 calendar
 
 controller: {{name}}<br />
@@ -7,3 +8,4 @@ controller: {{name}}<br />
 <a href="#/calendars">Calendars</a> |
 <a href="#/event/Scarlet">Scarlet Event</a><br/>
 <a href="#/addevent">Add Event</a>
+

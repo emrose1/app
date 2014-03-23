@@ -8,8 +8,9 @@ import java.util.Map;
 
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
-import com.googlecode.objectify.Result;
+import com.googlecode.objectify.Ref;
 import com.studio.bookings.entity.Calendar;
+import com.studio.bookings.entity.EventCategory;
 import com.studio.bookings.entity.EventItem;
 
 public class EventItemDao {
@@ -41,5 +42,11 @@ public class EventItemDao {
 		return ofy().load().type(EventItem.class).ancestor(calendar)
 			.filter("startDateTime >=", beginDate)
 			.filter("startDateTime <", endDate).list();
+	}
+	
+	public List<EventItem> findEventItemsByAttributes(Calendar calendar, Ref<EventCategory> eventCatRef) {
+		
+		return ofy().load().type(EventItem.class).ancestor(calendar)
+				.filter("eventItemDetails.eventCategoryRef", eventCatRef).list();
 	}
 }

@@ -8,10 +8,10 @@ import lombok.Setter;
 import com.google.api.server.spi.config.AnnotationBoolean;
 import com.google.api.server.spi.config.ApiResourceProperty;
 import com.googlecode.objectify.Key;
+import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
-import com.googlecode.objectify.annotation.Load;
 import com.googlecode.objectify.annotation.Parent;
 
 @Entity
@@ -24,16 +24,18 @@ public class Calendar {
 	Long id;
 
 	@Parent
+    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
+    private Ref<Account> accountRef;
+	
 	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-	private Key<Account> accountKey;
-
-	public Key<Account> getAccountKey() {
-		return this.accountKey;
-	}
-
-	public void setAccountKey(Key<Account> value) {
-		this.accountKey = value;
-	}
+    public Account getAccount() { 
+    	return accountRef.get(); 
+    }
+    
+	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
+    public void setAccount(Account account) { 
+    	accountRef = Ref.create(account); 
+    }
 
 	@Getter
 	@Setter
@@ -44,12 +46,11 @@ public class Calendar {
 	@Index
 	Date dateUpdated = new Date();
 
-	public Calendar() {
-	}
+	public Calendar() {}
 
 	public Calendar(String description, Account account) {
 		this.description = description;
-		this.accountKey = account.getKey();
+		this.setAccount(account);
 	};
 
 	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)

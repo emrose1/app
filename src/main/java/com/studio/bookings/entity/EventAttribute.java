@@ -22,10 +22,12 @@ public class EventAttribute {
     @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
     private Key<Calendar> calendarKey;
 	
-    public Key<Calendar> getCalendarKey() { 
+	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
+    public Key<Calendar> getCalendar() { 
     	return this.calendarKey; 
     }
     
+	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
     public void setCalendarKey(Key<Calendar> value) { 
     	this.calendarKey = value; 
     }

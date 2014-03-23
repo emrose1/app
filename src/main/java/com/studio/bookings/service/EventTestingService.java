@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Named;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.joda.time.DateTime;
 
@@ -17,15 +19,13 @@ import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.NotFoundException;
-import com.googlecode.objectify.Ref;
-import com.studio.bookings.dao.AccountDao;
-import com.studio.bookings.dao.CalendarDao;
+import com.studio.bookings.dao.BaseDao;
+import com.studio.bookings.dao.ChildBaseDao;
 import com.studio.bookings.dao.EventAttributeDao;
 import com.studio.bookings.dao.EventCategoryDao;
 import com.studio.bookings.dao.EventDao;
 import com.studio.bookings.dao.EventItemDao;
 import com.studio.bookings.dao.InstructorDao;
-import com.studio.bookings.dao.SettingsDao;
 import com.studio.bookings.entity.Account;
 import com.studio.bookings.entity.Calendar;
 import com.studio.bookings.entity.Event;
@@ -35,7 +35,8 @@ import com.studio.bookings.entity.EventItem;
 import com.studio.bookings.entity.EventItemDetails;
 import com.studio.bookings.entity.EventRepeatType;
 import com.studio.bookings.entity.Instructor;
-import com.studio.bookings.entity.Settings;
+import com.studio.bookings.entity.User;
+import com.studio.bookings.entity.UserSession;
 import com.studio.bookings.util.Constants;
 
 /**
@@ -54,41 +55,45 @@ public class EventTestingService {
 	public static ArrayList<Event> events = new ArrayList<Event>();
 	public static EventDao eventDao = new EventDao();
 	public static EventItemDao eventItemDao = new EventItemDao();
-	public static CalendarDao calendarDao = new CalendarDao();
 	public static EventAttributeDao eventAttributeDao = new EventAttributeDao();
 	public static EventCategoryDao eventCategoryDao = new EventCategoryDao();
 	public static InstructorDao instructorDao = new InstructorDao();
-	public static AccountDao accountDao = new AccountDao();
-	public static SettingsDao settingsDao = new SettingsDao();
+	
+	BaseDao<Account> accountDao = new BaseDao<Account>(Account.class);
+	ChildBaseDao<Calendar, Account> calendarDao = new ChildBaseDao<Calendar, Account>(Calendar.class, Account.class);
+	
 
 	@ApiMethod(name = "calendar.addAccount", path="calendar.addAccount", httpMethod = "post")
 	public Account insertAccount(@Named("account") String accountName) {
 		Account account = new Account(accountName);
-		Key<Account> accountKey = accountDao.save(account);
-		Settings setting = new Settings(accountKey);
-		settingsDao.save(setting);
+		accountDao.save(account);
 		return account;
 	}
 	
-	@ApiMethod(name = "calendar.getAccountById", path="bookings.getAccountById", httpMethod = "get")
-	public Account getAccountById(@Named("accountId") Long accountId) {
-		return accountDao.getAccountById(accountId);
+	@ApiMethod(name = "calendar.findAccount", path="calendar.getAccountById", httpMethod = "get")
+	public Account findAccount(@Named("account") Long accountId) {
+		return accountDao.retrieve(accountId);
 	}
 	
 	@ApiMethod(name = "calendar.listAccounts", path="calendar.listAccounts", httpMethod = "get")
 	public List<Account> listAccounts() {
-		return accountDao.findAll();
+		return accountDao.list();
 	}
 	
 	@ApiMethod(name = "calendar.addCalendar", path="calendar.addCalendar", httpMethod = "post")
 	public Calendar insertCalendar( 
 			@Named("description") String description,  
-			@Named("account") Long AccountId)  throws Exception {
-		Long oId = new Long(AccountId);
-		Account account =  accountDao.getAccountById(oId);
+			@Named("account") Long accountId) {
+		Long oId = new Long(accountId);
+		Account account =  accountDao.retrieve(oId);
 		Calendar cal = new Calendar(description, account);
-		Key<Calendar> calKey = calendarDao.save(cal);
 	    return cal; 
+	}
+	
+	@ApiMethod(name = "calendar.findCalendar", path="calendar.Calendar", httpMethod = "post")
+	public Calendar findCalendar(@Named("calendar") Long calendarId, @Named("account") Long accountId) {
+		Account account = findAccount(accountId);
+		return calendarDao.retrieveAncestor(calendarId, account);
 	}
 	
 	@ApiMethod(name = "calendar.listCalendars", path="calendar.listCalendars", httpMethod = "get")
@@ -96,26 +101,24 @@ public class EventTestingService {
 			@Named("Account") Long AccountId
 			) {
 		Long oId = new Long(AccountId);
-		Account Account = getAccountById(oId);
-		return calendarDao.getCalendarsByAccount(Account);
+		Account account = accountDao.retrieve(oId);
+		return calendarDao.listAncestors(account.getKey());
 	}
 	
 	@ApiMethod(name = "calendar.addInstructor", path="calendar.addInstructor", httpMethod = "post")
 	public Instructor addInstructor( 
 			@Named("name") String name,  
-			@Named("email") String email,
+			@Named("lastname") String lastname,
 			@Named("description") String description,
-			@Named("Account") Long AccountId)  throws Exception {
+			@Named("Calendar") Long calendarId,
+			@Named("Account") Long accountId)  throws Exception {
 		
-		Instructor instructor = new Instructor(name, email, description);
-		Key<Instructor> instructorKey = instructorDao.save(instructor);
+		Account account = accountDao.retrieve(accountId);
 		
-		Instructor fetchedInstructor = instructorDao.getInstructor(instructorKey);
 		
-		Account Account = getAccountById(AccountId);
-		Account.addInstructor(Ref.create(instructorKey));
-		
-	    return fetchedInstructor;
+		Instructor instructor = new Instructor(name, lastname, description);
+		instructorDao.save(instructor);
+	    return instructor;
 	}
 	
 	@ApiMethod(name = "calendar.listInstructors", path="calendar.listInstructors", httpMethod = "get")
@@ -129,9 +132,8 @@ public class EventTestingService {
 			@Named("calendar") Long calendarId,
 			@Named("account") Long account)  throws Exception {
 			
-			Account accountAccount = accountDao.getAccountById(account);
-			Calendar cal = calendarDao.getCalendarById(calendarId, accountAccount);
-			EventCategory ec = new EventCategory(name, cal);
+			Account accountAccount = accountDao.retrieve(account);
+			EventCategory ec = new EventCategory(name, accountAccount);
 			Key<EventCategory> ecKey = eventCategoryDao.save(ec);
 			EventCategory eventCategory = eventCategoryDao.getEventCategory(ecKey);
 			return eventCategory;
@@ -141,10 +143,9 @@ public class EventTestingService {
 	public EventAttribute addEventAttribute( 
 			@Named("name") String name,  
 			@Named("calendar") Long calendarId,
-			@Named("account") Long account)  throws Exception {
+			@Named("account") Long accountId)  throws Exception {
 			
-			Account accountAccount = accountDao.getAccountById(account);
-			Calendar cal = calendarDao.getCalendarById(calendarId, accountAccount);
+			Calendar cal = findCalendar(calendarId, accountId);
 			EventAttribute ea = new EventAttribute(name, cal);
 			Key<EventAttribute> eaKey = eventAttributeDao.save(ea);
 			EventAttribute eventAttribute = eventAttributeDao.getEventAttribute(eaKey);
@@ -180,8 +181,7 @@ public class EventTestingService {
 		Integer eventMaxAttendees = new Integer(maxAttendees);
 		
 		// Get Account
-		Account accountAccount = accountDao.getAccountById(accountId);
-		Calendar cal = calendarDao.getCalendarById(calendarId, accountAccount);
+		Account accountAccount = accountDao.retrieve(accountId);
 		
 		//Format Dates
 		DateFormat formatter = new SimpleDateFormat("HH:mm dd MM yyyy");
@@ -199,15 +199,15 @@ public class EventTestingService {
 		try {
 			eventFinalDateTime = new DateTime(formatter.parse(finalRepeatEvent)).toDate();
 		} catch (ParseException e) {
-			Settings settingsKeyFetched = settingsDao.findSettingsByAccount(accountAccount);
-			eventFinalDateTime = settingsKeyFetched.getRepeatEventFinalDate();
+			//Settings settingsKeyFetched = accountAccount.getSettings();
+			//eventFinalDateTime = settingsKeyFetched.getRepeatEventFinalDate();
 		}
 		
 		
 		// retrieving Calendar, Event Category and Event Attribute, Event Repeat Type
 		try {
 			Long calId1 = new Long(calendarId);
-			Calendar calendar =  calendarDao.getCalendarById(calId1, accountAccount);
+			Calendar calendar =  findCalendar(calId1, accountId);
 			Boolean repeatBoolean = new Boolean(false);
 			EventRepeatType repeatType = null;
 			
@@ -295,10 +295,10 @@ public class EventTestingService {
 		Long calId = new Long(calendarId);
 		
 		// Get Account
-		Account accountAccount = accountDao.getAccountById(accountId);
+		Account accountAccount = accountDao.retrieve(accountId);
 		
 		// Get Calendar
-		Calendar cal = calendarDao.getCalendarById(calendarId, accountAccount);
+		Calendar cal = findCalendar(calendarId, accountId);
 		
 		List<EventItem> events = eventItemDao.findEventItemsByCalendar(cal);
 		return events;
@@ -310,10 +310,10 @@ public class EventTestingService {
 			@Named("calendarId") Long calendarId) {
 		
 		// Get Account
-		Account accountAccount = accountDao.getAccountById(accountId);
+		Account accountAccount = accountDao.retrieve(accountId);
 		
 		// Get Calendar
-		Calendar cal = calendarDao.getCalendarById(calendarId, accountAccount);
+		Calendar cal = findCalendar(calendarId, accountId);
 		
 		List<EventAttribute> eventAttributes = eventAttributeDao.findEventAttributesByCalendar(cal);
 	    return eventAttributes;
@@ -325,10 +325,10 @@ public class EventTestingService {
 			@Named("calendarId") Long calendarId) {
 		
 		// Get Account
-		Account accountAccount = accountDao.getAccountById(accountId);
+		Account accountAccount = accountDao.retrieve(accountId);
 		
 		// Get Calendar
-		Calendar cal = calendarDao.getCalendarById(calendarId, accountAccount);
+		Calendar cal = findCalendar(calendarId, accountId);
 		
 		List<EventCategory> eventCategories = eventCategoryDao.findEventCategorysByCalendar(cal);
 	    return eventCategories;
@@ -337,6 +337,25 @@ public class EventTestingService {
 	@ApiMethod(name = "calendar.listEventRepeatTypes", path="calendar.listEventRepeatTypes", httpMethod = "get")
 	public List<EventRepeatType> listEventRepeatTypes() {
 		return Arrays.asList(EventRepeatType.values());
+	}
+	
+	@ApiMethod(name = "calendar.getUser", path="calendar.getUser", httpMethod = "get")
+	public List<User> getUser(HttpServletRequest req) {
+		List<User> stringList = new ArrayList<User>();
+		HttpSession session = req.getSession(false);
+		UserSession userSession = (UserSession) session.getAttribute("userSession");
+		User user = userSession.getUser();
+		stringList.add(user);
+	    return stringList;
+	}
+	
+	@ApiMethod(name = "calendar.getUserSession", path="calendar.getUserSession", httpMethod = "get")
+	public List<UserSession> getUserSession(HttpServletRequest req) {
+		List<UserSession> stringList = new ArrayList<UserSession>();
+		HttpSession session = req.getSession(false);
+		UserSession userSession = (UserSession) session.getAttribute("userSession");
+		stringList.add(userSession);
+	    return stringList;
 	}
 
 }

@@ -1,3 +1,4 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <div id="content-header">
     <h1>Add Studio Session</h1>
 </div> <!-- #content-header -->

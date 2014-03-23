@@ -1,6 +1,7 @@
 package com.studio.bookings.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -32,6 +33,10 @@ public class User implements Serializable {
     @Getter @Setter
     private String password;
     
+    @Index
+    @Getter @Setter
+    Date dateCreated;
+    
     @Parent
     @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
     private Ref<UserType> userType;
@@ -46,26 +51,13 @@ public class User implements Serializable {
         this.userType = userType;
     }
     
-  /*  @Parent
-    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-    private Ref<Organisation> organisation;
-    
-    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-    public Ref<Organisation> getOrganisation() {
-        return this.organisation;
-    }
-    
-    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-    public void setOrganisation(Ref<Organisation> organisation) {
-        this.organisation = organisation;
-    }*/
-    
     public User(){}
     
     public User(String username, String password, UserType userType) {
     	this.username = username;
     	this.password = password;
     	this.userType = Ref.create(userType);
+    	dateCreated = new Date();
     }
 
     @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)

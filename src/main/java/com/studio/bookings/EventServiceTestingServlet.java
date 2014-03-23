@@ -15,13 +15,15 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.joda.time.DateTime;
 
+import com.googlecode.objectify.Ref;
+import com.studio.bookings.dao.EventItemDao;
+import com.studio.bookings.entity.Account;
 import com.studio.bookings.entity.Calendar;
 import com.studio.bookings.entity.EventAttribute;
 import com.studio.bookings.entity.EventCategory;
 import com.studio.bookings.entity.EventItem;
 import com.studio.bookings.entity.EventRepeatType;
 import com.studio.bookings.entity.Instructor;
-import com.studio.bookings.entity.Account;
 import com.studio.bookings.service.EventTestingService;
 
 /**
@@ -39,27 +41,9 @@ public class EventServiceTestingServlet extends HttpServlet {
 		
 		
 		// CREATE OWNER Account
-		Account owner = ets.insertAccount("Big C's Calendar");
-		Account ownerFetched = ets.getAccountById(owner.getId());
+		Account owner = ets.insertAccount("Big C's Calendar");		
+		Long ownerFetchedId = owner.getId();
 		
-		Long ownerFetchedId = ownerFetched.getId();
-		
-		Instructor inst2 = new Instructor();
-		try {
-			inst2 = ets.addInstructor("teach", "email@email.com", "description", owner.getId());
-		} catch (Exception e3) {
-			// TODO Auto-generated catch block
-			e3.printStackTrace();
-		}
-		
-		Long instructor = new Long(inst2.getId());
-		String summary = new String("summary1");
-		String duration = new String ("1 hour");
-		String maxAttendees = new String ("10");
-		String repeatEvent = new String("true");
-		String eventRepeatType = new String("DAILY");
-		String finalRepeatEvent = new String ("12:20 05 03 2014");
-
 		// CREATE CALENDARS
 		Calendar cal1 = null;
 		try {
@@ -79,7 +63,25 @@ public class EventServiceTestingServlet extends HttpServlet {
 			rw.println(e3);
 		}
 		
-		rw.println("ownerFetched: " + ownerFetched);
+		rw.println("ownerFetched: " + owner);
+		
+		Instructor inst2 = new Instructor();
+		try {
+			inst2 = ets.addInstructor("teach", "email@email.com", "description", cal1.getId(), owner.getId());
+		} catch (Exception e3) {
+			// TODO Auto-generated catch block
+			e3.printStackTrace();
+		}
+		
+		Long instructor = new Long(inst2.getId());
+		String summary = new String("summary1");
+		String duration = new String ("1 hour");
+		String maxAttendees = new String ("10");
+		String repeatEvent = new String("true");
+		String eventRepeatType = new String("DAILY");
+		String finalRepeatEvent = new String ("12:20 05 03 2014");
+
+		
 		
 		Long calId1 = cal1.getId();
 		
@@ -142,7 +144,7 @@ public class EventServiceTestingServlet extends HttpServlet {
 		
 		
 		// List Calendars by ID
-		
+		EventItemDao eventItemDao = new EventItemDao();
 		try {
 			rw.println("Calendars by  " + ownerFetchedId);
 			List<Calendar> calList = ets.listCalendars(ownerFetchedId);
@@ -155,6 +157,8 @@ public class EventServiceTestingServlet extends HttpServlet {
 				rw.println("Event Items");
 				for(EventItem eventItem : eventList) {
 					rw.println(eventItem.getEventItemDetails());
+					rw.println(eventItem.getEventItemDetails().getEventCategory());
+					rw.println(Ref.create(eventItem.getEventItemDetails().getEventCategory()));
 				}
 				
 				rw.println("Event Repeat Types");
@@ -173,6 +177,14 @@ public class EventServiceTestingServlet extends HttpServlet {
 				List<EventCategory> ec = ets.listEventCategories(ownerFetchedId, calListItem.getId());
 				for(EventCategory ecItem : ec) {
 					rw.println(ecItem);
+					
+					rw.println("Events in Event Category: " + ecItem);
+					
+					List<EventItem> eiList = eventItemDao.findEventItemsByAttributes(calListItem, Ref.create(ecItem));
+					rw.println(Ref.create(ecItem));
+					for (EventItem ei : eiList) {
+						rw.println(ei);
+					}
 				}
 				
 			}

@@ -13,29 +13,29 @@ app.config(['$routeProvider',
         .when('/users',
             {
                 //controller: 'UsersController',
-                templateUrl: 'partials/users.html'
+                templateUrl: 'app/partials/users.html'
             })
         .when('/addevent',
             {
                 controller: 'EventController',
-                templateUrl: 'partials/add_event.html'
+                templateUrl: 'app/partials/add_event.jsp'
             })
         //Define a route that has a route parameter in it (:customerID)
         .when('/users/:userId',
             {
                 //controller: 'UserDetailsController',
-                templateUrl: 'partials/userDetails.html'
+                templateUrl: 'app/partials/userDetails.jsp'
             })
         //Define a route that has a route parameter in it (:customerID)
         .when('/calendars',
             {
                 controller: 'AccountController',
-                templateUrl: 'partials/calendar.html'
+                templateUrl: 'app/partials/calendar.jsp'
             })
         .when('/event/:eventId',
             {
                 controller: 'EventController',
-                templateUrl: 'partials/event.html'
+                templateUrl: 'app/partials/event.jsp'
             })
         .otherwise({
             redirectTo: '/calendars'

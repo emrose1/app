@@ -1,5 +1,5 @@
 package com.studio.bookings.entity;
-import java.util.List;
+import java.util.Date;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,7 +7,6 @@ import lombok.Setter;
 import com.google.api.server.spi.config.AnnotationBoolean;
 import com.google.api.server.spi.config.ApiResourceProperty;
 import com.googlecode.objectify.Key;
-import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
@@ -19,33 +18,19 @@ public class Account {
 	@Index
 	@Getter @Setter
 	@Id Long id;
-	
-    
-    private List<Ref<Instructor>> instructors;
-	
-    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-    public List<Ref<Instructor>> getInstructors() {
-    	return instructors;
-    }
-	
-    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-    public void addInstructors(Ref<Instructor> instructor) {
-    	this.instructors.add(instructor);
-    }
-    
-    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-    public void removeInstructors(Ref<Instructor> instructor) {
-    	this.instructors.remove(instructor);
-    }
-    
-    
+	 
 	@Getter @Setter
 	private String name;
+	
+	@Index
+	@Getter @Setter
+	private AccountSettings accountSettings;
 	
 	public Account(){};
 	
 	public Account(String name) {
 		this.name = name;
+		this.accountSettings = new AccountSettings();
 	}
 	
 	public String toString() {
@@ -62,8 +47,4 @@ public class Account {
         return Key.create(this.getClass(), id);
     }
 
-	public void addInstructor(Ref<Instructor> create) {
-		// TODO Auto-generated method stub
-		
-	}
 }

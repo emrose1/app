@@ -49,19 +49,21 @@ public class LoginServlet extends HttpServlet {
                     userSession.setUser(user);
                     userSession.setLoginTime(new Date());
                     request.getSession(true).setAttribute("userSession", userSession);
-                    request.getRequestDispatcher("/index.jsp").forward(request, response);
+                    request.setAttribute("username", username);
+                    request.setAttribute("password", password);
+                    request.getRequestDispatcher("/app/index.jsp").forward(request, response);
                 } else {
                     request.setAttribute("message", "Invalid username or password");
-                    request.getRequestDispatcher("/loginForm.jsp").forward(request, response);
+                    request.getRequestDispatcher("/app/login").forward(request, response);
                 }
             } catch (Exception e) {
             	request.setAttribute("message", e);
-            	request.getRequestDispatcher("/loginForm.jsp").forward(request, response);
+            	request.getRequestDispatcher("/app/login").forward(request, response);
                 //e.printStackTrace();
             }
         } else {
             request.setAttribute("message", "Insert username and password!");
-            request.getRequestDispatcher("/loginForm.jsp").forward(request, response);
+            request.getRequestDispatcher("/app/login").forward(request, response);
         }
 
     }
