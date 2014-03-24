@@ -22,7 +22,7 @@ public class EventTestingServiceTest extends TestBase {
 	BaseDao<Account> accountDao = new BaseDao<Account>(Account.class);
 	
 	@Test
-	public void addAccount() {
+	public void insertAccount() {
 		
 		Account account = ets.insertAccount("Testing Account");
 		Account accountFetched = ets.findAccount(account.getId());
@@ -85,6 +85,8 @@ public class EventTestingServiceTest extends TestBase {
 	public void insertCalendar() {
 		Account account = ets.insertAccount("Testing Account");
 		Calendar calendar = ets.insertCalendar("Testing Calendar", account.getId());
+		
+		Calendar calendarFetched = ets.findCalendar(calendar.getId(), account.getId());
 	}
 	
 	/*@Test

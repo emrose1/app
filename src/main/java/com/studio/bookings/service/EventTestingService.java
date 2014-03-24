@@ -26,6 +26,7 @@ import com.studio.bookings.dao.EventCategoryDao;
 import com.studio.bookings.dao.EventDao;
 import com.studio.bookings.dao.EventItemDao;
 import com.studio.bookings.dao.InstructorDao;
+import com.studio.bookings.dao.UserDao;
 import com.studio.bookings.entity.Account;
 import com.studio.bookings.entity.Calendar;
 import com.studio.bookings.entity.Event;
@@ -38,6 +39,7 @@ import com.studio.bookings.entity.Instructor;
 import com.studio.bookings.entity.User;
 import com.studio.bookings.entity.UserSession;
 import com.studio.bookings.util.Constants;
+import com.studio.bookings.util.LoadDummyData;
 
 /**
  * Defines v1 of a booking API
@@ -58,6 +60,7 @@ public class EventTestingService {
 	public static EventAttributeDao eventAttributeDao = new EventAttributeDao();
 	public static EventCategoryDao eventCategoryDao = new EventCategoryDao();
 	public static InstructorDao instructorDao = new InstructorDao();
+	public static UserDao userDao = new UserDao();
 	
 	BaseDao<Account> accountDao = new BaseDao<Account>(Account.class);
 	ChildBaseDao<Calendar, Account> calendarDao = new ChildBaseDao<Calendar, Account>(Calendar.class, Account.class);
@@ -86,8 +89,9 @@ public class EventTestingService {
 			@Named("account") Long accountId) {
 		Long oId = new Long(accountId);
 		Account account =  accountDao.retrieve(oId);
-		Calendar cal = new Calendar(description, account);
-	    return cal; 
+		Calendar calendar = new Calendar(description, account);
+		calendarDao.save(calendar);
+	    return calendar; 
 	}
 	
 	@ApiMethod(name = "calendar.findCalendar", path="calendar.Calendar", httpMethod = "post")
@@ -114,7 +118,6 @@ public class EventTestingService {
 			@Named("Account") Long accountId)  throws Exception {
 		
 		Account account = accountDao.retrieve(accountId);
-		
 		
 		Instructor instructor = new Instructor(name, lastname, description);
 		instructorDao.save(instructor);
@@ -357,5 +360,32 @@ public class EventTestingService {
 		stringList.add(userSession);
 	    return stringList;
 	}
+	
+	//TODO return permission role
+	// to test var message = {'email' : 'admin', 'password': 'password'}; console.log(message); 
+	// gapi.client.booking.calendar.authUserSession(message).execute(function(resp) { console.log(resp);});
+	
+	@ApiMethod(name = "calendar.authUserSession", path="calendar.authUserSession", httpMethod = "post")
+	public List<UserSession> authUserSession(@Named("email") String email, @Named("password") String password, HttpServletRequest request) {
+		
+		if (userDao.findAll().size() == 0) {
+    		LoadDummyData ldd = new LoadDummyData();
+    		ldd.initSetup();
+    	}
+		
+		User user = userDao.getByUsernamePassword(email, password);
+		List<UserSession> stringList = new ArrayList<UserSession>();
+		UserSession userSession = new UserSession();
+		
+		if(user != null) {
+            userSession.setUser(user);
+            userSession.setLoginTime(new Date());
+            request.getSession(true).setAttribute("userSession", userSession);
 
+        } else {
+            request.setAttribute("message", "Invalid username or password");
+        }
+		stringList.add(userSession);
+	    return stringList;
+	}
 }

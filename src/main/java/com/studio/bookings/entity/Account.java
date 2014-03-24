@@ -1,6 +1,4 @@
 package com.studio.bookings.entity;
-import java.util.Date;
-
 import lombok.Getter;
 import lombok.Setter;
 
