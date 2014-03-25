@@ -22,7 +22,7 @@
     <servlet-class>com.google.api.server.spi.SystemServiceServlet</servlet-class>
     <init-param>
       <param-name>services</param-name>
-      <param-value>com.studio.bookings.service.EventTestingService</param-value>
+      <param-value>com.studio.bookings.service.AccountService,com.studio.bookings.service.BaseService,com.studio.bookings.service.CalendarService,com.studio.bookings.service.EventService,com.studio.bookings.service.EventTestingService</param-value>
     </init-param>
   </servlet>
   <servlet-mapping>

@@ -24,7 +24,6 @@ import com.studio.bookings.entity.EventCategory;
 import com.studio.bookings.entity.EventItem;
 import com.studio.bookings.entity.EventRepeatType;
 import com.studio.bookings.entity.Instructor;
-import com.studio.bookings.service.EventTestingService;
 
 /**
  * Servlet implementation class EventServiceTestingServlet
@@ -37,7 +36,7 @@ public class EventServiceTestingServlet extends HttpServlet {
 		PrintWriter rw = response.getWriter();
 		response.setContentType("text/plain");
 		
-		EventTestingService ets = new EventTestingService();
+		/*EventTestingService ets = new EventTestingService();
 		
 		
 		// CREATE OWNER Account
@@ -190,7 +189,7 @@ public class EventServiceTestingServlet extends HttpServlet {
 			}
 		} catch (Exception e) {
 			rw.println(e);
-		}
+		}*/
 			
 		
 	}
