@@ -13,7 +13,6 @@ import com.googlecode.objectify.annotation.Index;
 @Entity
 public class Account {
 
-	@Index
 	@Getter @Setter
 	@Id Long id;
 	 

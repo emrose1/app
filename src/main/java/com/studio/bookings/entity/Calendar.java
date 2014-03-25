@@ -17,11 +17,8 @@ import com.googlecode.objectify.annotation.Parent;
 @Entity
 public class Calendar {
 
-	@Index
-	@Getter
-	@Setter
-	@Id
-	Long id;
+	@Getter @Setter
+	@Id Long id;
 
 	@Parent
     @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)

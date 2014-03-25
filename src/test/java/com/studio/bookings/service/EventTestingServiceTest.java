@@ -87,6 +87,9 @@ public class EventTestingServiceTest extends TestBase {
 		Calendar calendar = ets.insertCalendar("Testing Calendar", account.getId());
 		
 		Calendar calendarFetched = ets.findCalendar(calendar.getId(), account.getId());
+		assert calendar.getId().equals(calendarFetched.getId());
+		assert calendar.getDescription().equals(calendarFetched.getDescription());
+		assert calendar.getAccount().getId().equals(calendarFetched.getAccount().getId());
 	}
 	
 	/*@Test
