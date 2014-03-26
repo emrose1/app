@@ -81,5 +81,19 @@ public class AccountServiceTest extends TestBase {
 		assert accountsFetched.size() == accounts.size();
 		assert accountsFetched.size() == 2;
 	}
+	
+	@Test
+	public void updateAccount() {
+		
+		String accountName = "Account name";
+		Account account = accountService.insertAccount(accountName);
+		Long accountUpdatedId = accountService.updateAccount(account.getId(), "updated Account");
+		Account accountUpdated = accountService.findAccount(accountUpdatedId);
+		
+		assert account.getName().equals("updated Account");
+		assert account.getName().equals(accountUpdated.getName());
+		assert account.getId().equals(accountUpdated.getId());
+
+	}
 
 }
