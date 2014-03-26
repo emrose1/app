@@ -31,7 +31,7 @@ public class CalendarService extends BaseService {
 	    return calendar; 
 	}
 	
-	@ApiMethod(name = "calendar.findCalendar", path="calendar.Calendar", httpMethod = "post")
+	@ApiMethod(name = "calendar.findCalendar", path="calendar.findCalendar", httpMethod = "post")
 	public Calendar findCalendar(@Named("calendar") Long calendarId, @Named("account") Long accountId) {
 		Account account = accountDao.retrieve(accountId);
 		return calendarDao.retrieveAncestor(calendarId, account);
@@ -52,7 +52,7 @@ public class CalendarService extends BaseService {
 		return calendarDao.save(calendarFetched);
 	}
 	
-	@ApiMethod(name = "calendar.deleteAccount", path="calendar.deleteAccount", httpMethod = "get")
+	@ApiMethod(name = "calendar.deleteCalendar", path="calendar.deleteCalendar", httpMethod = "get")
 	public void deleteCalendar(@Named("calendar") Long calendarId) {
 		calendarDao.delete(calendarId);
 	}
