@@ -40,7 +40,7 @@ public class BaseDao<T> {
 	
 	public void delete(Long id)
 	{
-		ofy().delete().type(t).id(id);
+		ofy().delete().type(t).id(id).now();
 	}
 
 	public List<T> list()

@@ -53,10 +53,10 @@ public class AccountServiceTest extends TestBase {
 		Account accountFetched2 = accountService.findAccount(account2.getId());
 		
 		assert accountFetched1.getId().equals(account1.getId());
-		assert accountFetched1.getName().equals(accountFetched1.getName());
+		assert accountFetched1.getName().equals(account1.getName());
 		
 		assert accountFetched2.getId().equals(account2.getId());
-		assert accountFetched2.getName().equals(accountFetched2.getName());
+		assert accountFetched2.getName().equals(account2.getName());
 		
 		Assert.assertNotEquals(accountFetched1.getId(), accountFetched2.getId());
 		Assert.assertNotEquals(accountFetched1.getName(), accountFetched2.getName());
@@ -81,5 +81,33 @@ public class AccountServiceTest extends TestBase {
 		assert accountsFetched.size() == accounts.size();
 		assert accountsFetched.size() == 2;
 	}
+	
+	@Test
+	public void updateAccount() {
+		
+		String accountName = "Account name";
+		Account account = accountService.insertAccount(accountName);
+		Long accountUpdatedId = accountService.updateAccount(account.getId(), "updated Account");
+		Account accountUpdated = accountService.findAccount(accountUpdatedId);
+		
+		assert account.getName().equals("updated Account");
+		assert account.getName().equals(accountUpdated.getName());
+		assert account.getId().equals(accountUpdated.getId());
+
+	}
+	
+	@Test
+	public void deleteAccount() {
+		
+		String accountName = "Account name";
+		Account account = accountService.insertAccount(accountName);
+		ofy().clear();
+		Account accountDeleted = accountDao.retrieve(account.getId());
+		assert accountDeleted != null;
+		accountService.deleteAccount(account.getId());
+		ofy().clear();
+		assert ofy().load().key(accountDeleted.getKey()).now() == null;
+	}
+	
 
 }

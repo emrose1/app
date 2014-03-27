@@ -31,18 +31,29 @@ public class CalendarService extends BaseService {
 	    return calendar; 
 	}
 	
-	@ApiMethod(name = "calendar.findCalendar", path="calendar.Calendar", httpMethod = "post")
+	@ApiMethod(name = "calendar.findCalendar", path="calendar.findCalendar", httpMethod = "post")
 	public Calendar findCalendar(@Named("calendar") Long calendarId, @Named("account") Long accountId) {
 		Account account = accountDao.retrieve(accountId);
 		return calendarDao.retrieveAncestor(calendarId, account);
 	}
 	
 	@ApiMethod(name = "calendar.listCalendars", path="calendar.listCalendars", httpMethod = "get")
-	public List<Calendar> listCalendars(
-			@Named("Account") Long AccountId
-			) {
-		Long oId = new Long(AccountId);
-		Account account = accountDao.retrieve(oId);
-		return calendarDao.listAncestors(account.getKey());
+	public List<Calendar> listCalendars(@Named("account") Long accountId) {
+		Account accountFetched = accountDao.retrieve(accountId);
+		return calendarDao.listAncestors(accountFetched.getKey());
+	}
+	
+	@ApiMethod(name = "calendar.updateCalendar", path="calendar.updateCalendar", httpMethod = "get")
+	public Long updateCalendar(@Named("calendar") Long calendarId,  @Named("account") Long accountId, 
+			@Named("description") String description) {
+		Account accountFetched = accountDao.retrieve(accountId);
+		Calendar calendarFetched = calendarDao.retrieveAncestor(calendarId, accountFetched);
+		calendarFetched.setDescription(description);
+		return calendarDao.save(calendarFetched);
+	}
+	
+	@ApiMethod(name = "calendar.deleteCalendar", path="calendar.deleteCalendar", httpMethod = "get")
+	public void deleteCalendar(@Named("calendar") Long calendarId) {
+		calendarDao.delete(calendarId);
 	}
 }
