@@ -66,24 +66,24 @@ public class EventTestingService {
 	ChildBaseDao<Calendar, Account> calendarDao = new ChildBaseDao<Calendar, Account>(Calendar.class, Account.class);
 	
 
-	@ApiMethod(name = "calendar.addAccount", path="calendar.addAccount", httpMethod = "post")
+//	@ApiMethod(name = "calendar.addAccount", path="calendar.addAccount", httpMethod = "post")
 	public Account insertAccount(@Named("account") String accountName) {
 		Account account = new Account(accountName);
 		accountDao.save(account);
 		return account;
 	}
 	
-	@ApiMethod(name = "calendar.findAccount", path="calendar.getAccountById", httpMethod = "get")
+	//@ApiMethod(name = "calendar.findAccount", path="calendar.getAccountById", httpMethod = "get")
 	public Account findAccount(@Named("account") Long accountId) {
 		return accountDao.retrieve(accountId);
 	}
 	
-	@ApiMethod(name = "calendar.listAccounts", path="calendar.listAccounts", httpMethod = "get")
+	//@ApiMethod(name = "calendar.listAccounts", path="calendar.listAccounts", httpMethod = "get")
 	public List<Account> listAccounts() {
 		return accountDao.list();
 	}
 	
-	@ApiMethod(name = "calendar.addCalendar", path="calendar.addCalendar", httpMethod = "post")
+	//@ApiMethod(name = "calendar.addCalendar", path="calendar.addCalendar", httpMethod = "post")
 	public Calendar insertCalendar( 
 			@Named("description") String description,  
 			@Named("account") Long accountId) {
@@ -94,13 +94,13 @@ public class EventTestingService {
 	    return calendar; 
 	}
 	
-	@ApiMethod(name = "calendar.findCalendar", path="calendar.Calendar", httpMethod = "post")
+	//@ApiMethod(name = "calendar.findCalendar", path="calendar.Calendar", httpMethod = "post")
 	public Calendar findCalendar(@Named("calendar") Long calendarId, @Named("account") Long accountId) {
 		Account account = findAccount(accountId);
 		return calendarDao.retrieveAncestor(calendarId, account);
 	}
 	
-	@ApiMethod(name = "calendar.listCalendars", path="calendar.listCalendars", httpMethod = "get")
+	//@ApiMethod(name = "calendar.listCalendars", path="calendar.listCalendars", httpMethod = "get")
 	public List<Calendar> listCalendars(
 			@Named("Account") Long AccountId
 			) {

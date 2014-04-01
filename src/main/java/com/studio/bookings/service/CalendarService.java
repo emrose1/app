@@ -44,12 +44,13 @@ public class CalendarService extends BaseService {
 	}
 	
 	@ApiMethod(name = "calendar.updateCalendar", path="calendar.updateCalendar", httpMethod = "get")
-	public Long updateCalendar(@Named("calendar") Long calendarId,  @Named("account") Long accountId, 
+	public Calendar updateCalendar(@Named("calendar") Long calendarId,  @Named("account") Long accountId, 
 			@Named("description") String description) {
 		Account accountFetched = accountDao.retrieve(accountId);
 		Calendar calendarFetched = calendarDao.retrieveAncestor(calendarId, accountFetched);
 		calendarFetched.setDescription(description);
-		return calendarDao.save(calendarFetched);
+		calendarDao.save(calendarFetched);
+		return calendarFetched;
 	}
 	
 	@ApiMethod(name = "calendar.deleteCalendar", path="calendar.deleteCalendar", httpMethod = "get")

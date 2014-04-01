@@ -87,8 +87,8 @@ public class AccountServiceTest extends TestBase {
 		
 		String accountName = "Account name";
 		Account account = accountService.insertAccount(accountName);
-		Long accountUpdatedId = accountService.updateAccount(account.getId(), "updated Account");
-		Account accountUpdated = accountService.findAccount(accountUpdatedId);
+		Account accountUpdated = accountService.updateAccount(account.getId(), "updated Account");
+		//Account accountUpdated = accountService.findAccount(accountUpdatedId);
 		
 		assert account.getName().equals("updated Account");
 		assert account.getName().equals(accountUpdated.getName());

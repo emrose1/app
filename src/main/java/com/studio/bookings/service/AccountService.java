@@ -38,10 +38,11 @@ public class AccountService extends BaseService {
 	}
 	
 	@ApiMethod(name = "account.updateAccount", path="calendar.updateAccount", httpMethod = "get")
-	public Long updateAccount(@Named("account") Long accountId, @Named("name") String name) {
+	public Account updateAccount(@Named("account") Long accountId, @Named("name") String name) {
 		Account accountFetched = accountDao.retrieve(accountId);
 		accountFetched.setName(name);
-		return accountDao.save(accountFetched);
+		accountDao.save(accountFetched);
+		return accountFetched;
 	}
 	
 	@ApiMethod(name = "account.deletAccount", path="calendar.deleteAccount", httpMethod = "get")
