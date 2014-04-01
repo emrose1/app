@@ -54,7 +54,7 @@ angular.module( 'bookings', [
                 $scope.$broadcast('EventLoaded');
                 $scope.is_backend_ready = true;
             }
-        }
+        };
         gapi.client.load('booking', 'v1', callback, 'http://localhost:8080/_ah/api');
     };
 

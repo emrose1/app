@@ -6,14 +6,7 @@ angular.module('authService', [] )
 			gapi.client.booking.calendar.authUserSession(credentials).execute(function(resp) {
 				console.log('auth');
 				console.log(resp);
-
 			});
-
-			/*return $http
-			.post('/login', credentials)
-			.then(function (res) {
-			 	Session.create(res.id, res.userid, res.role);
-			});*/
 			console.log('bla');
 			Session.create('1234', '1234', 'admin');
 		},
