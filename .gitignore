@@ -12,3 +12,5 @@ src/main/webapp/LICENSE
 *.md
 
 src/main/webapp/css/App.css
+
+src/main/webapp/node_modules/*

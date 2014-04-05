@@ -343,13 +343,11 @@ public class EventTestingService {
 	}
 	
 	@ApiMethod(name = "calendar.getUser", path="calendar.getUser", httpMethod = "get")
-	public List<User> getUser(HttpServletRequest req) {
-		List<User> stringList = new ArrayList<User>();
+	public User getUser(HttpServletRequest req) {
 		HttpSession session = req.getSession(false);
 		UserSession userSession = (UserSession) session.getAttribute("userSession");
 		User user = userSession.getUser();
-		stringList.add(user);
-	    return stringList;
+		return user;
 	}
 	
 	@ApiMethod(name = "calendar.getUserSession", path="calendar.getUserSession", httpMethod = "get")
@@ -366,26 +364,22 @@ public class EventTestingService {
 	// gapi.client.booking.calendar.authUserSession(message).execute(function(resp) { console.log(resp);});
 	
 	@ApiMethod(name = "calendar.authUserSession", path="calendar.authUserSession", httpMethod = "post")
-	public List<UserSession> authUserSession(@Named("email") String email, @Named("password") String password, HttpServletRequest request) {
+	public UserSession authUserSession(@Named("username") String username, @Named("password") String password, HttpServletRequest request) {
 		
 		if (userDao.findAll().size() == 0) {
     		LoadDummyData ldd = new LoadDummyData();
     		ldd.initSetup();
     	}
 		
-		User user = userDao.getByUsernamePassword(email, password);
-		List<UserSession> stringList = new ArrayList<UserSession>();
-		UserSession userSession = new UserSession();
+		User user = userDao.getByUsernamePassword(username, password);
+		UserSession userSession;
 		
 		if(user != null) {
-            userSession.setUser(user);
-            userSession.setLoginTime(new Date());
+			userSession = new UserSession(new Date(), user);
             request.getSession(true).setAttribute("userSession", userSession);
-
         } else {
-            request.setAttribute("message", "Invalid username or password");
+            return null;
         }
-		stringList.add(userSession);
-	    return stringList;
+	    return userSession;
 	}
 }

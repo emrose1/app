@@ -31,6 +31,7 @@ public class User implements Serializable {
 
     @Index
     @Getter @Setter
+    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
     private String password;
     
     @Index
@@ -39,16 +40,15 @@ public class User implements Serializable {
     
     @Parent
     @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-    private Ref<UserType> userType;
+    private Ref<UserType> userTypeRef;
     
-    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-    public Ref<UserType> getUserType() {
-        return this.userType;
+
+    public UserType getUserType() {
+        return this.userTypeRef.get();
     }
     
-    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-    public void setUserType(Ref<UserType> userType) {
-        this.userType = userType;
+    public void setUserType(UserType userType) {
+        this.userTypeRef = Ref.create(userType);
     }
     
     public User(){}
@@ -56,7 +56,7 @@ public class User implements Serializable {
     public User(String username, String password, UserType userType) {
     	this.username = username;
     	this.password = password;
-    	this.userType = Ref.create(userType);
+    	this.userTypeRef = Ref.create(userType);
     	dateCreated = new Date();
     }
 
