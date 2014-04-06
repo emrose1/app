@@ -1,6 +1,5 @@
 angular.module( 'bookings.login', [
   'ui.state',
-  'plusOne',
   'authService'
 ])
 
@@ -31,9 +30,11 @@ angular.module( 'bookings.login', [
     $rootScope.$on(AUTH_EVENTS.loginFailed, loginFailed);
 
     var loginSuccess = function () {
+        console.log('login success');
         $rootScope.loginSuccessMessage = true;
     };
     var loginFailed = function () {
+        console.log('login failed');
         $rootScope.loginErrorMessage = true;
     };
 })
@@ -41,7 +42,7 @@ angular.module( 'bookings.login', [
 /**
  * And of course we define a controller for our route.
  */
-.controller( 'LoginCtrl', function LoginController($scope, $rootScope, AUTH_EVENTS, authService) {
+.controller( 'LoginCtrl', function LoginController($scope, $rootScope, AUTH_EVENTS, Session, $q) {
   $scope.credentials = {
     username: '',
     password: ''
@@ -50,14 +51,53 @@ angular.module( 'bookings.login', [
   $scope.loginErrorMessage = 'false';
   $scope.loginSuccessMessage = 'false';
 
-  $scope.login = function (credentials) {
-    authService.login(credentials);
-   /* .then(function () {
-        $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
-    }, function () {
-        $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
-    });*/
-  };
+
+
+        var init = function(credentials){
+
+            var one = $q.defer();
+
+            one.promise.then(function (data) {
+                console.log(data);
+
+                $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
+            }, function (reason) {
+                console.log('Failed: ' + reason);
+                $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
+            });
+
+            var request = gapi.client.booking.calendar.authUserSession({
+                username: credentials.username,
+                password: credentials.password
+            });
+
+            request.execute(function (resp) {
+                $scope.$apply(function() {
+                    if (resp && resp.user) {
+                        Session.create(resp.user.id, resp.user.userType.type);
+                        console.log('yeah');
+                        one.resolve(resp);
+                    } else {
+                        one.reject('error');
+                    }
+                });
+
+            });
+
+            return one.promise;
+        };
+
+        $scope.login = function (credentials) {
+            init(credentials);
+
+
+
+            /*.then(function () {
+             $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
+             }, function () {
+             $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
+             });*/
+        };
 })
 
 ;
