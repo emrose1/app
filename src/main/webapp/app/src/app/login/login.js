@@ -3,11 +3,6 @@ angular.module( 'bookings.login', [
   'authService'
 ])
 
-/**
- * Each section or module of the site can also have its own routes. AngularJS
- * will handle ensuring they are all available at run-time, but splitting it
- * this way makes each module more "self-contained".
- */
 .config(function config( $stateProvider ) {
   $stateProvider.state( 'login', {
     url: '/login',
@@ -21,83 +16,38 @@ angular.module( 'bookings.login', [
   });
 })
 
-.run(function($rootScope, AUTH_EVENTS) {
-
-    $rootScope.loginSuccessMessage = false;
-    $rootScope.loginErrorMessage = false;
-
-    $rootScope.$on(AUTH_EVENTS.loginSuccess, loginSuccess);
-    $rootScope.$on(AUTH_EVENTS.loginFailed, loginFailed);
+.controller( 'LoginCtrl', function LoginController($scope, $rootScope, $location, AUTH_EVENTS, authService) {
 
     var loginSuccess = function () {
         console.log('login success');
-        $rootScope.loginSuccessMessage = true;
+        $scope.loginSuccessMessage = true;
     };
     var loginFailed = function () {
         console.log('login failed');
-        $rootScope.loginErrorMessage = true;
+        $scope.loginErrorMessage = true;
     };
-})
 
-/**
- * And of course we define a controller for our route.
- */
-.controller( 'LoginCtrl', function LoginController($scope, $rootScope, AUTH_EVENTS, Session, $q) {
-  $scope.credentials = {
-    username: '',
-    password: ''
-  };
+    $scope.$on(AUTH_EVENTS.loginSuccess, loginSuccess);
+    $scope.$on(AUTH_EVENTS.loginFailed, loginFailed);
 
-  $scope.loginErrorMessage = 'false';
-  $scope.loginSuccessMessage = 'false';
+    $scope.credentials = {
+        username: '',
+        password: ''
+    };
 
+    $scope.login = function (credentials) {
+        $scope.loginSuccessMessage = false;
+        $scope.loginErrorMessage = false;
 
-
-        var init = function(credentials){
-
-            var one = $q.defer();
-
-            one.promise.then(function (data) {
-                console.log(data);
-
-                $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
-            }, function (reason) {
-                console.log('Failed: ' + reason);
-                $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
-            });
-
-            var request = gapi.client.booking.calendar.authUserSession({
-                username: credentials.username,
-                password: credentials.password
-            });
-
-            request.execute(function (resp) {
-                $scope.$apply(function() {
-                    if (resp && resp.user) {
-                        Session.create(resp.user.id, resp.user.userType.type);
-                        console.log('yeah');
-                        one.resolve(resp);
-                    } else {
-                        one.reject('error');
-                    }
-                });
-
-            });
-
-            return one.promise;
-        };
-
-        $scope.login = function (credentials) {
-            init(credentials);
-
-
-
-            /*.then(function () {
-             $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
-             }, function () {
-             $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
-             });*/
-        };
+        authService.login(credentials, $scope)
+        .then(function (data) {
+            $location.path('/home');
+            $scope.$broadcast(AUTH_EVENTS.loginSuccess);
+        }, function (reason) {
+            console.log('Failed: ' + reason);
+            $scope.$broadcast(AUTH_EVENTS.loginFailed);
+        });
+    };
 })
 
 ;

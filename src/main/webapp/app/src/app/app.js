@@ -8,18 +8,31 @@ angular.module( 'bookings', [
     'bookings.about',
     'bookings.login',
     'ui.state',
-    'ui.route'
+    'ui.route',
+    'authService'
 ])
 
 .config( function myAppConfig ( $stateProvider, $urlRouterProvider ) {
-  $urlRouterProvider.otherwise( '/home' );
+    $urlRouterProvider.otherwise( '/home' );
 })
 
-.run(function ($rootScope) {
-    /**
-     * $rootScope.doingResolve is a flag useful to display a spinner on changing states.
-     * Some states may require remote data so it will take awhile to load.
-     */
+/*.run(["$rootScope", "AUTH_EVENTS", "authService",
+        function ($rootScope, AUTH_EVENTS, authService) {
+
+    $rootScope.$on('$stateChangeStart', function (event, next, authService) {
+        var authorizedRoles = next.data.authorizedRoles;
+        if (!authService.isAuthorized(authorizedRoles)) {
+            event.preventDefault();
+            if (authService.isAuthenticated()) {
+                // user is not allowed
+                $rootScope.$broadcast(AUTH_EVENTS.notAuthorized);
+            } else {
+                // user is not logged in
+                $rootScope.$broadcast(AUTH_EVENTS.notAuthenticated);
+            }
+        }
+    });
+
     var resolveDone = function () { $rootScope.doingResolve = false; };
     $rootScope.doingResolve = false;
     //$scope.$on('ApiLoaded', resolveDone);
@@ -30,7 +43,8 @@ angular.module( 'bookings', [
     $rootScope.$on('$stateChangeSuccess', resolveDone);
     $rootScope.$on('$stateChangeError', resolveDone);
     $rootScope.$on('$statePermissionError', resolveDone);
-})
+}])*/
+
 .constant('AUTH_EVENTS', {
     loginSuccess: 'auth-login-success',
     loginFailed: 'auth-login-failed',
@@ -47,16 +61,16 @@ angular.module( 'bookings', [
     guest: 'guest'
 })
 
-.controller( 'AppCtrl', function AppCtrl ($scope, $location, USER_ROLES, $window) {
-  $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
-    if ( angular.isDefined( toState.data.pageTitle ) ) {
-      $scope.pageTitle = toState.data.pageTitle + ' | bookings' ;
-    }
-  });
+.controller( 'AppCtrl', function AppCtrl ($scope, $location, authService, $window) {
+    $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
+        if ( angular.isDefined( toState.data.pageTitle ) ) {
+            $scope.pageTitle = toState.data.pageTitle + ' | bookings' ;
+        }
+    });
 
     $scope.currentUser = null;
-    $scope.userRoles = USER_ROLES;
-    //$scope.isAuthorized = AuthService.isAuthorized;
+    //$scope.userRoles = USER_ROLES;
+    $scope.isAuthorized = authService.isAuthorized;
 
     $scope.$window = $window;
 

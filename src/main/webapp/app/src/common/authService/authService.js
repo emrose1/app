@@ -1,20 +1,8 @@
 angular.module('authService', [] )
-.service('authService', function ($rootScope, Session, $q, AUTH_EVENTS) {
+.service('authService', function (Session, $q, AUTH_EVENTS) {
 
-
-
-    this.init = function(credentials){
-
-        var one = $q.defer();
-
-        one.promise.then(function (data) {
-            console.log(data);
-
-            $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
-        }, function (reason) {
-            console.log('Failed: ' + reason);
-            $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
-        });
+    this.login = function(credentials, $scope){
+        var deferred = $q.defer();
 
         var request = gapi.client.booking.calendar.authUserSession({
             username: credentials.username,
@@ -22,23 +10,25 @@ angular.module('authService', [] )
         });
 
         request.execute(function (resp) {
-            if (resp && resp.user) {
-                Session.create(resp.user.id, resp.user.userType.type);
-                console.log('yeah');
-                one.resolve(resp);
-            } else {
-                one.reject('error');
-            }
-            return one.promise;
+            $scope.$apply(function() {
+                if (resp && resp.user) {
+                    Session.create(resp.user.id, resp.user.userType.type);
+                    console.log('yeah');
+                    deferred.resolve(resp);
+                } else {
+                    deferred.reject('error');
+                }
+            });
         });
+        return deferred.promise;
     };
 
-    var isAuthenticated = function () {
+    this.isAuthenticated = function () {
         console.log(!!Session.userId);
         return !!Session.userId;
     };
 
-    var isAuthorized = function (authorizedRoles) {
+    this.isAuthorized = function (authorizedRoles) {
         if (!angular.isArray(authorizedRoles)) {
             authorizedRoles = [authorizedRoles];
         }
@@ -49,6 +39,8 @@ angular.module('authService', [] )
 .service('Session', function () {
 	this.create = function (userId, userRole) {
         console.log('creating session');
+        console.log(userId);
+        console.log(userRole);
 		this.userId = userId;
 		this.userRole = userRole;
 	};

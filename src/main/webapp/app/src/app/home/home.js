@@ -13,7 +13,7 @@
  * specified, as shown below.
  */
 angular.module( 'bookings.home', [
-  'ui.state'
+    'ui.state'
 ])
 
 /**
@@ -21,17 +21,15 @@ angular.module( 'bookings.home', [
  * will handle ensuring they are all available at run-time, but splitting it
  * this way makes each module more "self-contained".
  */
-.config(function config( $stateProvider ) {
-  $stateProvider.state( 'home', {
-    url: '/home',
-    views: {
-      "main": {
+.config(function ($stateProvider) {
+    $stateProvider.state('home', {
+        url: '/home',
         controller: 'HomeCtrl',
-        templateUrl: 'home/home.tpl.html'
-      }
-    },
-    data:{ pageTitle: 'Home' }
-  });
+        templateUrl: 'home/home.tpl.html',
+        data: {
+            //authorizedRoles: [USER_ROLES.admin, USER_ROLES.editor]
+        }
+    });
 })
 
 /**
