@@ -1,20 +1,31 @@
 angular.module( 'bookings.login', [
-  'ui.state',
-  'authService'
+  'ui.state'
 ])
 
-.config(function config( $stateProvider ) {
+.constant('USER_ROLES', {
+    all: '*',
+    admin: 'admin',
+    editor: 'editor',
+    guest: 'guest'
+})
+
+.config(function myAppConfig  ($stateProvider, USER_ROLES) {
   $stateProvider.state( 'login', {
     url: '/login',
     views: {
-      "main": {
-        controller: 'LoginCtrl',
-        templateUrl: 'login/login.tpl.html'
-      }
+        "main": {
+            controller: 'LoginCtrl',
+            templateUrl: 'login/login.tpl.html'
+        }
     },
-    data:{ pageTitle: 'Login' }
+
+    data:{
+        authorizedRoles: [USER_ROLES.admin, USER_ROLES.editor]
+    }
   });
 })
+
+
 
 .controller( 'LoginCtrl', function LoginController($scope, $rootScope, $location, AUTH_EVENTS, authService) {
 

@@ -7,8 +7,8 @@
 describe( 'home section', function() {
   beforeEach( module( 'bookings.home' ) );
 
-  it( 'should have a dummy test', inject( function() {
+ /* it( 'should have a dummy test', inject( function() {
     expect( true ).toBeTruthy();
-  }));
+  }));*/
 });
 

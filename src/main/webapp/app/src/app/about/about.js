@@ -1,7 +1,7 @@
 angular.module( 'bookings.about', [
-  'ui.state',
-  'placeholders',
-  'ui.bootstrap'
+    'ui.state',
+    'placeholders',
+    'ui.bootstrap'
 ])
 
 .config(function config( $stateProvider ) {
@@ -13,7 +13,10 @@ angular.module( 'bookings.about', [
         templateUrl: 'about/about.tpl.html'
       }
     },
-    data:{ pageTitle: 'What is It?' }
+     data:{ pageTitle: 'About' }/*,
+    data:{
+        authorizedRoles: [USER_ROLES.admin, USER_ROLES.editor]
+    }*/
   });
 })
 

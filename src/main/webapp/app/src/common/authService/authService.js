@@ -1,5 +1,4 @@
-angular.module('authService', [] )
-.service('authService', function (Session, $q, AUTH_EVENTS) {
+bookings.service('authService', function (Session, $q, AUTH_EVENTS) {
 
     this.login = function(credentials, $scope){
         var deferred = $q.defer();

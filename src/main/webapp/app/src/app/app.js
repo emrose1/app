@@ -1,49 +1,15 @@
 var gapi = gapi || {};
 gapi.client = gapi.client || {};
 
-angular.module( 'bookings', [
+var bookings = angular.module( 'bookings', [
     'templates-app',
     'templates-common',
     'bookings.home',
     'bookings.about',
     'bookings.login',
     'ui.state',
-    'ui.route',
-    'authService'
+    'ui.route'
 ])
-
-.config( function myAppConfig ( $stateProvider, $urlRouterProvider ) {
-    $urlRouterProvider.otherwise( '/home' );
-})
-
-/*.run(["$rootScope", "AUTH_EVENTS", "authService",
-        function ($rootScope, AUTH_EVENTS, authService) {
-
-    $rootScope.$on('$stateChangeStart', function (event, next, authService) {
-        var authorizedRoles = next.data.authorizedRoles;
-        if (!authService.isAuthorized(authorizedRoles)) {
-            event.preventDefault();
-            if (authService.isAuthenticated()) {
-                // user is not allowed
-                $rootScope.$broadcast(AUTH_EVENTS.notAuthorized);
-            } else {
-                // user is not logged in
-                $rootScope.$broadcast(AUTH_EVENTS.notAuthenticated);
-            }
-        }
-    });
-
-    var resolveDone = function () { $rootScope.doingResolve = false; };
-    $rootScope.doingResolve = false;
-    //$scope.$on('ApiLoaded', resolveDone);
-
-        $rootScope.$on('$stateChangeStart', function () {
-        $rootScope.doingResolve = true;
-    });
-    $rootScope.$on('$stateChangeSuccess', resolveDone);
-    $rootScope.$on('$stateChangeError', resolveDone);
-    $rootScope.$on('$statePermissionError', resolveDone);
-}])*/
 
 .constant('AUTH_EVENTS', {
     loginSuccess: 'auth-login-success',
@@ -61,7 +27,56 @@ angular.module( 'bookings', [
     guest: 'guest'
 })
 
-.controller( 'AppCtrl', function AppCtrl ($scope, $location, authService, $window) {
+.config( function myAppConfig ( $stateProvider, $urlRouterProvider, USER_ROLES) {
+    $urlRouterProvider.otherwise( '/home' );
+    data: {
+        authorizedRoles: [USER_ROLES.admin, USER_ROLES.editor]
+    }
+})
+
+.run(function ($rootScope, AUTH_EVENTS, authService) {
+
+    $rootScope.$on('AUTH_EVENTS.notAuthenticated', function(){
+        console.log('not authenticated');
+    });
+
+    $rootScope.$on('AUTH_EVENTS.notAuthorized', function(){
+        console.log('not authorized');
+    });
+
+    $rootScope.$on('$stateChangeStart', function (event, next) {
+
+        if(next.data && next.data.authorizedRoles) {
+            var authorizedRoles = next.data.authorizedRoles;
+            if (!authService.isAuthorized(authorizedRoles)) {
+                event.preventDefault();
+                if (authService.isAuthenticated()) {
+                    // user is not allowed
+                    $rootScope.$broadcast(AUTH_EVENTS.notAuthorized);
+                } else {
+                    // user is not logged in
+                    $rootScope.$broadcast(AUTH_EVENTS.notAuthenticated);
+                }
+            }
+        }
+    });
+
+    /*var resolveDone = function () { $rootScope.doingResolve = false; };
+    $rootScope.doingResolve = false;
+    //$scope.$on('ApiLoaded', resolveDone);
+
+        $rootScope.$on('$stateChangeStart', function () {
+        $rootScope.doingResolve = true;
+    });
+    $rootScope.$on('$stateChangeSuccess', resolveDone);
+    $rootScope.$on('$stateChangeError', resolveDone);
+    $rootScope.$on('$statePermissionError', resolveDone);*/
+})
+
+
+
+.controller( 'AppCtrl', ['$scope', '$location','$window', 'authService', 'USER_ROLES',
+            function AppCtrl ($scope, $location, $window, authService, USER_ROLES) {
     $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
         if ( angular.isDefined( toState.data.pageTitle ) ) {
             $scope.pageTitle = toState.data.pageTitle + ' | bookings' ;
@@ -69,7 +84,7 @@ angular.module( 'bookings', [
     });
 
     $scope.currentUser = null;
-    //$scope.userRoles = USER_ROLES;
+    $scope.userRoles = USER_ROLES;
     $scope.isAuthorized = authService.isAuthorized;
 
     $scope.$window = $window;
@@ -86,7 +101,7 @@ angular.module( 'bookings', [
         gapi.client.load('booking', 'v1', callback, 'http://localhost:8080/_ah/api');
     };
 
-})
+}])
 
 ;
 
