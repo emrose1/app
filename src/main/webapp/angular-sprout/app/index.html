@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en" ng-app="application">
+<head>
+  <meta charset="utf-8">
+  <title>Angular Seedling</title>
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="application/application.css"/>
+  <link rel="stylesheet" href="login/login.css"/>
+</head>
+<body>
+    <nav>
+    <ng-include src="'menu/menu-partial.html'"/>
+    </nav>
+
+    <ng-view/>
+
+    <div ui-view>testing index</div>
+
+    <!-- In production use:
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular.min.js"></script>
+    -->
+    <script src="lib/angular.js"></script>
+    <script src="lib/angular-ui-router.min.js"></script>
+
+    <script src="application/application.js"></script>
+    <script src="application/configuration-constants.js"></script>
+
+    <script src="auth/auth-service.js"></script>
+    <script src="menu/menu-service.js"></script>
+    
+    <script src="application/application-controller.js"></script>
+    
+    <script src="login/login-controller.js"></script>
+    <script src="details/details-controller.js"></script>
+    <script src="error/error-controller.js"></script>
+    <script src="menu/menu-controller.js"></script>
+    <script src="menu/menu-item-directive.js"></script>
+    <script src="date-time/to-date-string-filter.js"></script>
+
+
+    <script>
+        var init = function() {
+            console.log('bookings init called');
+            window.initialise();
+        };
+    </script>
+    <script src="https://apis.google.com/js/client.js?onload=init"></script>
+
+</body>
+</html>
