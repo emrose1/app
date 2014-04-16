@@ -17,8 +17,9 @@ Application.Constants.constant('AUTH_EVENTS', {
 Application.Constants.constant('USER_ROLES', {
     all: '*',
     admin: 'admin',
-    editor: 'editor',
-    guest: 'guest'
+    owner: 'owner',
+    organizer: 'organizer',
+    attendee: 'attendee'
 });
 
 

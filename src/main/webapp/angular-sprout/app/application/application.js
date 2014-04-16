@@ -22,10 +22,47 @@ angular.module('application', [
     'application.directives',
     'application.constants',
     'application.controllers'
-
 ])
 
-.run(function ($rootScope, AUTH_EVENTS, auth) {
+.config(function($stateProvider, $urlRouterProvider, USER_ROLES) {
+    $urlRouterProvider.otherwise( '/login' );
+
+    $stateProvider
+        .state('about', {
+            url: '/about',
+            //controller:'application',
+            templateUrl: 'about/about-partial.html',
+            data: {
+                authorizedRoles: [USER_ROLES.all, USER_ROLES.owner],
+                pageTitle: 'Home'
+            }
+        })
+        .state('details', {
+            url: '/details',
+            controller: 'details',
+            templateUrl: 'details/details-partial.html',
+            data: {
+                authorizedRoles: [USER_ROLES.admin],
+                pageTitle: 'Details'
+            }
+        })
+        .state('error', {
+            url: '/error',
+            controller: 'error',
+            templateUrl: 'error/error-partial.html',
+            data: {
+                authorizedRoles: [USER_ROLES.admin, USER_ROLES.owner],
+                pageTitle: 'Error'
+            }
+        })
+        .state( 'login', {
+            url: '/login',
+            controller: 'login',
+            templateUrl: 'login/login-partial.html'
+        });
+})
+
+.run(function ($rootScope, AUTH_EVENTS, auth, $window) {
 
     $rootScope.$on('AUTH_EVENTS.notAuthenticated', function(){
         console.log('not authenticated');
@@ -36,10 +73,16 @@ angular.module('application', [
     });
 
     $rootScope.$on('$stateChangeStart', function (event, next) {
+        console.log('changestart');
+
+        $rootScope.alertType = "alert-info";
+        $rootScope.alertMessage = "Loading...";
+        $rootScope.active = "progress-striped active progress-warning";
 
         if(next.data && next.data.authorizedRoles) {
             var authorizedRoles = next.data.authorizedRoles;
             if (!auth.isAuthorized(authorizedRoles)) {
+
                 event.preventDefault();
                 if (auth.isAuthenticated()) {
                     // user is not allowed
@@ -51,43 +94,41 @@ angular.module('application', [
             }
         }
     });
+
+    $rootScope.$on('$stateChangeSuccess', function (event, next) {
+        console.log('change success');
+
+        $rootScope.alertType = "alert-success";
+        $rootScope.alertMessage = "Successfully changed routes :)";
+        $rootScope.active = "progress-success";
+
+
+    });
+
+    $rootScope.$on('$stateChangeError', function (event, next) {
+
+        console.log('change error');
+
+        $rootScope.alertType = "alert-warning";
+        $rootScope.alertMessage = "Error changing routes :)";
+        $rootScope.active = "progress-success";
+
+
+    });
+
+    $rootScope.$window = $window;
+
+    $window.initialise = function() {
+        var apisToLoad = 1;
+        var callback = function() {
+            if(--apisToLoad === 0) {
+                console.log('api loaded');
+                $rootScope.$broadcast('EventLoaded');
+                //$scope.is_backend_ready = true;
+            }
+        };
+        gapi.client.load('booking', 'v1', callback, 'http://localhost:8080/_ah/api');
+    };
 })
-
-.config(function($stateProvider, $urlRouterProvider, USER_ROLES) {
-    $urlRouterProvider.otherwise( '/login' );
-
-    $stateProvider
-        .state('about', {
-            url: '/about',
-            controller:'application',
-            templateUrl: 'about/about-partial.html'
-            /*data: {
-                authorizedRoles: [USER_ROLES.all, USER_ROLES.editor],
-                pageTitle: 'Home'
-            }*/
-        })
-        .state('details', {
-            url: '/details',
-            controller: 'details',
-            templateUrl: 'details/details-partial.html',
-            data: {
-                authorizedRoles: [USER_ROLES.admin, USER_ROLES.editor],
-                pageTitle: 'Details'
-            }
-        })
-        .state('error', {
-            url: '/error',
-            controller: 'error',
-            templateUrl: 'error/error-partial.html',
-            data: {
-                authorizedRoles: [USER_ROLES.admin, USER_ROLES.editor],
-                pageTitle: 'Error'
-            }
-        })
-        .state( 'login', {
-            url: '/login',
-            controller: 'application.login',
-            templateUrl: 'login/login-partial.html'
-        });
-});
+;
 

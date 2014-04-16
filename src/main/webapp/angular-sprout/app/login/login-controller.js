@@ -1,16 +1,5 @@
-Application.Controllers.controller( 'application.login', function LoginController($scope, $rootScope, $location, AUTH_EVENTS, auth) {
-
-    var loginSuccess = function () {
-        console.log('login success');
-        $scope.loginSuccessMessage = true;
-    };
-    var loginFailed = function () {
-        console.log('login failed');
-        $scope.loginErrorMessage = true;
-    };
-
-    $scope.$on(AUTH_EVENTS.loginSuccess, loginSuccess);
-    $scope.$on(AUTH_EVENTS.loginFailed, loginFailed);
+Application.Controllers.controller( 'login',
+    function LoginController($scope, $rootScope, $location, AUTH_EVENTS, auth, session) {
 
     $scope.credentials = {
         username: '',
@@ -24,10 +13,10 @@ Application.Controllers.controller( 'application.login', function LoginControlle
         auth.login(credentials, $scope)
         .then(function (data) {
             $location.path('/about');
-            $scope.$broadcast(AUTH_EVENTS.loginSuccess);
+            $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
         }, function (reason) {
             console.log('Failed: ' + reason);
-            $scope.$broadcast(AUTH_EVENTS.loginFailed);
+            $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
         });
     };
 })

@@ -8,14 +8,42 @@
   <link rel="stylesheet" href="login/login.css"/>
 </head>
 <body>
+
+
+
+
+    <div ng-controller="application">
+
+
     <nav>
-    <ng-include src="'menu/menu-partial.html'"/>
+        <ng-include src="'menu/menu-partial.html'"/>
     </nav>
 
-    <ng-view/>
+    <div class="alert" ng-class="alertType" ng-cloak>
+        {{alertMessage}}
+    </div>
 
-    <div ui-view>testing index</div>
 
+
+    <div class="progress" ng-class="active" ng-cloak>
+        <div class="bar" style="width: 100%;"></div>
+    </div>
+
+
+        <h1>boing {{ currentUser }}</h1>
+        <div ng-if="currentUser">Welcome, {{ currentUser }}</div>
+
+        <h2> {{ userRoles.admin ===  currentUser  }} </h2>
+        <div ng-if="isAuthorized(userRoles.admin)">Boing You're admin.</div>
+        <div ng-switch on="currentUser">
+            <div ng-switch-when="userRoles.admin">You're admin.</div>
+            <div ng-switch-when="userRoles.editor">You're editor.</div>
+            <div ng-switch-default>You're something else.</div>
+        </div>
+
+        <div ui-view>testing index</div>
+
+    </div>
     <!-- In production use:
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular.min.js"></script>
     -->
@@ -24,12 +52,9 @@
 
     <script src="application/application.js"></script>
     <script src="application/configuration-constants.js"></script>
-
-    <script src="auth/auth-service.js"></script>
+    <script src="common/auth/auth-service.js"></script>
     <script src="menu/menu-service.js"></script>
-    
     <script src="application/application-controller.js"></script>
-    
     <script src="login/login-controller.js"></script>
     <script src="details/details-controller.js"></script>
     <script src="error/error-controller.js"></script>
