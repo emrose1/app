@@ -6,13 +6,6 @@
         <h5>Please sign in to get access.</h5>
 
         <form id="login-form" name="loginForm" ng-submit="login(credentials)" novalidate class="form">
-            <div class="alert alert-danger" ng-show="loginErrorMessage">
-                Your username and password don't match our records
-            </div>
-
-            <div class="alert alert-danger" ng-show="loginSuccessMessage">
-                Success message {{currentUser}}
-            </div>
 
             <div class="form-group">
                 <label for="username">Username</label>

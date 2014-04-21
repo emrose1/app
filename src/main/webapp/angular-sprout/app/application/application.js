@@ -33,7 +33,7 @@ angular.module('application', [
             //controller:'application',
             templateUrl: 'about/about-partial.html',
             data: {
-                authorizedRoles: [USER_ROLES.all, USER_ROLES.owner],
+                authorizedRoles: [USER_ROLES.admin, USER_ROLES.owner],
                 pageTitle: 'Home'
             }
         })
@@ -48,8 +48,8 @@ angular.module('application', [
         })
         .state('error', {
             url: '/error',
-            controller: 'error',
-            templateUrl: 'error/error-partial.html',
+            controller: 'details',
+            templateUrl: 'details/details-partial.html',
             data: {
                 authorizedRoles: [USER_ROLES.admin, USER_ROLES.owner],
                 pageTitle: 'Error'
@@ -63,14 +63,6 @@ angular.module('application', [
 })
 
 .run(function ($rootScope, AUTH_EVENTS, auth, $window) {
-
-    $rootScope.$on('AUTH_EVENTS.notAuthenticated', function(){
-        console.log('not authenticated');
-    });
-
-    $rootScope.$on('AUTH_EVENTS.notAuthorized', function(){
-        console.log('not authorized');
-    });
 
     $rootScope.$on('$stateChangeStart', function (event, next) {
         console.log('changestart');
@@ -86,9 +78,11 @@ angular.module('application', [
                 event.preventDefault();
                 if (auth.isAuthenticated()) {
                     // user is not allowed
+                    console.log('not authed');
                     $rootScope.$broadcast(AUTH_EVENTS.notAuthorized);
                 } else {
                     // user is not logged in
+                    console.log('not authenticated');
                     $rootScope.$broadcast(AUTH_EVENTS.notAuthenticated);
                 }
             }

@@ -1,5 +1,5 @@
 Application.Controllers.controller( 'login',
-    function LoginController($scope, $rootScope, $location, AUTH_EVENTS, auth, session) {
+    function LoginController($scope, $rootScope, $location, AUTH_EVENTS, auth, session, alerts) {
 
     $scope.credentials = {
         username: '',
@@ -12,10 +12,13 @@ Application.Controllers.controller( 'login',
 
         auth.login(credentials, $scope)
         .then(function (data) {
+            alerts.clear();
             $location.path('/about');
             $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
         }, function (reason) {
-            console.log('Failed: ' + reason);
+            alerts.setAlert({
+                'alertMessage': "Your username and password don't match our records",
+                'alertType': 'alert-danger'});
             $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
         });
     };

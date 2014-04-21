@@ -1,47 +1,87 @@
 <!doctype html>
 <html lang="en" ng-app="application">
-<head>
-  <meta charset="utf-8">
-  <title>Angular Seedling</title>
-  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="application/application.css"/>
-  <link rel="stylesheet" href="login/login.css"/>
-</head>
-<body>
+    <head>
+        <meta charset="utf-8">
+        <title>Angular Seedling</title>
+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="application/application.css"/>
+        <link rel="stylesheet" href="login/login.css"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    </head>
+    <body>
 
+        <div class="container" ng-controller="application">
 
+            <nav class="navbar navbar-inverse" role="navigation">
+                <div class="container-fluid">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="#">Brand</a>
+                    </div>
 
+                        <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav">
+                            <li class="active"><a href="#">Link</a></li>
+                            <li><a href="#">Link</a></li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="#">Action</a></li>
+                                    <li><a href="#">Another action</a></li>
+                                    <li><a href="#">Something else here</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="#">Separated link</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="#">One more separated link</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <form class="navbar-form navbar-left" role="search">
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Search">
+                            </div>
+                            <button type="submit" class="btn btn-default">Submit</button>
+                        </form>
+                        <ul class="nav navbar-nav navbar-right">
+                            <li>
+                                <a ng-if="!isAuthenticated()" href="#/login">Login</a>
+                                <a ng-if="isAuthenticated()" href="#" ng-click="logout()">Logout</a>
+                            </li>
+                            <li class="dropdown" ng-if="isAuthorized(userRoles.admin)">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin <b class="caret"></b></a>
+                                <ul class="dropdown-menu" role="menu" ng-if="isAuthorized(userRoles.admin)">
+                                    <li><a href="#">Action</a></li>
+                                    <li><a href="#">Another action</a></li>
+                                    <li><a href="#">Something else here</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="#">Separated link</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><!-- /.navbar-collapse -->
+                </div><!-- /.container-fluid -->
+            </nav>
 
-    <div ng-controller="application">
+        <nav>
+            <ng-include src="'menu/menu-partial.html'"/>
+        </nav>
 
-
-    <nav>
-        <ng-include src="'menu/menu-partial.html'"/>
-    </nav>
-
-    <div class="alert" ng-class="alertType" ng-cloak>
-        {{alertMessage}}
-    </div>
-
-
-
-    <div class="progress" ng-class="active" ng-cloak>
-        <div class="bar" style="width: 100%;"></div>
-    </div>
-
-
-        <h1>boing {{ currentUser }}</h1>
-        <div ng-if="currentUser">Welcome, {{ currentUser }}</div>
-
-        <h2> {{ userRoles.admin ===  currentUser  }} </h2>
-        <div ng-if="isAuthorized(userRoles.admin)">Boing You're admin.</div>
-        <div ng-switch on="currentUser">
-            <div ng-switch-when="userRoles.admin">You're admin.</div>
-            <div ng-switch-when="userRoles.editor">You're editor.</div>
-            <div ng-switch-default>You're something else.</div>
+        <div class="progress progress-striped" ng-if="isError()">
+            <div class="progress-bar" ng-class="active" role="progressbar" ng-show="feedbackMessage"
+                aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                <span class="sr-only"></span>
+            </div>
         </div>
-
-        <div ui-view>testing index</div>
+        <div alert-modal alertinfo="alerts.alertMessage"></div>
+        <div ui-view></div>
 
     </div>
     <!-- In production use:
@@ -52,12 +92,15 @@
 
     <script src="application/application.js"></script>
     <script src="application/configuration-constants.js"></script>
-    <script src="common/auth/auth-service.js"></script>
+
+    <script src="common/auth-service/auth-service.js"></script>
+
+    <script src="alerts/alert-directive.js"></script>
+    <script src="alerts/alert-service.js"></script>
     <script src="menu/menu-service.js"></script>
     <script src="application/application-controller.js"></script>
     <script src="login/login-controller.js"></script>
     <script src="details/details-controller.js"></script>
-    <script src="error/error-controller.js"></script>
     <script src="menu/menu-controller.js"></script>
     <script src="menu/menu-item-directive.js"></script>
     <script src="date-time/to-date-string-filter.js"></script>

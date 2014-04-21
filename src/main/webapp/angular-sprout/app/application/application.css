@@ -1,5 +1,10 @@
 /* app css stylesheet */
 
+.container {
+	width: 960px;
+	margin: 0px auto;
+}
+
 .menu {
   list-style: none;
   border-bottom: 0.1em solid black;
