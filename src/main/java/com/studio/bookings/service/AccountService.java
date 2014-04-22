@@ -6,8 +6,8 @@ import javax.inject.Named;
 
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
-import com.googlecode.objectify.Key;
 import com.studio.bookings.entity.Account;
+import com.studio.bookings.entity.Calendar;
 import com.studio.bookings.util.Constants;
 
 @Api(
@@ -21,9 +21,15 @@ import com.studio.bookings.util.Constants;
 public class AccountService extends BaseService {
 
 	@ApiMethod(name = "account.addAccount", path="calendar.addAccount", httpMethod = "post")
-	public Account insertAccount(@Named("name") String name) {
+	public Account insertAccount(
+			@Named("name") String name,
+			@Named("description") String description
+			) {
 		Account account = new Account(name);
 		accountDao.save(account);
+		
+		Calendar calendar = new Calendar(description, account);
+		calendarDao.save(calendar);
 		return account;
 	}
 	

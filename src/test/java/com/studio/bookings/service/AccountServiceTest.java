@@ -1,5 +1,7 @@
 package com.studio.bookings.service;
 
+import static com.studio.bookings.util.TestObjectifyService.ofy;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -13,21 +15,23 @@ import com.studio.bookings.entity.Account;
 import com.studio.bookings.entity.Calendar;
 import com.studio.bookings.util.TestBase;
 
-import static com.studio.bookings.util.TestObjectifyService.ofy;
-
 
 public class AccountServiceTest extends TestBase {
 	
 	public static AccountService accountService = new AccountService();
 	BaseDao<Account> accountDao = new BaseDao<Account>(Account.class);
-	
+	public static CalendarService calendarService = new CalendarService();
+	BaseDao<Calendar> calendarDao = new BaseDao<Calendar>(Calendar.class);
 	
 	@Test
 	public void insertAccount() {
 		
-		Account account = accountService.insertAccount("Testing Account");
+		Account account = accountService.insertAccount("Testing Account", "Testing Calendar");
 		Account accountFetched = accountService.findAccount(account.getId());
 		
+		Calendar calendarFetched = calendarService.listCalendars(account.getId()).get(0);
+		assert "Testing Calendar".equals(calendarFetched.getDescription());
+		assert account.getId().equals(calendarFetched.getAccount().getId());
 		assert account.getId().equals(accountFetched.getId());
 		assert account.getName().equals(accountFetched.getName());
 		Assert.assertNotNull(account.getAccountSettings().getRepeatEventFinalDate());
@@ -46,8 +50,8 @@ public class AccountServiceTest extends TestBase {
 		String accountName1 = "Account 1";
 		String accountName2 = "Account 2";
 
-		Account account1 = accountService.insertAccount(accountName1);
-		Account account2 = accountService.insertAccount(accountName2);
+		Account account1 = accountService.insertAccount(accountName1, "test");
+		Account account2 = accountService.insertAccount(accountName2, "test");
 		
 		Account accountFetched1 = accountService.findAccount(account1.getId());
 		Account accountFetched2 = accountService.findAccount(account2.getId());
@@ -68,8 +72,8 @@ public class AccountServiceTest extends TestBase {
 		String accountName1 = "Account 1";
 		String accountName2 = "Account 2";
 
-		Account account1 = accountService.insertAccount(accountName1);
-		Account account2 = accountService.insertAccount(accountName2);
+		Account account1 = accountService.insertAccount(accountName1, "test");
+		Account account2 = accountService.insertAccount(accountName2, "test");
 		
 		List<Account> objs = new ArrayList<Account>();
 		objs.add(account1);
@@ -86,7 +90,7 @@ public class AccountServiceTest extends TestBase {
 	public void updateAccount() {
 		
 		String accountName = "Account name";
-		Account account = accountService.insertAccount(accountName);
+		Account account = accountService.insertAccount(accountName, "test");
 		Account accountUpdated = accountService.updateAccount(account.getId(), "updated Account");
 		//Account accountUpdated = accountService.findAccount(accountUpdatedId);
 		
@@ -100,7 +104,7 @@ public class AccountServiceTest extends TestBase {
 	public void deleteAccount() {
 		
 		String accountName = "Account name";
-		Account account = accountService.insertAccount(accountName);
+		Account account = accountService.insertAccount(accountName, "test");
 		ofy().clear();
 		Account accountDeleted = accountDao.retrieve(account.getId());
 		assert accountDeleted != null;
@@ -108,6 +112,4 @@ public class AccountServiceTest extends TestBase {
 		ofy().clear();
 		assert ofy().load().key(accountDeleted.getKey()).now() == null;
 	}
-	
-
 }

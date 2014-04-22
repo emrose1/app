@@ -26,7 +26,6 @@ import com.studio.bookings.dao.EventCategoryDao;
 import com.studio.bookings.dao.EventDao;
 import com.studio.bookings.dao.EventItemDao;
 import com.studio.bookings.dao.InstructorDao;
-import com.studio.bookings.dao.UserDao;
 import com.studio.bookings.entity.Account;
 import com.studio.bookings.entity.Calendar;
 import com.studio.bookings.entity.Event;
@@ -52,7 +51,7 @@ import com.studio.bookings.util.LoadDummyData;
     audiences = {Constants.ANDROID_AUDIENCE}
 )
 
-public class EventTestingService {
+public class EventTestingService extends BaseService {
 	
 	public static ArrayList<Event> events = new ArrayList<Event>();
 	public static EventDao eventDao = new EventDao();
@@ -60,7 +59,6 @@ public class EventTestingService {
 	public static EventAttributeDao eventAttributeDao = new EventAttributeDao();
 	public static EventCategoryDao eventCategoryDao = new EventCategoryDao();
 	public static InstructorDao instructorDao = new InstructorDao();
-	public static UserDao userDao = new UserDao();
 	
 	BaseDao<Account> accountDao = new BaseDao<Account>(Account.class);
 	ChildBaseDao<Calendar, Account> calendarDao = new ChildBaseDao<Calendar, Account>(Calendar.class, Account.class);

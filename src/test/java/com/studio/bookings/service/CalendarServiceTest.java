@@ -26,7 +26,7 @@ public class CalendarServiceTest extends TestBase {
 
 	@Test
 	public void insertCalendar() {
-		Account account = accountService.insertAccount("Testing Account");
+		Account account = accountService.insertAccount("Testing Account", "Test");
 		Calendar calendar = calendarService.insertCalendar("Testing Calendar", account.getId());
 		
 		Calendar calendarFetched = calendarService.findCalendar(calendar.getId(), account.getId());
@@ -41,8 +41,8 @@ public class CalendarServiceTest extends TestBase {
 		String accountName1 = "Account 1";
 		String accountName2 = "Account 2";
 
-		Account account1 = accountService.insertAccount(accountName1);
-		Account account2 = accountService.insertAccount(accountName2);
+		Account account1 = accountService.insertAccount(accountName1, "test");
+		Account account2 = accountService.insertAccount(accountName2, "test");
 		
 		String calendarName1 = "Calendar 1";
 		String calendarName2 = "Calendar 2";

@@ -10,10 +10,10 @@ import com.studio.bookings.dao.EventCategoryDao;
 import com.studio.bookings.dao.EventDao;
 import com.studio.bookings.dao.EventItemDao;
 import com.studio.bookings.dao.InstructorDao;
-import com.studio.bookings.dao.UserDao;
 import com.studio.bookings.entity.Account;
 import com.studio.bookings.entity.Calendar;
 import com.studio.bookings.entity.Event;
+import com.studio.bookings.entity.User;
 import com.studio.bookings.util.Constants;
 
 /**
@@ -35,7 +35,9 @@ public class BaseService {
 	public static EventAttributeDao eventAttributeDao = new EventAttributeDao();
 	public static EventCategoryDao eventCategoryDao = new EventCategoryDao();
 	public static InstructorDao instructorDao = new InstructorDao();
-	public static UserDao userDao = new UserDao();
+
 	public static BaseDao<Account> accountDao = new BaseDao<Account>(Account.class);
 	public static ChildBaseDao<Calendar, Account> calendarDao = new ChildBaseDao<Calendar, Account>(Calendar.class, Account.class);
+	public static ChildBaseDao<User, Account> userDao = new ChildBaseDao<User, Account>(User.class, Account.class);
+
 }
