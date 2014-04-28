@@ -10,6 +10,7 @@ import com.studio.bookings.dao.EventCategoryDao;
 import com.studio.bookings.dao.EventDao;
 import com.studio.bookings.dao.EventItemDao;
 import com.studio.bookings.dao.InstructorDao;
+import com.studio.bookings.entity.AccessControlList;
 import com.studio.bookings.entity.Account;
 import com.studio.bookings.entity.Calendar;
 import com.studio.bookings.entity.Event;
@@ -39,5 +40,6 @@ public class BaseService {
 	public static BaseDao<Account> accountDao = new BaseDao<Account>(Account.class);
 	public static ChildBaseDao<Calendar, Account> calendarDao = new ChildBaseDao<Calendar, Account>(Calendar.class, Account.class);
 	public static ChildBaseDao<User, Account> userDao = new ChildBaseDao<User, Account>(User.class, Account.class);
+	public static ChildBaseDao<AccessControlList, Account> accessControlListDao = new ChildBaseDao<AccessControlList, Account>(AccessControlList.class, Account.class);
 
 }

@@ -74,14 +74,15 @@
             <ng-include src="'menu/menu-partial.html'"/>
         </nav>
 
-        <div class="progress progress-striped" ng-if="isError()">
-            <div class="progress-bar" ng-class="active" role="progressbar" ng-show="feedbackMessage"
+
+        <div class="progress progress-striped" ng-if="!backendReady">
+            <div class="progress-bar progress-bar-info" role="progressbar"
                 aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
                 <span class="sr-only"></span>
             </div>
         </div>
         <div alert-modal alertinfo="alerts.alertMessage"></div>
-        <div ui-view></div>
+        <div ui-view ng-if="backendReady"></div>
 
     </div>
     <!-- In production use:
@@ -95,8 +96,16 @@
 
     <script src="common/auth-service/auth-service.js"></script>
 
+    <script src="accounts/accounts-service.js"></script>
+    <script src="accounts/accounts-controller.js"></script>
+    <script src="about/about-controller.js"></script>
+
     <script src="alerts/alert-directive.js"></script>
     <script src="alerts/alert-service.js"></script>
+
+    <script src="progressbar/progressbar-directive.js"></script>
+    <script src="progressbar/progressbar-service.js"></script>
+
     <script src="menu/menu-service.js"></script>
     <script src="application/application-controller.js"></script>
     <script src="login/login-controller.js"></script>
@@ -104,6 +113,8 @@
     <script src="menu/menu-controller.js"></script>
     <script src="menu/menu-item-directive.js"></script>
     <script src="date-time/to-date-string-filter.js"></script>
+
+
 
 
     <script>

@@ -22,5 +22,11 @@
 		"name" : "login",
 		"description" : "login details",
 		"timestamp" : "1349651343000"
+	},
+	{
+		"id" : "accounts",
+		"name" : "accounts",
+		"description" : "accounts list",
+		"timestamp" : "1349651343000"
 	}
 ]

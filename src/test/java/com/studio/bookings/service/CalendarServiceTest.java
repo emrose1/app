@@ -1,21 +1,12 @@
 package com.studio.bookings.service;
 
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.inject.Named;
-
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.googlecode.objectify.Key;
-import com.studio.bookings.dao.BaseDao;
 import com.studio.bookings.entity.Account;
 import com.studio.bookings.entity.Calendar;
 import com.studio.bookings.util.TestBase;
-
-import static com.studio.bookings.util.TestObjectifyService.ofy;
 
 
 public class CalendarServiceTest extends TestBase {
@@ -26,7 +17,7 @@ public class CalendarServiceTest extends TestBase {
 
 	@Test
 	public void insertCalendar() {
-		Account account = accountService.insertAccount("Testing Account", "Test");
+		Account account = accountService.insertAccount("Testing Account", "Test", "admin", "123", "ADMIN");
 		Calendar calendar = calendarService.insertCalendar("Testing Calendar", account.getId());
 		
 		Calendar calendarFetched = calendarService.findCalendar(calendar.getId(), account.getId());
@@ -41,8 +32,8 @@ public class CalendarServiceTest extends TestBase {
 		String accountName1 = "Account 1";
 		String accountName2 = "Account 2";
 
-		Account account1 = accountService.insertAccount(accountName1, "test");
-		Account account2 = accountService.insertAccount(accountName2, "test");
+		Account account1 = accountService.insertAccount(accountName1, "test", "admin", "123", "ADMIN");
+		Account account2 = accountService.insertAccount(accountName2, "test", "admin", "123", "ADMIN");
 		
 		String calendarName1 = "Calendar 1";
 		String calendarName2 = "Calendar 2";

@@ -10,23 +10,12 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Named;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.joda.time.DateTime;
 
-import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.NotFoundException;
-import com.studio.bookings.dao.BaseDao;
-import com.studio.bookings.dao.ChildBaseDao;
-import com.studio.bookings.dao.EventAttributeDao;
-import com.studio.bookings.dao.EventCategoryDao;
-import com.studio.bookings.dao.EventDao;
-import com.studio.bookings.dao.EventItemDao;
-import com.studio.bookings.dao.InstructorDao;
-import com.studio.bookings.dao.UserDao;
 import com.studio.bookings.entity.Account;
 import com.studio.bookings.entity.Calendar;
 import com.studio.bookings.entity.Event;
@@ -36,10 +25,6 @@ import com.studio.bookings.entity.EventItem;
 import com.studio.bookings.entity.EventItemDetails;
 import com.studio.bookings.entity.EventRepeatType;
 import com.studio.bookings.entity.Instructor;
-import com.studio.bookings.entity.User;
-import com.studio.bookings.entity.UserSession;
-import com.studio.bookings.util.Constants;
-import com.studio.bookings.util.LoadDummyData;
 
 
 public class EventService extends BaseService {

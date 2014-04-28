@@ -53,10 +53,11 @@ public class User implements Serializable {
     
     public User(){}
     
-    public User(String username, String password, UserType userType, Account account) {
+    public User(String username, String password, String userType, Account account) {
     	this.username = username;
     	this.password = password;
-    	this.userType = userType;
+    	this.userType = UserType.valueOf(userType);
+    	this.setAccount(account);
     	dateCreated = new Date();
     }
 

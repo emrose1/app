@@ -1,21 +1,22 @@
 package com.studio.bookings.servlet;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.studio.bookings.dao.UserDao;
+import com.studio.bookings.dao.ChildBaseDao;
+import com.studio.bookings.entity.Account;
 import com.studio.bookings.entity.User;
-import com.studio.bookings.entity.UserSession;
 import com.studio.bookings.util.LoadDummyData;
 
 
 public class LoginServlet extends HttpServlet {
+	
+	public static ChildBaseDao<User, Account> userDao = new ChildBaseDao<User, Account>(User.class, Account.class);
+	
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         execute(request, response);
@@ -28,8 +29,8 @@ public class LoginServlet extends HttpServlet {
     void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	
     	//Dummy Data Setup
-    	UserDao userDao = new UserDao();
-    	if (userDao.findAll().size() == 0) {
+    	//UserDao userDao = new UserDao();
+    	if (userDao.list().size() == 0) {
     		LoadDummyData ldd = new LoadDummyData();
     		ldd.initSetup();
     	}
@@ -41,7 +42,9 @@ public class LoginServlet extends HttpServlet {
         //request.setAttribute("message", username);
         
         if(username != null && password != null) {
-            try {
+        	
+        	//TODO fix
+            /*try {
                 User user = userDao.getByUsernamePassword(username, password);
 
                 if(user != null) {
@@ -60,7 +63,7 @@ public class LoginServlet extends HttpServlet {
             	request.setAttribute("message", e);
             	request.getRequestDispatcher("/app/login").forward(request, response);
                 //e.printStackTrace();
-            }
+            }*/
         } else {
             request.setAttribute("message", "Insert username and password!");
             request.getRequestDispatcher("/app/login").forward(request, response);

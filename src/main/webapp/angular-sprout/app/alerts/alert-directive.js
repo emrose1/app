@@ -1,17 +1,14 @@
-// <div alert-bar alertMessage="myMessageVar"></div>
 Application.Directives.directive('alertModal', ['$parse', function($parse) {
   return {
     restrict: 'A',
     templateUrl: 'alerts/alert-modal-template.html',
 
     link: function(scope, elem, attrs) {
-      console.log(attrs);
       var alertMessageAttr = attrs['alertinfo'];
+      console.log(alertMessageAttr);
       scope.alertMessage = null;
 
       scope.$watch(alertMessageAttr, function(newVal) {
-        console.log(alertMessageAttr);
-        console.log(newVal);
         scope.alertMessage = newVal;
       });
       scope.hideAlert = function() {

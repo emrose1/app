@@ -340,31 +340,16 @@ public class EventTestingService extends BaseService {
 		return Arrays.asList(EventRepeatType.values());
 	}
 	
-	@ApiMethod(name = "calendar.getUser", path="calendar.getUser", httpMethod = "get")
-	public User getUser(HttpServletRequest req) {
-		HttpSession session = req.getSession(false);
-		UserSession userSession = (UserSession) session.getAttribute("userSession");
-		User user = userSession.getUser();
-		return user;
-	}
-	
-	@ApiMethod(name = "calendar.getUserSession", path="calendar.getUserSession", httpMethod = "get")
-	public List<UserSession> getUserSession(HttpServletRequest req) {
-		List<UserSession> stringList = new ArrayList<UserSession>();
-		HttpSession session = req.getSession(false);
-		UserSession userSession = (UserSession) session.getAttribute("userSession");
-		stringList.add(userSession);
-	    return stringList;
-	}
+
 	
 	//TODO return permission role
 	// to test var message = {'email' : 'admin', 'password': 'password'}; console.log(message); 
 	// gapi.client.booking.calendar.authUserSession(message).execute(function(resp) { console.log(resp);});
 	
-	@ApiMethod(name = "calendar.authUserSession", path="calendar.authUserSession", httpMethod = "post")
+	/*@ApiMethod(name = "calendar.authUserSession", path="calendar.authUserSession", httpMethod = "post")
 	public UserSession authUserSession(@Named("username") String username, @Named("password") String password, HttpServletRequest request) {
 		
-		if (userDao.findAll().size() == 0) {
+		if (userDao.list().size() == 0) {
     		LoadDummyData ldd = new LoadDummyData();
     		ldd.initSetup();
     	}
@@ -379,5 +364,5 @@ public class EventTestingService extends BaseService {
             return null;
         }
 	    return userSession;
-	}
+	}*/
 }

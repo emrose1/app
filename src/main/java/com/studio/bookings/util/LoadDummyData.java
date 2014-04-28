@@ -1,9 +1,7 @@
 package com.studio.bookings.util;
 
-import com.studio.bookings.dao.AccessControlListDao;
 import com.studio.bookings.dao.BaseDao;
 import com.studio.bookings.dao.BookingDao;
-import com.studio.bookings.dao.CalendarDao;
 import com.studio.bookings.dao.EventAttributeDao;
 import com.studio.bookings.dao.EventCategoryDao;
 import com.studio.bookings.dao.EventDao;
@@ -13,13 +11,13 @@ import com.studio.bookings.entity.User;
 import com.studio.bookings.enums.Permission;
 import com.studio.bookings.enums.UserType;
 import com.studio.bookings.service.AccountService;
+import com.studio.bookings.service.BaseService;
 
-public class LoadDummyData {
+public class LoadDummyData extends BaseService {
 	
 	public static EventDao eventDao = new EventDao();
 	public static EventAttributeDao eventAttributeDao = new EventAttributeDao();
 	public static EventCategoryDao eventCategoryDao = new EventCategoryDao();
-	public static CalendarDao calDao = new CalendarDao();
 
 	public static BookingDao bookingDao = new BookingDao();
 	
@@ -28,10 +26,9 @@ public class LoadDummyData {
 	
 	public void initSetup() {
 		
-		Account account = accountService.insertAccount("Testing Account", "test");
-		
-		Account account2 = accountService.insertAccount("Testing Account2", "test");
-		Account account3 = accountService.insertAccount("Testing Account3", "test");
+		Account account = accountService.insertAccount("Testing Account", "test", "admin", "123", "ADMIN");
+		Account account2 = accountService.insertAccount("Testing Account2", "test", "admin", "123", "ADMIN");
+		Account account3 = accountService.insertAccount("Testing Account3", "test", "admin", "123", "ADMIN");
 		
 	
 		/*CalendarDao calendarDao = new CalendarDao();
@@ -94,21 +91,21 @@ public class LoadDummyData {
 		eventDao.save(event6);*/
 		
 
-		Permission bookingPermission = Permission.BOOKING;
+		/*Permission bookingPermission = Permission.BOOKING;
 		Permission eventPermission = Permission.EVENT;
 		Permission calendarPermission = Permission.CALENDAR;
 
-		AccessControlList adminBooking = new AccessControlList(bookingPermission, true, true, true, true, UserType.ADMIN);
-		AccessControlList adminEvent = new AccessControlList(eventPermission, false, false, false, false, UserType.ADMIN);
-		AccessControlList adminCalendar = new AccessControlList(calendarPermission, true, true, true, true, UserType.ADMIN);
+		AccessControlList adminBooking = new AccessControlList(bookingPermission, true, true, true, true, UserType.ADMIN, account);
+		AccessControlList adminEvent = new AccessControlList(eventPermission, false, false, false, false, UserType.ADMIN, account);
+		AccessControlList adminCalendar = new AccessControlList(calendarPermission, true, true, true, true, UserType.ADMIN, account);
 
-		AccessControlList ownerBooking = new AccessControlList(bookingPermission, true, true, true, true, UserType.OWNER);
-		AccessControlList ownerEvent = new AccessControlList(eventPermission, true, true, true, true, UserType.OWNER);
-		AccessControlList ownerCalendar = new AccessControlList(calendarPermission, false, false, false, false, UserType.OWNER);
+		AccessControlList ownerBooking = new AccessControlList(bookingPermission, true, true, true, true, UserType.OWNER, account);
+		AccessControlList ownerEvent = new AccessControlList(eventPermission, true, true, true, true, UserType.OWNER, account);
+		AccessControlList ownerCalendar = new AccessControlList(calendarPermission, false, false, false, false, UserType.OWNER, account);
 
-		AccessControlList organizerBooking = new AccessControlList(bookingPermission, true, true, true, true, UserType.INSTRUCTOR);
-		AccessControlList organizerEvent = new AccessControlList(eventPermission, false, false, false, false, UserType.INSTRUCTOR);
-		AccessControlList organizerCalendar = new AccessControlList(calendarPermission, false, false, false, false, UserType.INSTRUCTOR);
+		AccessControlList organizerBooking = new AccessControlList(bookingPermission, true, true, true, true, UserType.INSTRUCTOR, account);
+		AccessControlList organizerEvent = new AccessControlList(eventPermission, false, false, false, false, UserType.INSTRUCTOR, account);
+		AccessControlList organizerCalendar = new AccessControlList(calendarPermission, false, false, false, false, UserType.INSTRUCTOR, account);
 
 		accessControlListDao.save(adminBooking);
 		accessControlListDao.save(adminEvent);
@@ -120,12 +117,12 @@ public class LoadDummyData {
 
 		accessControlListDao.save(organizerBooking);
 		accessControlListDao.save(organizerEvent);
-		accessControlListDao.save(organizerCalendar);
+		accessControlListDao.save(organizerCalendar);*/
 
-		User user1 = new User("admin", "123", UserType.ADMIN);
-		User user2 = new User("owner", "123", UserType.OWNER);
-		User user3 = new User("organizer", "123", UserType.INSTRUCTOR);
-		User user4 = new User("attendee", "123", UserType.ATTENDEE);
+		User user1 = new User("admin", "123", "ADMIN", account);
+		User user2 = new User("owner", "123", "OWNER", account);
+		User user3 = new User("organizer", "123", "INSTRUCTOR", account);
+		User user4 = new User("attendee", "123", "ATTENDEE", account);
 
 		userDao.save(user1);
 		userDao.save(user2);

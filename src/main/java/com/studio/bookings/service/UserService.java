@@ -13,7 +13,6 @@ import com.google.api.server.spi.config.ApiMethod;
 import com.studio.bookings.entity.Account;
 import com.studio.bookings.entity.User;
 import com.studio.bookings.entity.UserSession;
-import com.studio.bookings.enums.UserType;
 import com.studio.bookings.util.Constants;
 import com.studio.bookings.util.LoadDummyData;
 
@@ -28,13 +27,11 @@ import com.studio.bookings.util.LoadDummyData;
 public class UserService extends BaseService {
 	
 	@ApiMethod(name = "calendar.getUser", path="calendar.getUser", httpMethod = "get")
-	public List<User> getUser(HttpServletRequest req) {
-		List<User> stringList = new ArrayList<User>();
+	public User getUser(HttpServletRequest req) {
 		HttpSession session = req.getSession(false);
 		UserSession userSession = (UserSession) session.getAttribute("userSession");
 		User user = userSession.getUser();
-		stringList.add(user);
-	    return stringList;
+		return user;
 	}
 	
 	@ApiMethod(name = "calendar.getUserSession", path="calendar.getUserSession", httpMethod = "get")
@@ -77,5 +74,33 @@ public class UserService extends BaseService {
         }
 		stringList.add(userSession);
 	    return stringList;
+	}
+	
+	// TESTABLE CODE BELOW
+	
+	@ApiMethod(name = "calendar.addUser", path="calendar.addUser", httpMethod = "post")
+	public User insertUser( 
+			@Named("username") String username,
+			@Named("password") String password,
+			@Named("userType") String userType,  
+			@Named("account") Long accountId) {
+		
+		Long oId = new Long(accountId);
+		Account account =  accountDao.retrieve(oId);
+		User user = new User(username, password, userType, account);
+		userDao.save(user);
+	    return user; 
+	}
+	
+	@ApiMethod(name = "calendar.findUser", path="calendar.findUser", httpMethod = "post")
+	public User findUser(@Named("user") Long userId, @Named("account") Long accountId) {
+		Account account = accountDao.retrieve(accountId);
+		return userDao.retrieveAncestor(userId, account);
+	}
+	
+	@ApiMethod(name = "calendar.listUsers", path="calendar.listUsers", httpMethod = "get")
+	public List<User> listUsers(@Named("account") Long accountId) {
+		Account accountFetched = accountDao.retrieve(accountId);
+		return userDao.listAncestors(accountFetched.getKey());
 	}
 }

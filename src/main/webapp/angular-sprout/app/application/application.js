@@ -25,17 +25,14 @@ angular.module('application', [
 ])
 
 .config(function($stateProvider, $urlRouterProvider, USER_ROLES) {
+
     $urlRouterProvider.otherwise( '/login' );
 
     $stateProvider
-        .state('about', {
+        .state('loading', {
             url: '/about',
-            //controller:'application',
-            templateUrl: 'about/about-partial.html',
-            data: {
-                authorizedRoles: [USER_ROLES.admin, USER_ROLES.owner],
-                pageTitle: 'Home'
-            }
+            controller:'about',
+            templateUrl: 'about/about-partial.html'
         })
         .state('details', {
             url: '/details',
@@ -59,30 +56,31 @@ angular.module('application', [
             url: '/login',
             controller: 'login',
             templateUrl: 'login/login-partial.html'
+        })
+        .state('accounts', {
+            url: '/accounts',
+            controller: 'accountsController',
+            templateUrl: 'accounts/accounts-partial.html'
         });
 })
 
-.run(function ($rootScope, AUTH_EVENTS, auth, $window) {
+.run(function ($state, $rootScope, AUTH_EVENTS, auth, $window, $location, alerts) {
+
+    $rootScope.is_backend_ready = false;
+
+
 
     $rootScope.$on('$stateChangeStart', function (event, next) {
-        console.log('changestart');
 
-        $rootScope.alertType = "alert-info";
-        $rootScope.alertMessage = "Loading...";
-        $rootScope.active = "progress-striped active progress-warning";
 
         if(next.data && next.data.authorizedRoles) {
             var authorizedRoles = next.data.authorizedRoles;
             if (!auth.isAuthorized(authorizedRoles)) {
-
                 event.preventDefault();
                 if (auth.isAuthenticated()) {
-                    // user is not allowed
-                    console.log('not authed');
                     $rootScope.$broadcast(AUTH_EVENTS.notAuthorized);
+
                 } else {
-                    // user is not logged in
-                    console.log('not authenticated');
                     $rootScope.$broadcast(AUTH_EVENTS.notAuthenticated);
                 }
             }
@@ -90,35 +88,28 @@ angular.module('application', [
     });
 
     $rootScope.$on('$stateChangeSuccess', function (event, next) {
-        console.log('change success');
-
         $rootScope.alertType = "alert-success";
         $rootScope.alertMessage = "Successfully changed routes :)";
-        $rootScope.active = "progress-success";
-
-
     });
 
     $rootScope.$on('$stateChangeError', function (event, next) {
-
-        console.log('change error');
-
         $rootScope.alertType = "alert-warning";
         $rootScope.alertMessage = "Error changing routes :)";
-        $rootScope.active = "progress-success";
-
-
     });
 
     $rootScope.$window = $window;
 
+
     $window.initialise = function() {
+
         var apisToLoad = 1;
+
         var callback = function() {
             if(--apisToLoad === 0) {
-                console.log('api loaded');
-                $rootScope.$broadcast('EventLoaded');
-                //$scope.is_backend_ready = true;
+
+            $rootScope.$broadcast('EventLoaded');
+            $rootScope.is_backend_ready = true;
+
             }
         };
         gapi.client.load('booking', 'v1', callback, 'http://localhost:8080/_ah/api');

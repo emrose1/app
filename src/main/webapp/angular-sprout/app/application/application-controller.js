@@ -1,6 +1,6 @@
 Application.Controllers.controller( 'application',
-	['$rootScope', '$scope', '$location','$window', 'auth', 'USER_ROLES', 'AUTH_EVENTS', 'session', 'alerts',
-    function ($rootScope, $scope, $location, $window, auth, USER_ROLES, AUTH_EVENTS, session, alerts) {
+	['$rootScope', '$scope', '$location','$window', 'auth', 'USER_ROLES', 'AUTH_EVENTS', 'session', 'alerts', 'progressbarService',
+    function ($rootScope, $scope, $location, $window, auth, USER_ROLES, AUTH_EVENTS, session, alerts, progressbarService) {
 
     $scope.currentUser = null;
     $scope.userSession = null;
@@ -10,14 +10,14 @@ Application.Controllers.controller( 'application',
     $scope.feedbackMessage = false;
 
     $scope.alerts = alerts;
+    $scope.progressbarService = progressbarService;
+    $scope.backendReady = false;
 
     $scope.logout = function () {
         session.destroy();
     };
 
-	var loginSuccess = function () {
-        console.log('login success');
-        console.log(session.userRole);
+    var loginSuccess = function () {
         $scope.currentUser = session.userRole;
 	};
 
@@ -29,21 +29,34 @@ Application.Controllers.controller( 'application',
     $rootScope.$on(AUTH_EVENTS.loginFailed, loginFailed);
 
     $rootScope.$on(AUTH_EVENTS.notAuthenticated, function(){
-        console.log('ctrl not authenticated');
-
-
         alerts.setAlert({
             'alertMessage': "You are not authorised to see this page",
-            'alertType': 'alert-danger'});
-
-        console.log('Not authorised');
+            'alertType': 'alert-danger'
+        });
     });
 
     $rootScope.$on(AUTH_EVENTS.notAuthorized, function(){
         console.log('ctrl not authorized');
     });
 
+    var apiLoadedSuccess = function () {
+        $scope.backendReady = true;
+        $scope.$apply();
+    };
 
+    $rootScope.$on('EventLoaded', apiLoadedSuccess);
+
+    var apiLoading = function () {
+        progressbarService.setProgressBar("progress-bar-danger");
+    };
+
+    $rootScope.$on('EventLoading', function(){
+        console.log('boing');
+        alerts.setAlert({
+            'alertMessage': "loading",
+            'alertType': 'alert-danger'
+        });
+    });
 
 }])
 ;
