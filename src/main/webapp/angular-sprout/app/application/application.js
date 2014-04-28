@@ -65,14 +65,7 @@ angular.module('application', [
 })
 
 .run(function ($state, $rootScope, AUTH_EVENTS, auth, $window, $location, alerts) {
-
-    $rootScope.is_backend_ready = false;
-
-
-
     $rootScope.$on('$stateChangeStart', function (event, next) {
-
-
         if(next.data && next.data.authorizedRoles) {
             var authorizedRoles = next.data.authorizedRoles;
             if (!auth.isAuthorized(authorizedRoles)) {
@@ -88,28 +81,20 @@ angular.module('application', [
     });
 
     $rootScope.$on('$stateChangeSuccess', function (event, next) {
-        $rootScope.alertType = "alert-success";
-        $rootScope.alertMessage = "Successfully changed routes :)";
     });
 
     $rootScope.$on('$stateChangeError', function (event, next) {
-        $rootScope.alertType = "alert-warning";
-        $rootScope.alertMessage = "Error changing routes :)";
     });
 
     $rootScope.$window = $window;
 
 
     $window.initialise = function() {
-
         var apisToLoad = 1;
 
         var callback = function() {
             if(--apisToLoad === 0) {
-
-            $rootScope.$broadcast('EventLoaded');
-            $rootScope.is_backend_ready = true;
-
+                $rootScope.$broadcast('EventLoaded');
             }
         };
         gapi.client.load('booking', 'v1', callback, 'http://localhost:8080/_ah/api');

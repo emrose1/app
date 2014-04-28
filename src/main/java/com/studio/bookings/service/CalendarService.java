@@ -40,7 +40,7 @@ public class CalendarService extends BaseService {
 	@ApiMethod(name = "calendar.listCalendars", path="calendar.listCalendars", httpMethod = "get")
 	public List<Calendar> listCalendars(@Named("account") Long accountId) {
 		Account accountFetched = accountDao.retrieve(accountId);
-		return calendarDao.listAncestors(accountFetched.getKey());
+		return calendarDao.listAncestors(accountFetched);
 	}
 	
 	@ApiMethod(name = "calendar.updateCalendar", path="calendar.updateCalendar", httpMethod = "get")

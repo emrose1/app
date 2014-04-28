@@ -104,7 +104,7 @@ public class EventTestingService extends BaseService {
 			) {
 		Long oId = new Long(AccountId);
 		Account account = accountDao.retrieve(oId);
-		return calendarDao.listAncestors(account.getKey());
+		return calendarDao.listAncestors(account);
 	}
 	
 	@ApiMethod(name = "calendar.addInstructor", path="calendar.addInstructor", httpMethod = "post")

@@ -67,7 +67,7 @@ public class AccountService extends BaseService {
 		return accountFetched;
 	}
 	
-	@ApiMethod(name = "account.deletAccount", path="calendar.deleteAccount", httpMethod = "get")
+	@ApiMethod(name = "account.deleteAccount", path="calendar.deleteAccount", httpMethod = "get")
 	public void deleteAccount(@Named("account") Long accountId) {
 		accountDao.delete(accountId);
 	}

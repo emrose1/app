@@ -25,6 +25,10 @@ Application.Controllers.controller( 'application',
 
     };
 
+    $scope.loadProgressBar = function() {
+        progressbarService.setProgressBar('progress-bar-warning');
+    };
+
     $rootScope.$on(AUTH_EVENTS.loginSuccess, loginSuccess);
     $rootScope.$on(AUTH_EVENTS.loginFailed, loginFailed);
 
@@ -49,14 +53,6 @@ Application.Controllers.controller( 'application',
     var apiLoading = function () {
         progressbarService.setProgressBar("progress-bar-danger");
     };
-
-    $rootScope.$on('EventLoading', function(){
-        console.log('boing');
-        alerts.setAlert({
-            'alertMessage': "loading",
-            'alertType': 'alert-danger'
-        });
-    });
 
 }])
 ;

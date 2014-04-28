@@ -7,9 +7,8 @@
 
         <form id="login-form" name="loginForm" ng-submit="login(credentials)" novalidate class="form">
 
-            <select ng-model="accountList" id="select-input" class="form-control">
-                <option ng-repeat="accountItem in accountsList">{{accountItem.name}}</option>
-            </select>
+            <select ng-init="credentials.account = credentials.account || items[0]" ng-model="credentials.account"
+                class="form-control" ng-options="account as account.name for account in accounts"></select>
 
             <div class="form-group">
                 <label for="username">Username</label>

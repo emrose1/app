@@ -74,13 +74,13 @@
             <ng-include src="'menu/menu-partial.html'"/>
         </nav>
 
-
         <div class="progress progress-striped" ng-if="!backendReady">
             <div class="progress-bar progress-bar-info" role="progressbar"
                 aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
                 <span class="sr-only"></span>
             </div>
         </div>
+        <div progress-bar progressinfo="progressbarService.loadingProgress"></div>
         <div alert-modal alertinfo="alerts.alertMessage"></div>
         <div ui-view ng-if="backendReady"></div>
 

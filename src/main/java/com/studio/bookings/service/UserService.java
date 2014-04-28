@@ -26,6 +26,27 @@ import com.studio.bookings.util.LoadDummyData;
 
 public class UserService extends BaseService {
 	
+	@ApiMethod(name = "calendar.dummyUsers", path="calendar.dummyUsers", httpMethod = "get")
+	public List<User> dummyUsers() {
+		if (userDao.list().size() == 0) {
+    		LoadDummyData ldd = new LoadDummyData();
+    		ldd.initSetup();
+    	}
+		return userDao.list();
+	}
+	
+	public void setSession(User user, HttpServletRequest req) {
+		
+		UserSession userSession = new UserSession();
+		if(user != null) {
+            userSession.setUser(user);
+            userSession.setLoginTime(new Date());
+            req.getSession(true).setAttribute("userSession", userSession);
+        } else {
+            req.setAttribute("message", "Invalid username or password");
+        }
+	}
+	
 	@ApiMethod(name = "calendar.getUser", path="calendar.getUser", httpMethod = "get")
 	public User getUser(HttpServletRequest req) {
 		HttpSession session = req.getSession(false);
@@ -43,37 +64,16 @@ public class UserService extends BaseService {
 	    return stringList;
 	}
 	
-	//TODO return permission role
-	// to test var message = {'email' : 'admin', 'password': 'password'}; console.log(message); 
-	// gapi.client.booking.calendar.authUserSession(message).execute(function(resp) { console.log(resp);});
-	
 	@ApiMethod(name = "calendar.authUserSession", path="calendar.authUserSession", httpMethod = "post")
-	public List<UserSession> authUserSession(
+	public User authUserSession(
 			@Named("email") String email, 
 			@Named("password") String password, 
-			@Named("account") Long accountId,
-			HttpServletRequest request) {
+			@Named("account") Long accountId) {
 		
-		//TODO remove
-		if (userDao.list().size() == 0) {
-    		LoadDummyData ldd = new LoadDummyData();
-    		ldd.initSetup();
-    	}
 		Account accountFetched = accountDao.retrieve(accountId);
-		User user = userDao.doubleQuery("email", email, "password", password, accountFetched.getKey());
-		List<UserSession> stringList = new ArrayList<UserSession>();
-		UserSession userSession = new UserSession();
+		User user = userDao.doubleFilterAncestorQuery("username", email, "password", password, accountFetched);
 		
-		if(user != null) {
-            userSession.setUser(user);
-            userSession.setLoginTime(new Date());
-            request.getSession(true).setAttribute("userSession", userSession);
-
-        } else {
-            request.setAttribute("message", "Invalid username or password");
-        }
-		stringList.add(userSession);
-	    return stringList;
+	    return user;
 	}
 	
 	// TESTABLE CODE BELOW
@@ -101,6 +101,6 @@ public class UserService extends BaseService {
 	@ApiMethod(name = "calendar.listUsers", path="calendar.listUsers", httpMethod = "get")
 	public List<User> listUsers(@Named("account") Long accountId) {
 		Account accountFetched = accountDao.retrieve(accountId);
-		return userDao.listAncestors(accountFetched.getKey());
+		return userDao.listAncestors(accountFetched);
 	}
 }

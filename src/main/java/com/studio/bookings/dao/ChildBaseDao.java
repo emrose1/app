@@ -30,11 +30,11 @@ public class ChildBaseDao<T, S> extends BaseDao<T> {
 	}
 	
 	
-	public List<T> listAncestors(Key<S> e) {
+	public List<T> listAncestors(S e) {
 		return ofy().load().type(t).ancestor(e).list();
 	}
 	
-	public T doubleQuery(String filter, String value, String filter2, String value2, Key<S> e) {
+	public T doubleFilterAncestorQuery(String filter, String value, String filter2, String value2, S e) {
         return ofy().load().type(t).ancestor(e).filter(filter, value).filter(filter2, value2).first().now();
 
 	}

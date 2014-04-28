@@ -3,7 +3,8 @@ Application.Controllers.controller( 'login',
 
     $scope.credentials = {
         username: '',
-        password: ''
+        password: '',
+        account: ''
     };
 
     $scope.login = function (credentials) {
@@ -30,7 +31,7 @@ Application.Controllers.controller( 'login',
     accountService.listAccounts()
     .then(function (data) {
         alerts.clear();
-        $scope.accountsList = data.items;
+        $scope.accounts = data.items;
 
     }, function (reason) {
         alerts.setAlert({

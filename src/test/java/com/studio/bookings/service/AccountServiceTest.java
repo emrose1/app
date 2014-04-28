@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Named;
+import javax.servlet.http.HttpServletRequest;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -14,6 +17,7 @@ import com.studio.bookings.dao.BaseDao;
 import com.studio.bookings.entity.Account;
 import com.studio.bookings.entity.Calendar;
 import com.studio.bookings.entity.User;
+import com.studio.bookings.entity.UserSession;
 import com.studio.bookings.util.TestBase;
 
 
@@ -36,9 +40,11 @@ public class AccountServiceTest extends TestBase {
 		assert account.getId().equals(calendarFetched.getAccount().getId());
 		
 		
-		User userFetched = userService.listUsers(account.getId()).get(0);
-		assert "Testing Calendar".equals(calendarFetched.getDescription());
-		assert account.getId().equals(calendarFetched.getAccount().getId());
+		//List<UserSession> usersFetched = userService.authUserSession("username", "password", account.getId());
+		
+		//User userFetched = userService.listUsers(account.getId()).get(0);
+		//assert "username".equals(usersFetched.get(0).getUser().getUsername());
+		//assert account.getId().equals(usersFetched.get(0).getUser().getAccount().getId());
 		
 		
 		

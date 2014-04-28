@@ -3,12 +3,16 @@ Application.Services.service('auth', function (session, $q, AUTH_EVENTS) {
     this.login = function(credentials, $scope){
         var deferred = $q.defer();
 
-        var request = gapi.client.booking.calendar.authUserSession({
+        var message = {
             username: credentials.username,
-            password: credentials.password
-        });
+            password: credentials.password,
+            account: credentials.account.id
+        };
+        console.log(message);
+        var request = gapi.client.booking.calendar.authUserSession(message);
 
         request.execute(function (resp) {
+            console.log(resp);
             $scope.$apply(function() {
                 if (resp && resp.user) {
                     session.create(resp.user.id, resp.user.userType.type);
