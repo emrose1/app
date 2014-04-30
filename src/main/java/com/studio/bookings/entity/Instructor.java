@@ -3,9 +3,9 @@ package com.studio.bookings.entity;
 import lombok.Getter;
 import lombok.Setter;
 
-import com.googlecode.objectify.annotation.EntitySubclass;
+import com.googlecode.objectify.annotation.Subclass;
 
-@EntitySubclass(index=true)
+@Subclass(index=true)
 public class Instructor extends User {
 	
 	@Getter @Setter

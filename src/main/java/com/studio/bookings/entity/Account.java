@@ -1,4 +1,6 @@
 package com.studio.bookings.entity;
+import java.io.Serializable;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,7 +13,7 @@ import com.googlecode.objectify.annotation.Index;
 
 
 @Entity
-public class Account {
+public class Account implements Serializable  {
 
 	@Getter @Setter
 	@Id Long id;

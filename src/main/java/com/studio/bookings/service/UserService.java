@@ -26,57 +26,6 @@ import com.studio.bookings.util.LoadDummyData;
 
 public class UserService extends BaseService {
 	
-	@ApiMethod(name = "calendar.dummyUsers", path="calendar.dummyUsers", httpMethod = "get")
-	public List<User> dummyUsers() {
-		if (userDao.list().size() == 0) {
-    		LoadDummyData ldd = new LoadDummyData();
-    		ldd.initSetup();
-    	}
-		return userDao.list();
-	}
-	
-	public void setSession(User user, HttpServletRequest req) {
-		
-		UserSession userSession = new UserSession();
-		if(user != null) {
-            userSession.setUser(user);
-            userSession.setLoginTime(new Date());
-            req.getSession(true).setAttribute("userSession", userSession);
-        } else {
-            req.setAttribute("message", "Invalid username or password");
-        }
-	}
-	
-	@ApiMethod(name = "calendar.getUser", path="calendar.getUser", httpMethod = "get")
-	public User getUser(HttpServletRequest req) {
-		HttpSession session = req.getSession(false);
-		UserSession userSession = (UserSession) session.getAttribute("userSession");
-		User user = userSession.getUser();
-		return user;
-	}
-	
-	@ApiMethod(name = "calendar.getUserSession", path="calendar.getUserSession", httpMethod = "get")
-	public List<UserSession> getUserSession(HttpServletRequest req) {
-		List<UserSession> stringList = new ArrayList<UserSession>();
-		HttpSession session = req.getSession(false);
-		UserSession userSession = (UserSession) session.getAttribute("userSession");
-		stringList.add(userSession);
-	    return stringList;
-	}
-	
-	@ApiMethod(name = "calendar.authUserSession", path="calendar.authUserSession", httpMethod = "post")
-	public User authUserSession(
-			@Named("email") String email, 
-			@Named("password") String password, 
-			@Named("account") Long accountId) {
-		
-		Account accountFetched = accountDao.retrieve(accountId);
-		User user = userDao.doubleFilterAncestorQuery("username", email, "password", password, accountFetched);
-		
-	    return user;
-	}
-	
-	// TESTABLE CODE BELOW
 	
 	@ApiMethod(name = "calendar.addUser", path="calendar.addUser", httpMethod = "post")
 	public User insertUser( 
@@ -103,4 +52,58 @@ public class UserService extends BaseService {
 		Account accountFetched = accountDao.retrieve(accountId);
 		return userDao.listAncestors(accountFetched);
 	}
+	
+	
+	@ApiMethod(name = "calendar.getUserSession", path="calendar.getUserSession", httpMethod = "get")
+	public List<UserSession> getUserSession(HttpServletRequest req) {
+		List<UserSession> stringList = new ArrayList<UserSession>();
+		HttpSession session = req.getSession(false);
+		UserSession userSession = (UserSession) session.getAttribute("userSession");
+		stringList.add(userSession);
+	    return stringList;
+	}
+	
+	@ApiMethod(name = "calendar.authUserSession", path="calendar.authUserSession", httpMethod = "post")
+	public User authUserSession(
+			@Named("username") String username, 
+			@Named("password") String password, 
+			@Named("account") Long accountId) {
+		
+		Account accountFetched = accountDao.retrieve(accountId);
+		User user = userDao.doubleFilterAncestorQuery("username", username, "password", password, accountFetched);
+		
+	    return user;
+	}
+	
+	
+	/// UTILITY METHODS
+	
+	@ApiMethod(name = "calendar.dummyUsers", path="calendar.dummyUsers", httpMethod = "get")
+	public List<User> dummyUsers() {
+		if (userDao.list().size() == 0) {
+    		LoadDummyData ldd = new LoadDummyData();
+    		ldd.initSetup();
+    	}
+		return userDao.list();
+	}
+	
+	private User getUser(HttpServletRequest req) {
+		HttpSession session = req.getSession(false);
+		UserSession userSession = (UserSession) session.getAttribute("userSession");
+		User user = userSession.getUser();
+		return user;
+	}
+	
+	private void setSession(User user, HttpServletRequest req) {
+		
+		UserSession userSession = new UserSession();
+		if(user != null) {
+            userSession.setUser(user);
+            userSession.setLoginTime(new Date());
+            req.getSession(true).setAttribute("userSession", userSession);
+        } else {
+            req.setAttribute("message", "Invalid username or password");
+        }
+	}
+	
 }

@@ -8,11 +8,8 @@ import lombok.Setter;
 import org.joda.time.DateTime;
 import org.joda.time.Period;
 
-import com.googlecode.objectify.annotation.Embed;
-import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
 
-@Embed
 public class AccountSettings {
 
 	@Index

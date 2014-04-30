@@ -10,7 +10,7 @@
 
     <properties>
         <appengine.app.version>1</appengine.app.version>
-        <appengine.target.version>1.9.1</appengine.target.version>
+        <appengine.target.version>1.9.3</appengine.target.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -45,7 +45,7 @@
         <dependency>
             <groupId>com.googlecode.objectify</groupId>
             <artifactId>objectify</artifactId>
-            <version>4.0b3</version>
+            <version>5.0.2</version>
         </dependency>
         
         <dependency>

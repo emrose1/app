@@ -14,6 +14,7 @@ import org.testng.annotations.Test;
 
 import com.googlecode.objectify.Key;
 import com.studio.bookings.dao.BaseDao;
+import com.studio.bookings.dao.ChildBaseDao;
 import com.studio.bookings.entity.Account;
 import com.studio.bookings.entity.Calendar;
 import com.studio.bookings.entity.User;
@@ -28,6 +29,8 @@ public class AccountServiceTest extends TestBase {
 	public static CalendarService calendarService = new CalendarService();
 	BaseDao<Calendar> calendarDao = new BaseDao<Calendar>(Calendar.class);
 	public static UserService userService = new UserService();
+	public static ChildBaseDao<User, Account> userDao = new ChildBaseDao<User, Account>(User.class, Account.class);
+	
 	
 	@Test
 	public void insertAccount() {
@@ -39,14 +42,10 @@ public class AccountServiceTest extends TestBase {
 		assert "Testing Calendar".equals(calendarFetched.getDescription());
 		assert account.getId().equals(calendarFetched.getAccount().getId());
 		
+		User usersFetched = userService.authUserSession("username", "password", account.getId());
 		
-		//List<UserSession> usersFetched = userService.authUserSession("username", "password", account.getId());
-		
-		//User userFetched = userService.listUsers(account.getId()).get(0);
-		//assert "username".equals(usersFetched.get(0).getUser().getUsername());
-		//assert account.getId().equals(usersFetched.get(0).getUser().getAccount().getId());
-		
-		
+		assert "username".equals(usersFetched.getUsername());
+		assert account.getId().equals(usersFetched.getAccount().getId());
 		
 		assert account.getId().equals(accountFetched.getId());
 		assert account.getName().equals(accountFetched.getName());
@@ -63,12 +62,12 @@ public class AccountServiceTest extends TestBase {
 	@Test
 	public void findAccount() {
 		
-		String accountName1 = "Account 1";
-		String accountName2 = "Account 2";
+		Account account1 = new Account("Account 1");
+		Account account2 = new Account("Account 2");
 
-		Account account1 = accountService.insertAccount(accountName1, "test", "admin", "123", "ADMIN");
-		Account account2 = accountService.insertAccount(accountName2, "test", "admin", "123", "ADMIN");
-		
+		accountDao.save(account1);
+		accountDao.save(account2);
+
 		Account accountFetched1 = accountService.findAccount(account1.getId());
 		Account accountFetched2 = accountService.findAccount(account2.getId());
 		
@@ -85,42 +84,39 @@ public class AccountServiceTest extends TestBase {
 	@Test
 	public void ListAccounts() {
 		
-		String accountName1 = "Account 1";
-		String accountName2 = "Account 2";
-
-		Account account1 = accountService.insertAccount(accountName1, "test", "admin", "123", "ADMIN");
-		Account account2 = accountService.insertAccount(accountName2, "test", "admin", "123", "ADMIN");
+		Account account1 = new Account("Account 1");
+		Account account2 = new Account("Account 2");
+				
+		List<Account> accountList = new ArrayList<Account>();
+		accountList.add(account1);
+		accountList.add(account2);
 		
-		List<Account> objs = new ArrayList<Account>();
-		objs.add(account1);
-		objs.add(account2);
-		
-		List<Key<Account>> accounts = accountDao.save(objs);
+		accountDao.save(accountList);
 		List<Account> accountsFetched = accountService.listAccounts();
 		
-		assert accountsFetched.size() == accounts.size();
+		Assert.assertNotNull(accountsFetched);
+		assert accountsFetched.size() == accountList.size();
 		assert accountsFetched.size() == 2;
 	}
 	
 	@Test
 	public void updateAccount() {
 		
-		String accountName = "Account name";
-		Account account = accountService.insertAccount(accountName, "test", "admin", "123", "ADMIN");
-		Account accountUpdated = accountService.updateAccount(account.getId(), "updated Account");
-		//Account accountUpdated = accountService.findAccount(accountUpdatedId);
+		Account account = new Account("Account 1");
+		accountDao.save(account);
 		
+		Account accountUpdated = accountService.updateAccount(account.getId(), "updated Account");
 		assert account.getName().equals("updated Account");
 		assert account.getName().equals(accountUpdated.getName());
 		assert account.getId().equals(accountUpdated.getId());
-
 	}
 	
 	@Test
 	public void deleteAccount() {
 		
-		String accountName = "Account name";
-		Account account = accountService.insertAccount(accountName, "test", "admin", "123", "ADMIN");
+		Account account = new Account("Account 1");
+		accountDao.save(account);
+		
 		ofy().clear();
 		Account accountDeleted = accountDao.retrieve(account.getId());
 		assert accountDeleted != null;

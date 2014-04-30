@@ -21,10 +21,10 @@
 	<classpathentry kind="lib" path="lombok.jar"/>
 	<classpathentry kind="lib" path="joda-time-2.3.jar"/>
 	<classpathentry kind="lib" path="servlet-api-2.5.jar"/>
-	<classpathentry kind="lib" path="objectify-4.0b3.jar"/>
 	<classpathentry kind="lib" path="/Applications/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.0/appengine-java-sdk-1.9.0/src/user/appengine-api-1.0-sdk-1.9.0-src.zip"/>
 	<classpathentry kind="lib" path="google-api-client-1.17.0-rc.jar"/>
 	<classpathentry kind="lib" path="google-api-client-appengine-1.17.0-rc.jar"/>
+	<classpathentry kind="lib" path="objectify-5.0.2.jar"/>
 	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER"/>
 	<classpathentry kind="con" path="org.testng.TESTNG_CONTAINER"/>
 	<classpathentry kind="output" path="target/classes"/>

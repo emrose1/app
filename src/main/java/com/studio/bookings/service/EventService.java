@@ -31,7 +31,7 @@ public class EventService extends BaseService {
 	
 	public static CalendarService calendarService = new CalendarService();
 	
-	@ApiMethod(name = "calendar.addInstructor", path="calendar.addInstructor", httpMethod = "post")
+/*	@ApiMethod(name = "calendar.addInstructor", path="calendar.addInstructor", httpMethod = "post")
 	public Instructor addInstructor( 
 			@Named("name") String name,  
 			@Named("lastname") String lastname,
@@ -262,5 +262,5 @@ public class EventService extends BaseService {
 	@ApiMethod(name = "calendar.listEventRepeatTypes", path="calendar.listEventRepeatTypes", httpMethod = "get")
 	public List<EventRepeatType> listEventRepeatTypes() {
 		return Arrays.asList(EventRepeatType.values());
-	}
+	}*/
 }

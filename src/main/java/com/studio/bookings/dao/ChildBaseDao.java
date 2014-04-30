@@ -10,6 +10,7 @@ import com.googlecode.objectify.NotFoundException;
 import com.googlecode.objectify.ObjectifyService;
 import com.studio.bookings.entity.Account;
 import com.studio.bookings.entity.Calendar;
+import com.studio.bookings.entity.EventItemDetails;
 
 //http://stackoverflow.com/questions/21036934/objectify-the-list-from-query-result-contains-null
 

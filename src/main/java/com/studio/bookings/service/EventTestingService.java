@@ -63,7 +63,7 @@ public class EventTestingService extends BaseService {
 	BaseDao<Account> accountDao = new BaseDao<Account>(Account.class);
 	ChildBaseDao<Calendar, Account> calendarDao = new ChildBaseDao<Calendar, Account>(Calendar.class, Account.class);
 	
-
+/*
 //	@ApiMethod(name = "calendar.addAccount", path="calendar.addAccount", httpMethod = "post")
 	public Account insertAccount(@Named("account") String accountName) {
 		Account account = new Account(accountName);
@@ -105,7 +105,14 @@ public class EventTestingService extends BaseService {
 		Long oId = new Long(AccountId);
 		Account account = accountDao.retrieve(oId);
 		return calendarDao.listAncestors(account);
-	}
+	}*/
+	
+	
+	
+	
+	
+	
+	/*
 	
 	@ApiMethod(name = "calendar.addInstructor", path="calendar.addInstructor", httpMethod = "post")
 	public Instructor addInstructor( 
@@ -339,6 +346,9 @@ public class EventTestingService extends BaseService {
 	public List<EventRepeatType> listEventRepeatTypes() {
 		return Arrays.asList(EventRepeatType.values());
 	}
+	
+	*/
+	
 	
 
 	
