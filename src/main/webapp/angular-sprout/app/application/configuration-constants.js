@@ -16,10 +16,10 @@ Application.Constants.constant('AUTH_EVENTS', {
 
 Application.Constants.constant('USER_ROLES', {
     all: '*',
-    admin: 'admin',
-    owner: 'owner',
-    organizer: 'organizer',
-    attendee: 'attendee'
+    admin: 'ADMIN',
+    owner: 'OWNER',
+    organizer: 'ORGANIZER',
+    attendee: 'ATTENDEE'
 });
 
 

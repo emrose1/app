@@ -31,6 +31,7 @@ Application.Controllers.controller( 'login',
     accountService.listAccounts()
     .then(function (data) {
         alerts.clear();
+        console.log(data);
         $scope.accounts = data.items;
 
     }, function (reason) {

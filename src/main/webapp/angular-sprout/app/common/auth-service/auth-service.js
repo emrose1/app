@@ -15,7 +15,7 @@ Application.Services.service('auth', function (session, $q, AUTH_EVENTS) {
             console.log(resp);
             $scope.$apply(function() {
                 if (resp && resp.username) {
-                    session.create(resp.id, resp.userType.type);
+                    session.create(resp.id, resp.userType);
                     deferred.resolve(resp);
                 } else {
                     deferred.reject('error');

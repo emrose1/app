@@ -7,7 +7,7 @@
 
         <form id="login-form" name="loginForm" ng-submit="login(credentials)" novalidate class="form">
 
-            <select ng-init="credentials.account = credentials.account || items[0]" ng-model="credentials.account"
+            <select ng-model="credentials.account" ng-init="credentials.account = credentials.account || accounts[0]"
                 class="form-control" ng-options="account as account.name for account in accounts"></select>
 
             <div class="form-group">
