@@ -1,5 +1,15 @@
-Application.Controllers.controller( 'application',
-	['$rootScope', '$scope', '$location','$window', 'auth', 'USER_ROLES', 'AUTH_EVENTS', 'session', 'alerts', 'progressbarService',
+Application.Controllers.controller( 'application',[
+        '$rootScope',
+        '$scope',
+        '$location',
+        '$window',
+        'auth',
+        'USER_ROLES',
+        'AUTH_EVENTS',
+        'session',
+        'alerts',
+        'progressbarService',
+
     function ($rootScope, $scope, $location, $window, auth, USER_ROLES, AUTH_EVENTS, session, alerts, progressbarService) {
 
     $scope.currentUser = null;
@@ -49,10 +59,6 @@ Application.Controllers.controller( 'application',
     };
 
     $rootScope.$on('EventLoaded', apiLoadedSuccess);
-
-    var apiLoading = function () {
-        progressbarService.setProgressBar("progress-bar-danger");
-    };
 
 }])
 ;
