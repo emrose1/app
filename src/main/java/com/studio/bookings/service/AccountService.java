@@ -37,7 +37,8 @@ public class AccountService extends BaseService {
 			@Named("description") String description,
 			@Named("username") String username, 
 			@Named("password") String password, 
-			@Named("userType") String userType
+			@Named("userType") String userType,
+			User user
 			) {
 		Account account = new Account(name);
 		accountDao.save(account);
@@ -45,8 +46,8 @@ public class AccountService extends BaseService {
 		Calendar calendar = new Calendar(description, account);
 		calendarDao.save(calendar);
 		
-		Person user = new Person(username, password, userType, account);
-		personDao.save(user);
+		Person p = new Person(username, password, userType, account, user);
+		personDao.save(p);
 		
 		return account;
 	}

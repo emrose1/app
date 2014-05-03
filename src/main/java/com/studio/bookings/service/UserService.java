@@ -10,6 +10,7 @@ import javax.servlet.http.HttpSession;
 
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
+import com.google.appengine.api.users.User;
 import com.studio.bookings.entity.Account;
 import com.studio.bookings.entity.Person;
 import com.studio.bookings.entity.UserSession;
@@ -32,19 +33,26 @@ public class UserService extends BaseService {
 			@Named("username") String username,
 			@Named("password") String password,
 			@Named("userType") String userType,  
-			@Named("account") Long accountId) {
+			@Named("account") Long accountId,
+			User user) {
 		
 		Long oId = new Long(accountId);
 		Account account =  accountDao.retrieve(oId);
-		Person user = new Person(username, password, userType, account);
-		personDao.save(user);
-	    return user; 
+		Person p = new Person(username, password, userType, account, user);
+		personDao.save(p);
+	    return p; 
 	}
 	
 	@ApiMethod(name = "calendar.findUser", path="calendar.findUser", httpMethod = "post")
-	public Person findUser(@Named("user") Long userId, @Named("account") Long accountId) {
+	public Person findUser(@Named("person") Long personId, @Named("account") Long accountId) {
 		Account account = accountDao.retrieve(accountId);
-		return personDao.retrieveAncestor(userId, account);
+		return personDao.retrieveAncestor(personId, account);
+	}
+	
+	public Person findPerson(@Named("account") Long accountId, User user) {
+		Account accountFetched = accountDao.retrieve(accountId);
+		Person person = personDao.oneFilterAncestorQuery("user_id", user.getUserId(), accountFetched);
+		return person;
 	}
 	
 	@ApiMethod(name = "calendar.listUsers", path="calendar.listUsers", httpMethod = "get")
@@ -70,7 +78,7 @@ public class UserService extends BaseService {
 			@Named("account") Long accountId) {
 		
 		Account accountFetched = accountDao.retrieve(accountId);
-		Person user = personDao.doubleFilterAncestorQuery("username", username, "password", password, accountFetched);
+		Person user = personDao.twoFilterAncestorQuery("username", username, "password", password, accountFetched);
 		
 	    return user;
 	}

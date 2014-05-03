@@ -72,7 +72,16 @@ public class AccountServiceTest extends TestBase {
 	@Test
 	public void insertAccount() {
 		
-		Account account = accountService.insertAccount("Testing Account", "Testing Calendar", "username", "password", "ADMIN");
+		OAuthService oauth = OAuthServiceFactory.getOAuthService();
+	    User user = null;
+		try {
+			user = oauth.getCurrentUser();
+		} catch (OAuthRequestException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		Account account = accountService.insertAccount("Testing Account", "Testing Calendar", "username", "password", "ADMIN", user);
 		Account accountFetched = accountService.findAccount(account.getId());
 		
 		Calendar calendarFetched = calendarService.listCalendars(account.getId()).get(0);

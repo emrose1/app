@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import com.google.api.server.spi.config.AnnotationBoolean;
 import com.google.api.server.spi.config.ApiResourceProperty;
+import com.google.appengine.api.users.User;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
@@ -50,16 +51,21 @@ public class Person {
     @Getter @Setter
     Date dateCreated;
     
+    @Index
+    @Getter @Setter
+    String userId;
+    
     public UserType userType;
     
     public Person(){}
     
-    public Person(String username, String password, String userType, Account account) {
+    public Person(String username, String password, String userType, Account account, User user) {
     	this.username = username;
     	this.password = password;
     	this.userType = UserType.valueOf(userType);
     	this.setAccount(account);
     	dateCreated = new Date();
+    	this.userId = user.getUserId();
     }
 
     @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)

@@ -1,5 +1,9 @@
 package com.studio.bookings.util;
 
+import com.google.appengine.api.oauth.OAuthRequestException;
+import com.google.appengine.api.oauth.OAuthService;
+import com.google.appengine.api.oauth.OAuthServiceFactory;
+import com.google.appengine.api.users.User;
 import com.studio.bookings.dao.BaseDao;
 import com.studio.bookings.dao.BookingDao;
 import com.studio.bookings.dao.EventAttributeDao;
@@ -26,9 +30,18 @@ public class LoadDummyData extends BaseService {
 	
 	public void initSetup() {
 		
-		Account account = accountService.insertAccount("Testing Account", "test", "admin", "123", "ADMIN");
-		Account account2 = accountService.insertAccount("Testing Account2", "test", "admin", "123", "ADMIN");
-		Account account3 = accountService.insertAccount("Testing Account3", "test", "admin", "123", "ADMIN");
+		OAuthService oauth = OAuthServiceFactory.getOAuthService();
+	    User user = null;
+		try {
+			user = oauth.getCurrentUser();
+		} catch (OAuthRequestException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		Account account = accountService.insertAccount("Testing Account", "test", "admin", "123", "ADMIN", user);
+		Account account2 = accountService.insertAccount("Testing Account2", "test", "admin", "123", "ADMIN", user);
+		Account account3 = accountService.insertAccount("Testing Account3", "test", "admin", "123", "ADMIN", user);
 		
 	
 		/*CalendarDao calendarDao = new CalendarDao();
@@ -119,10 +132,10 @@ public class LoadDummyData extends BaseService {
 		accessControlListDao.save(organizerEvent);
 		accessControlListDao.save(organizerCalendar);*/
 
-		Person user1 = new Person("admin", "123", "ADMIN", account);
-		Person user2 = new Person("owner", "123", "OWNER", account);
-		Person user3 = new Person("organizer", "123", "INSTRUCTOR", account);
-		Person user4 = new Person("attendee", "123", "ATTENDEE", account);
+		Person user1 = new Person("admin", "123", "ADMIN", account, user);
+		Person user2 = new Person("owner", "123", "OWNER", account, user);
+		Person user3 = new Person("organizer", "123", "INSTRUCTOR", account, user);
+		Person user4 = new Person("attendee", "123", "ATTENDEE", account, user);
 
 		personDao.save(user1);
 		personDao.save(user2);

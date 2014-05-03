@@ -14,6 +14,10 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.testng.annotations.Test;
 
+import com.google.appengine.api.oauth.OAuthRequestException;
+import com.google.appengine.api.oauth.OAuthService;
+import com.google.appengine.api.oauth.OAuthServiceFactory;
+import com.google.appengine.api.users.User;
 import com.googlecode.objectify.Key;
 import com.studio.bookings.dao.BaseDao;
 import com.studio.bookings.dao.ChildBaseDao;
@@ -33,12 +37,23 @@ public class UserServiceTest extends TestBase  {
 	BaseDao<Calendar> calendarDao = new BaseDao<Calendar>(Calendar.class);
 	public static ChildBaseDao<Person, Account> personDao = new ChildBaseDao<Person, Account>(Person.class, Account.class);
 	public static UserService userService = new UserService();
+
 	
 	@Test
 	public void insertUser() {
-		Account account = accountService.insertAccount("Account", "test", "admin", "123", "ADMIN");
-		Person user = userService.insertUser("username", "password", "ADMIN",  account.getId()); 
-		Person userFetched = userService.findUser(user.getId(), account.getId()); 
+		
+		OAuthService oauth = OAuthServiceFactory.getOAuthService();
+		User user = null;
+		try {
+			user = oauth.getCurrentUser();
+		} catch (OAuthRequestException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		Account account = accountService.insertAccount("Account", "test", "admin", "123", "ADMIN", user);
+		Person p = userService.insertUser("username", "password", "ADMIN",  account.getId(), user); 
+		Person userFetched = userService.findUser(p.getId(), account.getId()); 
 		assert "username".equals(userFetched.getUsername());
 		assert "password".equals(userFetched.getPassword());
 		assert account.getId().equals(userFetched.getAccount().getId());
@@ -46,8 +61,18 @@ public class UserServiceTest extends TestBase  {
 	
 	@Test
 	public void authUserSession() {
-		Account account = accountService.insertAccount("Account", "test", "admin", "123", "ADMIN");
-		Person user = userService.insertUser("username", "password", "ADMIN",  account.getId()); 
+		
+		OAuthService oauth = OAuthServiceFactory.getOAuthService();
+		User user = null;
+		try {
+			user = oauth.getCurrentUser();
+		} catch (OAuthRequestException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		Account account = accountService.insertAccount("Account", "test", "admin", "123", "ADMIN", user);
+		Person p = userService.insertUser("username", "password", "ADMIN",  account.getId(), user); 
 		Person userFetched = userService.authUserSession("username", "password", account.getId());
 		assert "username".equals(userFetched.getUsername());
 		assert "password".equals(userFetched.getPassword());
@@ -56,9 +81,19 @@ public class UserServiceTest extends TestBase  {
 	
 	@Test
 	public void findUser() {
-		Account account = accountService.insertAccount("Account", "test", "admin", "123", "ADMIN");
-		Person user = userService.insertUser("username", "password", "ADMIN",  account.getId()); 
-		Person userFetched = userService.findUser(user.getId(), account.getId()); 
+		
+		OAuthService oauth = OAuthServiceFactory.getOAuthService();
+		User user = null;
+		try {
+			user = oauth.getCurrentUser();
+		} catch (OAuthRequestException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		Account account = accountService.insertAccount("Account", "test", "admin", "123", "ADMIN", user);
+		Person p = userService.insertUser("username", "password", "ADMIN",  account.getId(), user); 
+		Person userFetched = userService.findUser(p.getId(), account.getId()); 
 		assert "username".equals(userFetched.getUsername());
 		assert "password".equals(userFetched.getPassword());
 		assert account.getId().equals(userFetched.getAccount().getId());	
@@ -66,9 +101,19 @@ public class UserServiceTest extends TestBase  {
 	
 	@Test
 	public void ListUsers() {
-		Account account = accountService.insertAccount("Account", "test", "admin", "123", "ADMIN");
+		
+		OAuthService oauth = OAuthServiceFactory.getOAuthService();
+		User user = null;
+		try {
+			user = oauth.getCurrentUser();
+		} catch (OAuthRequestException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		Account account = accountService.insertAccount("Account", "test", "admin", "123", "ADMIN", user);
 		//User user1 = personDao.insertUser("username1", "password1", "ADMIN",  account.getId()); 
-		Long user2 = personDao.save(new Person("username2", "password2", "ADMIN",  account)); 
+		Long user2 = personDao.save(new Person("username2", "password2", "ADMIN",  account, user)); 
 		//List<User> usersFetched = userService.listUsers(account.getId());
 		//assert usersFetched.size() == 0;
 		
