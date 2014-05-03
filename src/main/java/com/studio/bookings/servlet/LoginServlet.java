@@ -9,13 +9,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.studio.bookings.dao.ChildBaseDao;
 import com.studio.bookings.entity.Account;
-import com.studio.bookings.entity.User;
+import com.studio.bookings.entity.Person;
 import com.studio.bookings.util.LoadDummyData;
 
 
 public class LoginServlet extends HttpServlet {
 	
-	public static ChildBaseDao<User, Account> userDao = new ChildBaseDao<User, Account>(User.class, Account.class);
+	public static ChildBaseDao<Person, Account> userDao = new ChildBaseDao<Person, Account>(Person.class, Account.class);
 	
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

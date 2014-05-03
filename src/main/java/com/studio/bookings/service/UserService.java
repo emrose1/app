@@ -11,7 +11,7 @@ import javax.servlet.http.HttpSession;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.studio.bookings.entity.Account;
-import com.studio.bookings.entity.User;
+import com.studio.bookings.entity.Person;
 import com.studio.bookings.entity.UserSession;
 import com.studio.bookings.util.Constants;
 import com.studio.bookings.util.LoadDummyData;
@@ -28,7 +28,7 @@ public class UserService extends BaseService {
 	
 	
 	@ApiMethod(name = "calendar.addUser", path="calendar.addUser", httpMethod = "post")
-	public User insertUser( 
+	public Person insertUser( 
 			@Named("username") String username,
 			@Named("password") String password,
 			@Named("userType") String userType,  
@@ -36,21 +36,21 @@ public class UserService extends BaseService {
 		
 		Long oId = new Long(accountId);
 		Account account =  accountDao.retrieve(oId);
-		User user = new User(username, password, userType, account);
-		userDao.save(user);
+		Person user = new Person(username, password, userType, account);
+		personDao.save(user);
 	    return user; 
 	}
 	
 	@ApiMethod(name = "calendar.findUser", path="calendar.findUser", httpMethod = "post")
-	public User findUser(@Named("user") Long userId, @Named("account") Long accountId) {
+	public Person findUser(@Named("user") Long userId, @Named("account") Long accountId) {
 		Account account = accountDao.retrieve(accountId);
-		return userDao.retrieveAncestor(userId, account);
+		return personDao.retrieveAncestor(userId, account);
 	}
 	
 	@ApiMethod(name = "calendar.listUsers", path="calendar.listUsers", httpMethod = "get")
-	public List<User> listUsers(@Named("account") Long accountId) {
+	public List<Person> listUsers(@Named("account") Long accountId) {
 		Account accountFetched = accountDao.retrieve(accountId);
-		return userDao.listAncestors(accountFetched);
+		return personDao.listAncestors(accountFetched);
 	}
 	
 	
@@ -64,13 +64,13 @@ public class UserService extends BaseService {
 	}
 	
 	@ApiMethod(name = "calendar.authUserSession", path="calendar.authUserSession", httpMethod = "post")
-	public User authUserSession(
+	public Person authUserSession(
 			@Named("username") String username, 
 			@Named("password") String password, 
 			@Named("account") Long accountId) {
 		
 		Account accountFetched = accountDao.retrieve(accountId);
-		User user = userDao.doubleFilterAncestorQuery("username", username, "password", password, accountFetched);
+		Person user = personDao.doubleFilterAncestorQuery("username", username, "password", password, accountFetched);
 		
 	    return user;
 	}
@@ -79,22 +79,22 @@ public class UserService extends BaseService {
 	/// UTILITY METHODS
 	
 	@ApiMethod(name = "calendar.dummyUsers", path="calendar.dummyUsers", httpMethod = "get")
-	public List<User> dummyUsers() {
-		if (userDao.list().size() == 0) {
+	public List<Person> dummyUsers() {
+		if (personDao.list().size() == 0) {
     		LoadDummyData ldd = new LoadDummyData();
     		ldd.initSetup();
     	}
-		return userDao.list();
+		return personDao.list();
 	}
 	
-	private User getUser(HttpServletRequest req) {
+	private Person getUser(HttpServletRequest req) {
 		HttpSession session = req.getSession(false);
 		UserSession userSession = (UserSession) session.getAttribute("userSession");
-		User user = userSession.getUser();
+		Person user = userSession.getUser();
 		return user;
 	}
 	
-	private void setSession(User user, HttpServletRequest req) {
+	private void setSession(Person user, HttpServletRequest req) {
 		
 		UserSession userSession = new UserSession();
 		if(user != null) {

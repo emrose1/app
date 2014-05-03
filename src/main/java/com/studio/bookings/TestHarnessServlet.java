@@ -24,7 +24,7 @@ import com.studio.bookings.entity.Account;
 import com.studio.bookings.entity.Booking;
 import com.studio.bookings.entity.Calendar;
 import com.studio.bookings.entity.Event;
-import com.studio.bookings.entity.User;
+import com.studio.bookings.entity.Person;
 import com.studio.bookings.enums.Permission;
 import com.studio.bookings.enums.UserType;
 import com.studio.bookings.util.LoadDummyData;
@@ -37,7 +37,7 @@ public class TestHarnessServlet extends HttpServlet {
       throws IOException {
 	  
 	  ChildBaseDao<Calendar, Account> calendarDao = new ChildBaseDao<Calendar, Account>(Calendar.class, Account.class);
-	  ChildBaseDao<User, Account> userDao = new ChildBaseDao<User, Account>(User.class, Account.class);
+	  ChildBaseDao<Person, Account> userDao = new ChildBaseDao<Person, Account>(Person.class, Account.class);
 	  ChildBaseDao<AccessControlList, Account> accessControlListDao = new ChildBaseDao<AccessControlList, Account>(AccessControlList.class, Account.class);
 
 

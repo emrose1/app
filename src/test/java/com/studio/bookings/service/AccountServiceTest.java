@@ -6,31 +6,68 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.inject.Named;
-import javax.servlet.http.HttpServletRequest;
-
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.googlecode.objectify.Key;
+import com.google.appengine.api.users.User;
+import com.google.appengine.api.oauth.OAuthRequestException;
+import com.google.appengine.api.oauth.OAuthService;
+import com.google.appengine.api.oauth.OAuthServiceFactory;
+import com.google.appengine.api.oauth.OAuthServiceFailureException;
+
+import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Id;
 import com.studio.bookings.dao.BaseDao;
 import com.studio.bookings.dao.ChildBaseDao;
 import com.studio.bookings.entity.Account;
 import com.studio.bookings.entity.Calendar;
-import com.studio.bookings.entity.User;
-import com.studio.bookings.entity.UserSession;
+import com.studio.bookings.entity.HelloGreetings;
+import com.studio.bookings.entity.Person;
 import com.studio.bookings.util.TestBase;
 
 
 public class AccountServiceTest extends TestBase {
+	
+	/*@Entity
+	public static class User {
+		public @Id Long id;
+		public String foo;
+
+		public User() {}
+		public User(long id) { this.id = id; }
+
+		@Override public boolean equals(Object obj) {
+			return ((User)obj).id.equals(id);
+		}
+	}*/
+
 	
 	public static AccountService accountService = new AccountService();
 	BaseDao<Account> accountDao = new BaseDao<Account>(Account.class);
 	public static CalendarService calendarService = new CalendarService();
 	BaseDao<Calendar> calendarDao = new BaseDao<Calendar>(Calendar.class);
 	public static UserService userService = new UserService();
-	public static ChildBaseDao<User, Account> userDao = new ChildBaseDao<User, Account>(User.class, Account.class);
+	public static ChildBaseDao<Person, Account> personDao = new ChildBaseDao<Person, Account>(Person.class, Account.class);
+	BaseDao<User> userTestDao = new BaseDao<User>(User.class);
 	
+	
+	@Test 
+	public void authedGreeting() {
+
+		OAuthService oauth = OAuthServiceFactory.getOAuthService();
+	    User user = null;
+		try {
+			user = oauth.getCurrentUser();
+		} catch (OAuthRequestException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    
+		HelloGreetings hg1 = new HelloGreetings("testMessage1");
+		HelloGreetings hg = accountService.authedGreeting(user);
+		assert "example@example.com".equals(user.getEmail());
+		assert "0".equals(user.getUserId().toString());
+	}
 	
 	@Test
 	public void insertAccount() {
@@ -42,7 +79,7 @@ public class AccountServiceTest extends TestBase {
 		assert "Testing Calendar".equals(calendarFetched.getDescription());
 		assert account.getId().equals(calendarFetched.getAccount().getId());
 		
-		User usersFetched = userService.authUserSession("username", "password", account.getId());
+		Person usersFetched = userService.authUserSession("username", "password", account.getId());
 		
 		assert "username".equals(usersFetched.getUsername());
 		assert account.getId().equals(usersFetched.getAccount().getId());

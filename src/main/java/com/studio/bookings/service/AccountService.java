@@ -6,10 +6,11 @@ import javax.inject.Named;
 
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
+import com.google.appengine.api.users.User;
 import com.studio.bookings.entity.Account;
 import com.studio.bookings.entity.Calendar;
-import com.studio.bookings.entity.User;
-import com.studio.bookings.enums.UserType;
+import com.studio.bookings.entity.HelloGreetings;
+import com.studio.bookings.entity.Person;
 import com.studio.bookings.util.Constants;
 import com.studio.bookings.util.LoadDummyData;
 
@@ -22,6 +23,13 @@ import com.studio.bookings.util.LoadDummyData;
 	)
 
 public class AccountService extends BaseService {
+	
+	
+	@ApiMethod(name = "greetings.authed", path = "hellogreeting/authed")
+	public HelloGreetings authedGreeting(User user) {
+		HelloGreetings response = new HelloGreetings("hello " + user.getEmail());
+		return response;
+	}
 
 	@ApiMethod(name = "account.addAccount", path="calendar.addAccount", httpMethod = "post")
 	public Account insertAccount(
@@ -37,8 +45,8 @@ public class AccountService extends BaseService {
 		Calendar calendar = new Calendar(description, account);
 		calendarDao.save(calendar);
 		
-		User user = new User(username, password, userType, account);
-		userDao.save(user);
+		Person user = new Person(username, password, userType, account);
+		personDao.save(user);
 		
 		return account;
 	}

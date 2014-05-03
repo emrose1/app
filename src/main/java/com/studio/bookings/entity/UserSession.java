@@ -16,14 +16,14 @@ public class UserSession implements Serializable {
 	@Id private Long id;
     
 	@Getter @Setter
-    private User user;
+    private Person user;
 	
 	@Getter @Setter
     private Date loginTime;
 
 	public UserSession(){}
 	
-    public UserSession(Date loginTime, User user) {
+    public UserSession(Date loginTime, Person user) {
     	this.user = user;
     	this.loginTime = loginTime;
     }

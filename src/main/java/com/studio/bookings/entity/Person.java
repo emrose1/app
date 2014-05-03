@@ -17,7 +17,7 @@ import com.googlecode.objectify.annotation.Parent;
 import com.studio.bookings.enums.UserType;
 
 @Entity
-public class User {
+public class Person {
 
     @Getter @Setter
 	@Id private Long id;
@@ -52,9 +52,9 @@ public class User {
     
     public UserType userType;
     
-    public User(){}
+    public Person(){}
     
-    public User(String username, String password, String userType, Account account) {
+    public Person(String username, String password, String userType, Account account) {
     	this.username = username;
     	this.password = password;
     	this.userType = UserType.valueOf(userType);
@@ -63,7 +63,7 @@ public class User {
     }
 
     @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-	public Key<User> getKey() {
+	public Key<Person> getKey() {
     	if(id == null){
     		return null;
     	}

@@ -14,7 +14,7 @@ import com.studio.bookings.entity.AccessControlList;
 import com.studio.bookings.entity.Account;
 import com.studio.bookings.entity.Calendar;
 import com.studio.bookings.entity.Event;
-import com.studio.bookings.entity.User;
+import com.studio.bookings.entity.Person;
 import com.studio.bookings.util.Constants;
 
 /**
@@ -39,7 +39,7 @@ public class BaseService {
 
 	public static BaseDao<Account> accountDao = new BaseDao<Account>(Account.class);
 	public static ChildBaseDao<Calendar, Account> calendarDao = new ChildBaseDao<Calendar, Account>(Calendar.class, Account.class);
-	public static ChildBaseDao<User, Account> userDao = new ChildBaseDao<User, Account>(User.class, Account.class);
+	public static ChildBaseDao<Person, Account> personDao = new ChildBaseDao<Person, Account>(Person.class, Account.class);
 	public static ChildBaseDao<AccessControlList, Account> accessControlListDao = new ChildBaseDao<AccessControlList, Account>(AccessControlList.class, Account.class);
 
 }

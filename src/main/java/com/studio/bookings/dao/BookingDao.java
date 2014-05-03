@@ -8,7 +8,7 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
 import com.studio.bookings.entity.Booking;
 import com.studio.bookings.entity.Event;
-import com.studio.bookings.entity.User;
+import com.studio.bookings.entity.Person;
 
 public class BookingDao {
 	
@@ -33,7 +33,7 @@ public class BookingDao {
 		return bookings;
 	}
 	
-	public List<Booking> getBookingsByUser(User user) {
+	public List<Booking> getBookingsByUser(Person user) {
 		return ofy().load().type(Booking.class).ancestor(user).list();
 	}
 	

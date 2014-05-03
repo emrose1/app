@@ -7,7 +7,7 @@ import com.studio.bookings.dao.EventCategoryDao;
 import com.studio.bookings.dao.EventDao;
 import com.studio.bookings.entity.AccessControlList;
 import com.studio.bookings.entity.Account;
-import com.studio.bookings.entity.User;
+import com.studio.bookings.entity.Person;
 import com.studio.bookings.enums.Permission;
 import com.studio.bookings.enums.UserType;
 import com.studio.bookings.service.AccountService;
@@ -119,15 +119,15 @@ public class LoadDummyData extends BaseService {
 		accessControlListDao.save(organizerEvent);
 		accessControlListDao.save(organizerCalendar);*/
 
-		User user1 = new User("admin", "123", "ADMIN", account);
-		User user2 = new User("owner", "123", "OWNER", account);
-		User user3 = new User("organizer", "123", "INSTRUCTOR", account);
-		User user4 = new User("attendee", "123", "ATTENDEE", account);
+		Person user1 = new Person("admin", "123", "ADMIN", account);
+		Person user2 = new Person("owner", "123", "OWNER", account);
+		Person user3 = new Person("organizer", "123", "INSTRUCTOR", account);
+		Person user4 = new Person("attendee", "123", "ATTENDEE", account);
 
-		userDao.save(user1);
-		userDao.save(user2);
-		userDao.save(user3);
-		userDao.save(user4);
+		personDao.save(user1);
+		personDao.save(user2);
+		personDao.save(user3);
+		personDao.save(user4);
 		
 		/*
 		Booking booking1 = new Booking(user1, event1);

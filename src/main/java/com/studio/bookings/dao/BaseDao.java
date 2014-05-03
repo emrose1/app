@@ -10,7 +10,7 @@ import com.googlecode.objectify.ObjectifyService;
 import com.studio.bookings.entity.AccessControlList;
 import com.studio.bookings.entity.Account;
 import com.studio.bookings.entity.Calendar;
-import com.studio.bookings.entity.User;
+import com.studio.bookings.entity.Person;
 
 //http://stackoverflow.com/questions/21036934/objectify-the-list-from-query-result-contains-null
 
@@ -20,7 +20,7 @@ public class BaseDao<T> {
 	static{
 		ObjectifyService.register(Account.class);
 		ObjectifyService.register(Calendar.class);
-		ObjectifyService.register(User.class);
+		ObjectifyService.register(Person.class);
 		ObjectifyService.register(AccessControlList.class);
 	}
 	

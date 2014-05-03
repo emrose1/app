@@ -6,7 +6,7 @@ import lombok.Setter;
 import com.googlecode.objectify.annotation.Subclass;
 
 @Subclass(index=true)
-public class Instructor extends User {
+public class Instructor extends Person {
 	
 	@Getter @Setter
 	private String firstname;

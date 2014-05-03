@@ -21,7 +21,7 @@ import com.studio.bookings.entity.AccessControlList;
 import com.studio.bookings.entity.Account;
 import com.studio.bookings.entity.Booking;
 import com.studio.bookings.entity.Calendar;
-import com.studio.bookings.entity.User;
+import com.studio.bookings.entity.Person;
 import com.studio.bookings.util.TestBase;
 
 
@@ -31,14 +31,14 @@ public class UserServiceTest extends TestBase  {
 	BaseDao<Account> accountDao = new BaseDao<Account>(Account.class);
 	public static CalendarService calendarService = new CalendarService();
 	BaseDao<Calendar> calendarDao = new BaseDao<Calendar>(Calendar.class);
-	public static ChildBaseDao<User, Account> userDao = new ChildBaseDao<User, Account>(User.class, Account.class);
+	public static ChildBaseDao<Person, Account> personDao = new ChildBaseDao<Person, Account>(Person.class, Account.class);
 	public static UserService userService = new UserService();
 	
 	@Test
 	public void insertUser() {
 		Account account = accountService.insertAccount("Account", "test", "admin", "123", "ADMIN");
-		User user = userService.insertUser("username", "password", "ADMIN",  account.getId()); 
-		User userFetched = userService.findUser(user.getId(), account.getId()); 
+		Person user = userService.insertUser("username", "password", "ADMIN",  account.getId()); 
+		Person userFetched = userService.findUser(user.getId(), account.getId()); 
 		assert "username".equals(userFetched.getUsername());
 		assert "password".equals(userFetched.getPassword());
 		assert account.getId().equals(userFetched.getAccount().getId());
@@ -47,8 +47,8 @@ public class UserServiceTest extends TestBase  {
 	@Test
 	public void authUserSession() {
 		Account account = accountService.insertAccount("Account", "test", "admin", "123", "ADMIN");
-		User user = userService.insertUser("username", "password", "ADMIN",  account.getId()); 
-		User userFetched = userService.authUserSession("username", "password", account.getId());
+		Person user = userService.insertUser("username", "password", "ADMIN",  account.getId()); 
+		Person userFetched = userService.authUserSession("username", "password", account.getId());
 		assert "username".equals(userFetched.getUsername());
 		assert "password".equals(userFetched.getPassword());
 		assert account.getId().equals(userFetched.getAccount().getId());
@@ -57,8 +57,8 @@ public class UserServiceTest extends TestBase  {
 	@Test
 	public void findUser() {
 		Account account = accountService.insertAccount("Account", "test", "admin", "123", "ADMIN");
-		User user = userService.insertUser("username", "password", "ADMIN",  account.getId()); 
-		User userFetched = userService.findUser(user.getId(), account.getId()); 
+		Person user = userService.insertUser("username", "password", "ADMIN",  account.getId()); 
+		Person userFetched = userService.findUser(user.getId(), account.getId()); 
 		assert "username".equals(userFetched.getUsername());
 		assert "password".equals(userFetched.getPassword());
 		assert account.getId().equals(userFetched.getAccount().getId());	
@@ -67,16 +67,16 @@ public class UserServiceTest extends TestBase  {
 	@Test
 	public void ListUsers() {
 		Account account = accountService.insertAccount("Account", "test", "admin", "123", "ADMIN");
-		//User user1 = userDao.insertUser("username1", "password1", "ADMIN",  account.getId()); 
-		Long user2 = userDao.save(new User("username2", "password2", "ADMIN",  account)); 
+		//User user1 = personDao.insertUser("username1", "password1", "ADMIN",  account.getId()); 
+		Long user2 = personDao.save(new Person("username2", "password2", "ADMIN",  account)); 
 		//List<User> usersFetched = userService.listUsers(account.getId());
 		//assert usersFetched.size() == 0;
 		
-		/*List<User> calList =  userDao.list();
+		/*List<User> calList =  personDao.list();
 		assert calList.size() == 1;*/
 		
-		List <User> users = com.studio.bookings.util.TestObjectifyService.ofy().
-				load().type(User.class).ancestor(account).list();
+		List <Person> users = com.studio.bookings.util.TestObjectifyService.ofy().
+				load().type(Person.class).ancestor(account).list();
 		
 		/*Account account = accountService.insertAccount("Account", "test", "admin", "123", "ADMIN");
 		User user = userService.insertUser("username", "password", "ADMIN",  account.getId()); 

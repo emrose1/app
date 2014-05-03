@@ -13,7 +13,7 @@ import com.studio.bookings.dao.BaseDao;
 import com.studio.bookings.dao.ChildBaseDao;
 import com.studio.bookings.entity.Account;
 import com.studio.bookings.entity.Calendar;
-import com.studio.bookings.entity.User;
+import com.studio.bookings.entity.Person;
 import com.studio.bookings.util.TestBase;
 
 
@@ -23,7 +23,7 @@ public class CalendarServiceTest extends TestBase {
 	CalendarService calendarService = new CalendarService();
 	public static BaseDao<Account> accountDao = new BaseDao<Account>(Account.class);
 	public static ChildBaseDao<Calendar, Account> calendarDao = new ChildBaseDao<Calendar, Account>(Calendar.class, Account.class);
-	public static ChildBaseDao<User, Account> userDao = new ChildBaseDao<User, Account>(User.class, Account.class);
+	public static ChildBaseDao<Person, Account> userDao = new ChildBaseDao<Person, Account>(Person.class, Account.class);
 	
 
 	@Test

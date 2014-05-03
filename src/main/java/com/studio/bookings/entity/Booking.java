@@ -24,13 +24,13 @@ public class Booking {
 	@Parent
 	@Load
 	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-    private Ref<User> userRef;
+    private Ref<Person> userRef;
 	
-    public User getUser() { 
+    public Person getUser() { 
     	return userRef.get(); 
     }
     
-    public void setUser(User value) { 
+    public void setUser(Person value) { 
     	userRef = Ref.create(value); 
     }
     
@@ -55,7 +55,7 @@ public class Booking {
     
     public Booking(){}
     
-    public Booking(User user, Event event) {
+    public Booking(Person user, Event event) {
     	this.dateBooked = new Date();
     	this.userRef = Ref.create(user);
     	this.eventRef = Ref.create(event);
