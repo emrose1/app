@@ -51,7 +51,7 @@ public class UserService extends BaseService {
 	
 	public Person findPerson(@Named("account") Long accountId, User user) {
 		Account accountFetched = accountDao.retrieve(accountId);
-		Person person = personDao.oneFilterAncestorQuery("user_id", user.getUserId(), accountFetched);
+		Person person = personDao.oneFilterAncestorQuery("userId", user.getUserId(), accountFetched);
 		return person;
 	}
 	

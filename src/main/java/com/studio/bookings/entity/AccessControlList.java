@@ -10,6 +10,7 @@ import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
+import com.googlecode.objectify.annotation.Load;
 import com.googlecode.objectify.annotation.Parent;
 import com.studio.bookings.enums.Permission;
 import com.studio.bookings.enums.UserType;
@@ -20,7 +21,8 @@ public class AccessControlList {
 	@Getter @Setter
 	@Id private Long id;
 	
-	@Parent
+    @Parent
+    @Load
     @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
     private Ref<Account> accountRef;
 	
@@ -54,14 +56,14 @@ public class AccessControlList {
 	
 	public AccessControlList(){}
 	
-	public AccessControlList(Permission permission, boolean canView, boolean canInsert, boolean canUpdate, 
-			boolean canDelete, UserType userType, Account account) {
-		this.permission = permission;
-		this.canView = canView;
-		this.canInsert = canInsert;
-		this.canUpdate = canUpdate;
-		this.canDelete = canDelete;
-		this.userType = userType;
+	public AccessControlList(String permission, String canView, String canInsert, String canUpdate, 
+			String canDelete, String userType, Account account) {
+		this.permission = 	Permission.valueOf(permission);
+		this.canView = 		Boolean.valueOf(canView);
+		this.canInsert = 	Boolean.valueOf(canInsert);
+		this.canUpdate = 	Boolean.valueOf(canUpdate);
+		this.canDelete = 	Boolean.valueOf(canDelete);
+		this.userType = 	UserType.valueOf(userType);
 		this.setAccount(account);
 	}
 	
