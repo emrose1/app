@@ -9,8 +9,8 @@ import com.google.api.server.spi.config.ApiMethod;
 import com.google.appengine.api.users.User;
 import com.studio.bookings.entity.Account;
 import com.studio.bookings.entity.Calendar;
-import com.studio.bookings.entity.HelloGreetings;
 import com.studio.bookings.entity.Person;
+import com.studio.bookings.enums.Permission;
 import com.studio.bookings.util.Constants;
 import com.studio.bookings.util.LoadDummyData;
 
@@ -23,61 +23,76 @@ import com.studio.bookings.util.LoadDummyData;
 	)
 
 public class AccountService extends BaseService {
-	
-	
-	@ApiMethod(name = "greetings.authed", path = "hellogreeting/authed")
-	public HelloGreetings authedGreeting(User user) {
-		HelloGreetings response = new HelloGreetings("hello " + user.getEmail());
-		return response;
-	}
+
+	public static AccessControlListService aclService = new AccessControlListService();
+	Permission permission = Permission.ACCOUNT;
 
 	@ApiMethod(name = "account.addAccount", path="calendar.addAccount", httpMethod = "post")
 	public Account insertAccount(
+			@Named("account") Long userAccountId,
 			@Named("name") String name,
 			@Named("description") String description,
 			@Named("username") String username, 
 			@Named("password") String password, 
 			@Named("userType") String userType,
-			User user
-			) {
-		Account account = new Account(name);
-		accountDao.save(account);
+			User user) {
 		
-		Calendar calendar = new Calendar(description, account);
-		calendarDao.save(calendar);
-		
-		Person p = new Person(username, password, userType, account, user);
-		personDao.save(p);
-		
+		Account account = null;
+		if (user != null && aclService.allowInsert(userAccountId, permission.toString(), user)) { 
+			account = new Account(name);
+			accountDao.save(account);
+			Calendar calendar = new Calendar(description, account);
+			calendarDao.save(calendar);
+			Person p = new Person(username, password, userType, account, user);
+			personDao.save(p);
+		}
 		return account;
 	}
 	
 	@ApiMethod(name = "account.findAccount", path="calendar.findAccount", httpMethod = "get")
-	public Account findAccount(@Named("account") Long accountId) {
-		return accountDao.retrieve(accountId);
+	public Account findAccount(
+			@Named("account") Long userAccountId,
+			@Named("accountToFind") Long accountToFindId, 
+			User user) {
+		Account accountFetched = null;
+		if (user != null && aclService.allowView(userAccountId, permission.toString(), user)) {
+			accountFetched = accountDao.retrieve(accountToFindId);
+		}
+		return accountFetched;
 	}
 	
 	@ApiMethod(name = "account.listAccounts", path="calendar.listAccounts", httpMethod = "get")
-	public List<Account> listAccounts() {
+	public List<Account> listAccounts(@Named("account") Long userAccountId, User user) {
+		if (user != null && aclService.allowView(userAccountId, permission.toString(), user)) {
+			return accountDao.list();
+		} else {
+			return null;
+		}
 		
-		//TODO remove
-		if (accountDao.list().size() == 0) {
-    		LoadDummyData ldd = new LoadDummyData();
-    		ldd.initSetup();
-    	}
-		return accountDao.list();
 	}
 	
 	@ApiMethod(name = "account.updateAccount", path="calendar.updateAccount", httpMethod = "get")
-	public Account updateAccount(@Named("account") Long accountId, @Named("name") String name) {
-		Account accountFetched = accountDao.retrieve(accountId);
-		accountFetched.setName(name);
-		accountDao.save(accountFetched);
+	public Account updateAccount(
+			@Named("account") Long userAccountId,
+			@Named("accountToUpdate") Long accountToUpdateId, 
+			@Named("name") String name, 
+			User user) {
+		Account accountFetched = null;
+		if (user != null && aclService.allowUpdate(userAccountId, permission.toString(), user)) {
+			accountFetched = accountDao.retrieve(accountToUpdateId);
+			accountFetched.setName(name);
+			accountDao.save(accountFetched);
+		}
 		return accountFetched;
 	}
 	
 	@ApiMethod(name = "account.deleteAccount", path="calendar.deleteAccount", httpMethod = "get")
-	public void deleteAccount(@Named("account") Long accountId) {
-		accountDao.delete(accountId);
+	public void deleteAccount(
+			@Named("account") Long userAccountId, 
+			@Named("accountDelete") Long accountToDeleteId, 
+			User user) {
+		if (user != null && aclService.allowDelete(userAccountId, permission.toString(), user)) {
+			accountDao.delete(accountToDeleteId);
+		}
 	}
 }

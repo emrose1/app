@@ -39,10 +39,10 @@ public class LoadDummyData extends BaseService {
 			e.printStackTrace();
 		}
 		
-		Account account = accountService.insertAccount("Testing Account", "test", "admin", "123", "ADMIN", user);
+		/*Account account = accountService.insertAccount("Testing Account", "test", "admin", "123", "ADMIN", user);
 		Account account2 = accountService.insertAccount("Testing Account2", "test", "admin", "123", "ADMIN", user);
 		Account account3 = accountService.insertAccount("Testing Account3", "test", "admin", "123", "ADMIN", user);
-		
+		*/
 	
 		/*CalendarDao calendarDao = new CalendarDao();
 		EventDao eventDao = new EventDao();
@@ -132,7 +132,7 @@ public class LoadDummyData extends BaseService {
 		accessControlListDao.save(organizerEvent);
 		accessControlListDao.save(organizerCalendar);*/
 
-		Person user1 = new Person("admin", "123", "ADMIN", account, user);
+		/*Person user1 = new Person("admin", "123", "ADMIN", account, user);
 		Person user2 = new Person("owner", "123", "OWNER", account, user);
 		Person user3 = new Person("organizer", "123", "INSTRUCTOR", account, user);
 		Person user4 = new Person("attendee", "123", "ATTENDEE", account, user);
@@ -141,7 +141,7 @@ public class LoadDummyData extends BaseService {
 		personDao.save(user2);
 		personDao.save(user3);
 		personDao.save(user4);
-		
+		*/
 		/*
 		Booking booking1 = new Booking(user1, event1);
 		Booking booking2 = new Booking(user2, event1);

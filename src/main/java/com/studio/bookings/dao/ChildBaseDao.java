@@ -42,6 +42,9 @@ public class ChildBaseDao<T, S> extends BaseDao<T> {
 	
 	public T twoFilterAncestorQuery(String filter, String value, String filter2, String value2, S e) {
         return ofy().load().type(t).ancestor(e).filter(filter, value).filter(filter2, value2).first().now();
-
+	}
+	
+	public void deleteAncestors(List<Long> aclIds, S e) {
+		ofy().delete().type(t).parent(e).ids(aclIds);
 	}
 }

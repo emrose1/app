@@ -36,6 +36,8 @@ public class AccessControlList {
     	accountRef = Ref.create(account); 
     }
 	
+	@Index
+	@Getter @Setter
     private UserType userType;
 	
 	@Index

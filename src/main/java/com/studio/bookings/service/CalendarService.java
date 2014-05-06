@@ -1,5 +1,6 @@
 package com.studio.bookings.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Named;
@@ -31,7 +32,7 @@ public class CalendarService extends BaseService {
 	    return calendar; 
 	}
 	
-	@ApiMethod(name = "calendar.findCalendar", path="calendar.findCalendar", httpMethod = "post")
+	@ApiMethod(name = "calendar.findCalendar", path="calendar.findCalendar", httpMethod = "get")
 	public Calendar findCalendar(@Named("calendar") Long calendarId, @Named("account") Long accountId) {
 		Account account = accountDao.retrieve(accountId);
 		return calendarDao.retrieveAncestor(calendarId, account);
@@ -43,7 +44,7 @@ public class CalendarService extends BaseService {
 		return calendarDao.listAncestors(accountFetched);
 	}
 	
-	@ApiMethod(name = "calendar.updateCalendar", path="calendar.updateCalendar", httpMethod = "get")
+	@ApiMethod(name = "calendar.updateCalendar", path="calendar.updateCalendar", httpMethod = "post")
 	public Calendar updateCalendar(@Named("calendar") Long calendarId,  @Named("account") Long accountId, 
 			@Named("description") String description) {
 		Account accountFetched = accountDao.retrieve(accountId);
@@ -53,8 +54,20 @@ public class CalendarService extends BaseService {
 		return calendarFetched;
 	}
 	
-	@ApiMethod(name = "calendar.deleteCalendar", path="calendar.deleteCalendar", httpMethod = "get")
-	public void deleteCalendar(@Named("calendar") Long calendarId) {
-		calendarDao.delete(calendarId);
+	@ApiMethod(name = "calendar.deleteCalendar", path="calendar.deleteCalendar", httpMethod = "post")
+	public void deleteCalendar(
+			@Named("calendar") Long calendarId,
+			@Named("account") Long accountId) {
+		Account accountFetched = accountDao.retrieve(accountId);
+		List<Long> idsToDelete = new ArrayList<Long>();
+		idsToDelete.add(calendarId);
+		calendarDao.deleteAncestors(idsToDelete, accountFetched);
+	}
+	
+	public void deleteAcl(
+			@Named("aclList") List<Long> aclIds,
+			@Named("account") Long accountId) {
+		Account accountFetched = accountDao.retrieve(accountId); 
+		aclDao.deleteAncestors(aclIds, accountFetched);
 	}
 }

@@ -78,7 +78,7 @@ public class CalendarServiceTest extends TestBase {
 	}
 	
 	@Test
-	public void ListCalendars() {
+	public void listCalendars() {
 		Account account = new Account("account");
 		accountDao.save(account);
 		Calendar cal1 = new Calendar ("calendar1", account); 
@@ -94,35 +94,40 @@ public class CalendarServiceTest extends TestBase {
 		Assert.assertNotNull(cals);
 		assert cals.size() == 2;
 	}
-	
-/*
-	
+		
 	@Test
-	public void updateAccount() {
+	public void updateCalendar() {
 		
-		String accountName = "Account name";
-		Account account = accountService.insertAccount(accountName);
-		Long accountUpdatedId = accountService.updateAccount(account.getId(), "updated Account");
-		Account accountUpdated = accountService.findAccount(accountUpdatedId);
+		Account account = new Account("account");
+		accountDao.save(account);
+		Calendar cal = new Calendar ("calendar1", account);
+		calendarDao.save(cal);
+
+		Calendar calendarUpdated = calendarService.updateCalendar(cal.getId(), account.getId(), "Updated Calendar");
+		Calendar calendarFetched = calendarDao.retrieveAncestor(calendarUpdated.getId(), account);
 		
-		assert account.getName().equals("updated Account");
-		assert account.getName().equals(accountUpdated.getName());
-		assert account.getId().equals(accountUpdated.getId());
+		assert calendarUpdated.getAccount().equals(calendarFetched.getAccount());
+		assert calendarUpdated.getDescription().equals("Updated Calendar");
+		assert calendarUpdated.getId().equals(calendarFetched.getId());
 
 	}
 	
 	@Test
-	public void deleteAccount() {
+	public void deleteCalendar() {
 		
-		String accountName = "Account name";
-		Account account = accountService.insertAccount(accountName);
+		Account account = new Account("account");
+		Long accountId = accountDao.save(account);
+		Calendar cal = new Calendar ("calendar1", account);
+		calendarDao.save(cal);
+		
 		ofy().clear();
-		Account accountDeleted = accountDao.retrieve(account.getId());
-		assert accountDeleted != null;
-		accountService.deleteAccount(account.getId());
+		Calendar calendarToDelete = calendarDao.retrieveAncestor(cal.getId(), account);
+		assert calendarToDelete != null;
+		calendarService.deleteCalendar(calendarToDelete.getId(), accountId);
 		ofy().clear();
-		assert ofy().load().key(accountDeleted.getKey()).now() == null;
-	}*/
+		
+		assert ofy().load().key(calendarToDelete.getKey()).now() == null;
+	}
 	
 	
 }

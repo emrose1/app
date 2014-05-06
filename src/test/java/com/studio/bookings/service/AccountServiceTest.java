@@ -9,80 +9,63 @@ import java.util.List;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.google.appengine.api.users.User;
 import com.google.appengine.api.oauth.OAuthRequestException;
 import com.google.appengine.api.oauth.OAuthService;
 import com.google.appengine.api.oauth.OAuthServiceFactory;
-import com.google.appengine.api.oauth.OAuthServiceFailureException;
-
-import com.googlecode.objectify.annotation.Entity;
-import com.googlecode.objectify.annotation.Id;
+import com.google.appengine.api.users.User;
 import com.studio.bookings.dao.BaseDao;
 import com.studio.bookings.dao.ChildBaseDao;
+import com.studio.bookings.entity.AccessControlList;
 import com.studio.bookings.entity.Account;
 import com.studio.bookings.entity.Calendar;
-import com.studio.bookings.entity.HelloGreetings;
 import com.studio.bookings.entity.Person;
+import com.studio.bookings.enums.Permission;
 import com.studio.bookings.util.TestBase;
 
 
 public class AccountServiceTest extends TestBase {
 	
-	/*@Entity
-	public static class User {
-		public @Id Long id;
-		public String foo;
-
-		public User() {}
-		public User(long id) { this.id = id; }
-
-		@Override public boolean equals(Object obj) {
-			return ((User)obj).id.equals(id);
-		}
-	}*/
-
-	
 	public static AccountService accountService = new AccountService();
-	BaseDao<Account> accountDao = new BaseDao<Account>(Account.class);
+	static BaseDao<Account> accountDao = new BaseDao<Account>(Account.class);
 	public static CalendarService calendarService = new CalendarService();
 	BaseDao<Calendar> calendarDao = new BaseDao<Calendar>(Calendar.class);
-	public static UserService userService = new UserService();
+	public static PersonService userService = new PersonService();
 	public static ChildBaseDao<Person, Account> personDao = new ChildBaseDao<Person, Account>(Person.class, Account.class);
 	BaseDao<User> userTestDao = new BaseDao<User>(User.class);
-	
-	
-	@Test 
-	public void authedGreeting() {
 
+	static Permission permission = Permission.ACCOUNT;
+	public static ChildBaseDao<AccessControlList, Account> aclDao = new ChildBaseDao<AccessControlList, Account>(AccessControlList.class, Account.class);
+	public static PersonService personService = new PersonService();
+	
+	
+	public User setUpUser() {
 		OAuthService oauth = OAuthServiceFactory.getOAuthService();
-	    User user = null;
+		User user = null;
 		try {
 			user = oauth.getCurrentUser();
 		} catch (OAuthRequestException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	    
-		HelloGreetings hg1 = new HelloGreetings("testMessage1");
-		HelloGreetings hg = accountService.authedGreeting(user);
-		assert "example@example.com".equals(user.getEmail());
-		assert "0".equals(user.getUserId().toString());
+		return user;
 	}
 	
+	public void setUp(Account userAccount, User user) {
+		AccessControlList acl = new AccessControlList(permission.toString(), "true", "true", "true", "true", "SUPERADMIN", userAccount);
+		aclDao.save(acl);
+		Person p = personService.insertPerson("username", "password", "SUPERADMIN",  userAccount.getId(), user); 
+	}
+		
 	@Test
 	public void insertAccount() {
 		
-		OAuthService oauth = OAuthServiceFactory.getOAuthService();
-	    User user = null;
-		try {
-			user = oauth.getCurrentUser();
-		} catch (OAuthRequestException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		Account userAccount = new Account();
+		Long userAccountId = accountDao.save(userAccount);
+		User user = this.setUpUser();
+		this.setUp(userAccount, user);
 		
-		Account account = accountService.insertAccount("Testing Account", "Testing Calendar", "username", "password", "ADMIN", user);
-		Account accountFetched = accountService.findAccount(account.getId());
+		Account account = accountService.insertAccount(userAccountId, "Testing Account", "Testing Calendar", "username", "password", "ADMIN", user);
+		Account accountFetched = accountDao.retrieve(account.getId());
 		
 		Calendar calendarFetched = calendarService.listCalendars(account.getId()).get(0);
 		assert "Testing Calendar".equals(calendarFetched.getDescription());
@@ -108,14 +91,19 @@ public class AccountServiceTest extends TestBase {
 	@Test
 	public void findAccount() {
 		
+		Account userAccount = new Account();
+		Long userAccountId = accountDao.save(userAccount);
+		User user = this.setUpUser();
+		this.setUp(userAccount, user);
+		
 		Account account1 = new Account("Account 1");
 		Account account2 = new Account("Account 2");
 
 		accountDao.save(account1);
 		accountDao.save(account2);
 
-		Account accountFetched1 = accountService.findAccount(account1.getId());
-		Account accountFetched2 = accountService.findAccount(account2.getId());
+		Account accountFetched1 = accountService.findAccount(userAccountId, account1.getId(), user);
+		Account accountFetched2 = accountService.findAccount(userAccountId, account2.getId(), user);
 		
 		assert accountFetched1.getId().equals(account1.getId());
 		assert accountFetched1.getName().equals(account1.getName());
@@ -130,28 +118,39 @@ public class AccountServiceTest extends TestBase {
 	@Test
 	public void ListAccounts() {
 		
+		Account userAccount = new Account();
+		Long userAccountId = accountDao.save(userAccount);
+		User user = this.setUpUser();
+		this.setUp(userAccount, user);
+		
 		Account account1 = new Account("Account 1");
 		Account account2 = new Account("Account 2");
 				
 		List<Account> accountList = new ArrayList<Account>();
+		accountList.add(userAccount);
 		accountList.add(account1);
 		accountList.add(account2);
 		
 		accountDao.save(accountList);
-		List<Account> accountsFetched = accountService.listAccounts();
+		List<Account> accountsFetched = accountService.listAccounts(userAccountId, user);
 		
 		Assert.assertNotNull(accountsFetched);
 		assert accountsFetched.size() == accountList.size();
-		assert accountsFetched.size() == 2;
+		assert accountsFetched.size() == 3;
 	}
 	
 	@Test
 	public void updateAccount() {
 		
+		Account userAccount = new Account();
+		Long userAccountId = accountDao.save(userAccount);
+		User user = this.setUpUser();
+		this.setUp(userAccount, user);
+		
 		Account account = new Account("Account 1");
 		accountDao.save(account);
 		
-		Account accountUpdated = accountService.updateAccount(account.getId(), "updated Account");
+		Account accountUpdated = accountService.updateAccount(userAccountId, account.getId(), "updated Account", user);
 		assert account.getName().equals("updated Account");
 		assert account.getName().equals(accountUpdated.getName());
 		assert account.getId().equals(accountUpdated.getId());
@@ -160,13 +159,18 @@ public class AccountServiceTest extends TestBase {
 	@Test
 	public void deleteAccount() {
 		
+		Account userAccount = new Account();
+		Long userAccountId = accountDao.save(userAccount);
+		User user = this.setUpUser();
+		this.setUp(userAccount, user);
+		
 		Account account = new Account("Account 1");
 		accountDao.save(account);
 		
 		ofy().clear();
 		Account accountDeleted = accountDao.retrieve(account.getId());
 		assert accountDeleted != null;
-		accountService.deleteAccount(account.getId());
+		accountService.deleteAccount(userAccountId, account.getId(), user);
 		ofy().clear();
 		assert ofy().load().key(accountDeleted.getKey()).now() == null;
 	}

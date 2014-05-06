@@ -55,6 +55,8 @@ public class Person {
     @Getter @Setter
     String userId;
     
+    @Index
+    @Getter @Setter
     public UserType userType;
     
     public Person(){}

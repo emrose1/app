@@ -1,6 +1,7 @@
 package com.studio.bookings.entity;
 import java.io.Serializable;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,6 +14,7 @@ import com.googlecode.objectify.annotation.Index;
 
 
 @Entity
+@EqualsAndHashCode(exclude={"id"})
 public class Account implements Serializable  {
 
 	@Getter @Setter

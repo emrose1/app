@@ -14,6 +14,7 @@ import com.google.appengine.api.users.User;
 import com.studio.bookings.entity.Account;
 import com.studio.bookings.entity.Person;
 import com.studio.bookings.entity.UserSession;
+import com.studio.bookings.enums.Permission;
 import com.studio.bookings.util.Constants;
 import com.studio.bookings.util.LoadDummyData;
 
@@ -25,11 +26,13 @@ import com.studio.bookings.util.LoadDummyData;
 	    audiences = {Constants.ANDROID_AUDIENCE}
 	)
 
-public class UserService extends BaseService {
+public class PersonService extends BaseService {
 	
+	public static AccessControlListService aclService = new AccessControlListService();
+	static Permission permission = Permission.ACCOUNT;
 	
-	@ApiMethod(name = "calendar.addUser", path="calendar.addUser", httpMethod = "post")
-	public Person insertUser( 
+	@ApiMethod(name = "calendar.addPerson", path="calendar.addPerson", httpMethod = "post")
+	public Person insertPerson( 
 			@Named("username") String username,
 			@Named("password") String password,
 			@Named("userType") String userType,  
