@@ -51,9 +51,10 @@ public class AccountServiceTest extends TestBase {
 	}
 	
 	public void setUp(Account userAccount, User user) {
-		AccessControlList acl = new AccessControlList(permission.toString(), "true", "true", "true", "true", "SUPERADMIN", userAccount);
+		AccessControlList acl = new AccessControlList(permission.toString(), "true", "true", "true", "true", "SUPERADMIN");
 		aclDao.save(acl);
-		Person p = personService.insertPerson("username", "password", "SUPERADMIN",  userAccount.getId(), user); 
+		Person p = new Person("username", "password", "SUPERADMIN", userAccount, user);
+		personDao.save(p);
 	}
 		
 	@Test

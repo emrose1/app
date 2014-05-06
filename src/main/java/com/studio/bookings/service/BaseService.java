@@ -38,8 +38,9 @@ public class BaseService {
 	public static InstructorDao instructorDao = new InstructorDao();
 
 	public static BaseDao<Account> accountDao = new BaseDao<Account>(Account.class);
+	public static BaseDao<AccessControlList> aclDao = new BaseDao<AccessControlList>(AccessControlList.class);
+
 	public static ChildBaseDao<Calendar, Account> calendarDao = new ChildBaseDao<Calendar, Account>(Calendar.class, Account.class);
 	public static ChildBaseDao<Person, Account> personDao = new ChildBaseDao<Person, Account>(Person.class, Account.class);
-	public static ChildBaseDao<AccessControlList, Account> aclDao = new ChildBaseDao<AccessControlList, Account>(AccessControlList.class, Account.class);
-
+	
 }

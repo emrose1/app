@@ -63,11 +63,5 @@ public class CalendarService extends BaseService {
 		idsToDelete.add(calendarId);
 		calendarDao.deleteAncestors(idsToDelete, accountFetched);
 	}
-	
-	public void deleteAcl(
-			@Named("aclList") List<Long> aclIds,
-			@Named("account") Long accountId) {
-		Account accountFetched = accountDao.retrieve(accountId); 
-		aclDao.deleteAncestors(aclIds, accountFetched);
-	}
+
 }

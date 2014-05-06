@@ -9,7 +9,6 @@ import com.google.api.server.spi.config.ApiMethod;
 import com.google.appengine.api.users.User;
 import com.studio.bookings.entity.AccessControlList;
 import com.studio.bookings.entity.Account;
-
 import com.studio.bookings.enums.Permission;
 import com.studio.bookings.enums.UserType;
 import com.studio.bookings.util.Constants;
@@ -24,6 +23,8 @@ import com.studio.bookings.util.Constants;
 
 public class AccessControlListService extends BaseService {
 	
+	Permission aclPermission = Permission.ACL;
+	
 	@ApiMethod(name = "calendar.addAcl", path="calendar.addAcl", httpMethod = "post")
     public AccessControlList insertAccessControlList(
     		@Named("permission") String permission,
@@ -33,30 +34,35 @@ public class AccessControlListService extends BaseService {
     		@Named("canDelete") String canDelete,
     		@Named("userType") String userType,
     		@Named("account") Long accountId,
-			User user) throws Exception {
-    	
+			User user) {
+		AccessControlList acl = null;
+		Permission p = Permission.ACL;
     	if(user != null) { 
     		// TODO THROW UNAUTHORIZED EXCEPTION
-    		if (this.allowInsert(accountId, permission, user)) {
-
-		    	Long oId = new Long(accountId);
-				Account account =  accountDao.retrieve(oId);
-				AccessControlList acl = new AccessControlList(
+    		if (this.allowInsert(accountId, aclPermission.toString(), user)) {
+				acl = new AccessControlList(
 						permission, canView, canInsert, canUpdate, 
-						canDelete, userType, account);
+						canDelete, userType);
 				aclDao.save(acl);
-				return acl;
     		}
-    		return null;
     	}
-    	
-    	else { return null; }
-    }
+    	return acl;
+	}
 
     @ApiMethod(name = "calendar.findAcl", path="calendar.findAcl", httpMethod = "get")
-	public AccessControlList findAcl(@Named("acl") Long aclId, @Named("account") Long accountId) {
-		Account account = accountDao.retrieve(accountId);
-		return aclDao.retrieveAncestor(aclId, account);
+	public AccessControlList findAcl(
+			@Named("acl") Long aclId,
+			@Named("account") Long accountId,
+			User user) {
+    	
+    	AccessControlList acl = null;
+    	if(user != null) { 
+    		// TODO THROW UNAUTHORIZED EXCEPTION
+    		if (this.allowView(accountId, aclPermission.toString(), user)) {
+    			acl = aclDao.retrieve(aclId);
+    		}
+    	}
+    	return acl;
 	}
 	
     @ApiMethod(name = "calendar.updateAcl", path="calendar.updateAcl", httpMethod = "post")
@@ -69,8 +75,7 @@ public class AccessControlListService extends BaseService {
     		@Named("canDelete") String canDelete,
     		@Named("userType") String userType,
     		@Named("account") Long accountId) {
-		Account accountFetched = accountDao.retrieve(accountId);
-		AccessControlList aclFetched = aclDao.retrieveAncestor(aclId, accountFetched);
+		AccessControlList aclFetched = aclDao.retrieve(aclId);
 		aclFetched.setPermission(Permission.valueOf(permission));
 		aclFetched.setCanView(Boolean.valueOf(canView));
 		aclFetched.setCanInsert(Boolean.valueOf(canInsert));
@@ -85,21 +90,25 @@ public class AccessControlListService extends BaseService {
 
 	@ApiMethod(name = "calendar.deleteAcl", path="calendar.deleteAcl", httpMethod = "post")
 	public void deleteAcl(
-			@Named("aclList") List<Long> aclIds,
+			@Named("aclList") Long aclId,
 			@Named("account") Long accountId) {
-		Account accountFetched = accountDao.retrieve(accountId); 
-		aclDao.deleteAncestors(aclIds, accountFetched);
+		aclDao.delete(aclId);
 	}
     
-    
 	@ApiMethod(name = "calendar.listAcl", path="calendar.listAcl", httpMethod = "post")
-    public List<AccessControlList> listAcl (@Named("account") Long accountId) {
-		Account accountFetched = accountDao.retrieve(accountId);
-		return aclDao.listAncestors(accountFetched);    	
+    public List<AccessControlList> listAcl(@Named("account") Long accountId, User user) {
+		List<AccessControlList> aclList = null;
+		if(user != null) { 
+    		// TODO THROW UNAUTHORIZED EXCEPTION
+    		if (this.allowInsert(accountId, aclPermission.toString(), user)) {
+    			aclList = aclDao.list();    	
+    		}
+		}
+		return aclList;
     }
 
-	private AccessControlList getByUserTypeAndPermission(UserType userType, Permission permission, Account accountFetched) {
-		return aclDao.twoFilterAncestorQuery("userType", userType.toString(), "permission", permission.toString(), accountFetched);
+	private AccessControlList getByUserTypeAndPermission(UserType userType, Permission permission) {
+		return aclDao.twoFilterQuery("userType", userType.toString(), "permission", permission.toString());
     }
 	
 	private UserType getUserType(Account account, User user) {
@@ -110,28 +119,28 @@ public class AccessControlListService extends BaseService {
     public Boolean allowView(@Named("account") Long accountId, @Named("permission") String permission, User user) {
     	Account accountFetched = accountDao.retrieve(accountId);
     	UserType ut = this.getUserType(accountFetched, user);
-        return this.getByUserTypeAndPermission(ut, Permission.valueOf(permission), accountFetched).isCanView();
+        return this.getByUserTypeAndPermission(ut, Permission.valueOf(permission)).getCanView();
     }
 	
 	@ApiMethod(name = "calendar.isCanInsert", path="calendar.isCanInsert", httpMethod = "get")
     public Boolean allowInsert(@Named("account") Long accountId, @Named("permission") String permission, User user) {
-    	Account accountFetched = accountDao.retrieve(accountId);
-    	UserType ut = this.getUserType(accountFetched, user);
-        return this.getByUserTypeAndPermission(ut, Permission.valueOf(permission), accountFetched).isCanInsert();
+    	//Account accountFetched = accountDao.retrieve(accountId);
+    	UserType ut = UserType.SUPERADMIN;
+        return this.getByUserTypeAndPermission(ut, Permission.valueOf(permission)).getCanInsert();
     }
 
 	@ApiMethod(name = "calendar.isCanUpdate", path="calendar.isCanUpdate", httpMethod = "get")
     public Boolean allowUpdate(@Named("account") Long accountId, @Named("permission") String permission, User user)  {
     	Account accountFetched = accountDao.retrieve(accountId);
     	UserType ut = this.getUserType(accountFetched, user);
-        return this.getByUserTypeAndPermission(ut, Permission.valueOf(permission), accountFetched).isCanUpdate();
+        return this.getByUserTypeAndPermission(ut, Permission.valueOf(permission)).getCanUpdate();
     }
 
 	@ApiMethod(name = "calendar.isCanDelete", path="calendar.isCanDelete", httpMethod = "get")
     public Boolean allowDelete(@Named("account") Long accountId, @Named("permission") String permission, User user)  {
     	Account accountFetched = accountDao.retrieve(accountId);
     	UserType ut = this.getUserType(accountFetched, user);
-        return this.getByUserTypeAndPermission(ut, Permission.valueOf(permission), accountFetched).isCanDelete();
+        return this.getByUserTypeAndPermission(ut, Permission.valueOf(permission)).getCanDelete();
     }
 	
 }

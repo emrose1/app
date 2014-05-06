@@ -56,4 +56,13 @@ public class BaseDao<T> {
 		return ofy().load().type(t).id(id).now();
 	}
 	
+
+	public T oneFilterQuery(String filter, String value) {
+        return ofy().load().type(t).filter(filter, value).first().now();
+	}
+	
+	public T twoFilterQuery(String filter, String value, String filter2, String value2) {
+        return ofy().load().type(t).filter(filter, value).filter(filter2, value2).first().now();
+	}
+	
 }
