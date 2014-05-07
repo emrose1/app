@@ -27,17 +27,19 @@ public class AccountServiceTest extends TestBase {
 	
 	public static AccountService accountService = new AccountService();
 	static BaseDao<Account> accountDao = new BaseDao<Account>(Account.class);
+	
 	public static CalendarService calendarService = new CalendarService();
-	BaseDao<Calendar> calendarDao = new BaseDao<Calendar>(Calendar.class);
-	public static PersonService userService = new PersonService();
+	public static ChildBaseDao<Calendar, Account> calendarDao = new ChildBaseDao<Calendar, Account>(Calendar.class, Account.class);
+	
+	public static PersonService personService = new PersonService();
 	public static ChildBaseDao<Person, Account> personDao = new ChildBaseDao<Person, Account>(Person.class, Account.class);
+	
 	BaseDao<User> userTestDao = new BaseDao<User>(User.class);
 
 	static Permission permission = Permission.ACCOUNT;
 	public static ChildBaseDao<AccessControlList, Account> aclDao = new ChildBaseDao<AccessControlList, Account>(AccessControlList.class, Account.class);
-	public static PersonService personService = new PersonService();
 	
-	
+
 	public User setUpUser() {
 		OAuthService oauth = OAuthServiceFactory.getOAuthService();
 		User user = null;
@@ -53,7 +55,7 @@ public class AccountServiceTest extends TestBase {
 	public void setUp(Account userAccount, User user) {
 		AccessControlList acl = new AccessControlList(permission.toString(), "true", "true", "true", "true", "SUPERADMIN");
 		aclDao.save(acl);
-		Person p = new Person("username", "password", "SUPERADMIN", userAccount, user);
+		Person p = new Person("username", "SUPERADMIN", userAccount, user.getUserId());
 		personDao.save(p);
 	}
 		
@@ -65,14 +67,14 @@ public class AccountServiceTest extends TestBase {
 		User user = this.setUpUser();
 		this.setUp(userAccount, user);
 		
-		Account account = accountService.insertAccount(userAccountId, "Testing Account", "Testing Calendar", "username", "password", "ADMIN", user);
+		Account account = accountService.insertAccount(userAccountId, "Testing Account", "Testing Calendar", "username", "ADMIN", user);
 		Account accountFetched = accountDao.retrieve(account.getId());
 		
-		Calendar calendarFetched = calendarService.listCalendars(account.getId()).get(0);
+		Calendar calendarFetched = calendarDao.listAncestors(account).get(0);
 		assert "Testing Calendar".equals(calendarFetched.getDescription());
 		assert account.getId().equals(calendarFetched.getAccount().getId());
 		
-		Person usersFetched = userService.authUserSession("username", "password", account.getId());
+		Person usersFetched = personDao.oneFilterAncestorQuery("userId", user.getUserId() , account);
 		
 		assert "username".equals(usersFetched.getUsername());
 		assert account.getId().equals(usersFetched.getAccount().getId());

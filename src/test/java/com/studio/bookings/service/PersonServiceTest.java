@@ -32,17 +32,19 @@ import com.studio.bookings.util.TestBase;
 
 public class PersonServiceTest extends TestBase  {
 	
-	public static AccountService accountService = new AccountService();
+	AccountService accountService = new AccountService();
 	BaseDao<Account> accountDao = new BaseDao<Account>(Account.class);
-	public static CalendarService calendarService = new CalendarService();
+	
+	CalendarService calendarService = new CalendarService();
 	BaseDao<Calendar> calendarDao = new BaseDao<Calendar>(Calendar.class);
-	public static ChildBaseDao<Person, Account> personDao = new ChildBaseDao<Person, Account>(Person.class, Account.class);
-	public static PersonService personService = new PersonService();
 	
-	static Permission permission = Permission.ACCOUNT;
-	public static ChildBaseDao<AccessControlList, Account> aclDao = new ChildBaseDao<AccessControlList, Account>(AccessControlList.class, Account.class);
+	ChildBaseDao<Person, Account> personDao = new ChildBaseDao<Person, Account>(Person.class, Account.class);
+	PersonService personService = new PersonService();
 	
-
+	ChildBaseDao<AccessControlList, Account> aclDao = new ChildBaseDao<AccessControlList, Account>(AccessControlList.class, Account.class);
+	
+	Permission permission = Permission.USER;
+	
 	public User setUpUser() {
 		OAuthService oauth = OAuthServiceFactory.getOAuthService();
 		User user = null;
@@ -55,43 +57,41 @@ public class PersonServiceTest extends TestBase  {
 		return user;
 	}
 	
-	public Account setUpAccount() {
+	public Account setUpAccount(User user) {
 		Account account = new Account();
 		accountDao.save(account);
-		AccessControlList acl = new AccessControlList(permission.toString(), "true", "true", "true", "true", "ADMIN");
+		AccessControlList acl = new AccessControlList(permission.toString(), "true", "true", "true", "true", "SUPERADMIN");
 		aclDao.save(acl);
+		Person p = new Person("username", "SUPERADMIN", account, user.getUserId());
+		personDao.save(p);
 		return account;
 	}
-	
+
 	@Test
 	public void insertPerson() {
 		User user = this.setUpUser();
-		Account account = this.setUpAccount();
-		Person p = personService.insertPerson("username", "password", "ADMIN", account.getId(), user);
-
-		// TODO change to using DAO 
-		Person userFetched = personService.findUser(p.getId(), account.getId()); 
+		Account account = this.setUpAccount(user);  
+		String userId = "1";
+		Person p = personService.insertPerson("username", "SUPERADMIN", userId,  account.getId(), user); 
+		Person personFetched = personDao.retrieveAncestor(p.getId(), account); 
+		
+		assert "username".equals(personFetched.getUsername());
+		assert account.getId().equals(personFetched.getAccount().getId());	
+	}
+	
+	@Test
+	public void findPerson() {
+		User user = this.setUpUser();
+		Account account = this.setUpAccount(user);
+		String userId = "1";
+		Person p = new Person("username", "SUPERADMIN", account, userId);
+		personDao.save(p);
+		Person userFetched = personService.findPerson(p.getId(), account.getId(), user); 
 		
 		assert "username".equals(userFetched.getUsername());
-		assert "password".equals(userFetched.getPassword());
 		assert account.getId().equals(userFetched.getAccount().getId());
 	}
 	
-
-	
-	@Test
-	public void findUser() {
-		User user = this.setUpUser();
-		Account account = this.setUpAccount();
-		
-		// TODO change to using DAO 
-		Person p = personService.insertPerson("username", "password", "ADMIN",  account.getId(), user); 
-		
-		Person userFetched = personService.findUser(p.getId(), account.getId()); 
-		assert "username".equals(userFetched.getUsername());
-		assert "password".equals(userFetched.getPassword());
-		assert account.getId().equals(userFetched.getAccount().getId());	
-	}
 	
 	/*@Test
 	public void ListUsers() {

@@ -41,11 +41,6 @@ public class Person {
     @Index
     @Getter @Setter
     private String username;
-
-    @Index
-    @Getter @Setter
-    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-    private String password;
     
     @Index
     @Getter @Setter
@@ -61,13 +56,12 @@ public class Person {
     
     public Person(){}
     
-    public Person(String username, String password, String userType, Account account, User user) {
+    public Person(String username, String userType, Account account, String userId) {
     	this.username = username;
-    	this.password = password;
     	this.userType = UserType.valueOf(userType);
     	this.setAccount(account);
     	dateCreated = new Date();
-    	this.userId = user.getUserId();
+    	this.userId = userId;
     }
 
     @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)

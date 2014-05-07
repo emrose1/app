@@ -29,63 +29,50 @@ import com.studio.bookings.util.LoadDummyData;
 public class PersonService extends BaseService {
 	
 	public static AccessControlListService aclService = new AccessControlListService();
-	static Permission permission = Permission.ACCOUNT;
+	static Permission permission = Permission.USER;
 	
 	@ApiMethod(name = "calendar.addPerson", path="calendar.addPerson", httpMethod = "post")
 	public Person insertPerson( 
 			@Named("username") String username,
-			@Named("password") String password,
 			@Named("userType") String userType,  
+			@Named("userId") String userId, 
 			@Named("account") Long accountId,
 			User user) {
-		
-		Long oId = new Long(accountId);
-		Account account =  accountDao.retrieve(oId);
-		Person p = new Person(username, password, userType, account, user);
-		personDao.save(p);
-	    return p; 
+		Person p = null;
+		if(user != null) { 
+    		// TODO THROW UNAUTHORIZED EXCEPTION
+    		if (aclService.allowInsert(accountId, permission.toString(), user)) {
+				Account account =  accountDao.retrieve(accountId);
+				p = new Person(username, userType, account, userId);
+				personDao.save(p);
+    		}
+		}
+		return p; 
 	}
 	
-	@ApiMethod(name = "calendar.findUser", path="calendar.findUser", httpMethod = "post")
-	public Person findUser(@Named("person") Long personId, @Named("account") Long accountId) {
-		Account account = accountDao.retrieve(accountId);
-		return personDao.retrieveAncestor(personId, account);
+	@ApiMethod(name = "calendar.findPerson", path="calendar.findPerson", httpMethod = "post")
+	public Person findPerson(
+			@Named("person") Long personId, 
+			@Named("account") Long accountId, 
+			User user) {
+		Person p = null;
+		if(user != null) { 
+    		// TODO THROW UNAUTHORIZED EXCEPTION
+    		if (aclService.allowView(accountId, permission.toString(), user)) {
+				Account account = accountDao.retrieve(accountId);
+				p = personDao.retrieveAncestor(personId, account);
+    		}
+		}
+		return p;
 	}
-	
-	public Person findPerson(@Named("account") Long accountId, User user) {
-		Account accountFetched = accountDao.retrieve(accountId);
-		Person person = personDao.oneFilterAncestorQuery("userId", user.getUserId(), accountFetched);
-		return person;
-	}
+
 	
 	@ApiMethod(name = "calendar.listUsers", path="calendar.listUsers", httpMethod = "get")
 	public List<Person> listUsers(@Named("account") Long accountId) {
 		Account accountFetched = accountDao.retrieve(accountId);
 		return personDao.listAncestors(accountFetched);
 	}
-	
-	
-	@ApiMethod(name = "calendar.getUserSession", path="calendar.getUserSession", httpMethod = "get")
-	public List<UserSession> getUserSession(HttpServletRequest req) {
-		List<UserSession> stringList = new ArrayList<UserSession>();
-		HttpSession session = req.getSession(false);
-		UserSession userSession = (UserSession) session.getAttribute("userSession");
-		stringList.add(userSession);
-	    return stringList;
-	}
-	
-	@ApiMethod(name = "calendar.authUserSession", path="calendar.authUserSession", httpMethod = "post")
-	public Person authUserSession(
-			@Named("username") String username, 
-			@Named("password") String password, 
-			@Named("account") Long accountId) {
-		
-		Account accountFetched = accountDao.retrieve(accountId);
-		Person user = personDao.twoFilterAncestorQuery("username", username, "password", password, accountFetched);
-		
-	    return user;
-	}
-	
+
 	
 	/// UTILITY METHODS
 	
@@ -96,6 +83,14 @@ public class PersonService extends BaseService {
     		ldd.initSetup();
     	}
 		return personDao.list();
+	}
+	
+	private List<UserSession> getUserSession(HttpServletRequest req) {
+		List<UserSession> stringList = new ArrayList<UserSession>();
+		HttpSession session = req.getSession(false);
+		UserSession userSession = (UserSession) session.getAttribute("userSession");
+		stringList.add(userSession);
+	    return stringList;
 	}
 	
 	private Person getUser(HttpServletRequest req) {

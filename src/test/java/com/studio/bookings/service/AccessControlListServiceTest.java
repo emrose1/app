@@ -5,9 +5,12 @@ import static com.studio.bookings.util.TestObjectifyService.ofy;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Named;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import com.google.api.server.spi.config.ApiMethod;
 import com.google.appengine.api.oauth.OAuthRequestException;
 import com.google.appengine.api.oauth.OAuthService;
 import com.google.appengine.api.oauth.OAuthServiceFactory;
@@ -19,19 +22,23 @@ import com.studio.bookings.entity.Account;
 import com.studio.bookings.entity.Calendar;
 import com.studio.bookings.entity.Person;
 import com.studio.bookings.enums.Permission;
+import com.studio.bookings.enums.UserType;
 import com.studio.bookings.util.TestBase;
 
 public class AccessControlListServiceTest extends TestBase {
 	
 	public static AccountService accountService = new AccountService();
 	static BaseDao<Account> accountDao = new BaseDao<Account>(Account.class);
+	
+	public static AccessControlListService aclService = new AccessControlListService();
 	public static BaseDao<AccessControlList> aclDao = new BaseDao<AccessControlList>(AccessControlList.class);
 	
 	public static CalendarService calendarService = new CalendarService();
 	BaseDao<Calendar> calendarDao = new BaseDao<Calendar>(Calendar.class);
+	
 	public static PersonService personService = new PersonService();
 	public static ChildBaseDao<Person, Account> personDao = new ChildBaseDao<Person, Account>(Person.class, Account.class);
-	public static AccessControlListService aclService = new AccessControlListService();
+	
 	
 	
 	static Permission permission = Permission.ACL;
@@ -51,7 +58,7 @@ public class AccessControlListServiceTest extends TestBase {
 	public void setUp(Account userAccount, User user) {
 		AccessControlList acl = new AccessControlList(permission.toString(), "true", "true", "true", "true", "SUPERADMIN");
 		aclDao.save(acl);
-		Person p = new Person("username", "password", "SUPERADMIN", userAccount, user);
+		Person p = new Person("username", "SUPERADMIN", userAccount, user.getUserId());
 		personDao.save(p);
 	}
 		
@@ -90,7 +97,7 @@ public class AccessControlListServiceTest extends TestBase {
 		
 		AccessControlList acl = new AccessControlList("CALENDAR", "true", "true", "true", "true", "ADMIN");
 		aclDao.save(acl);	
-		AccessControlList aclFetched = aclService.findAcl(acl.getId(), account.getId(), user);
+		AccessControlList aclFetched = aclService.findAccessControlList(acl.getId(), account.getId(), user);
 		
 		Assert.assertNotNull(aclFetched);
 		assert acl.getId().equals(aclFetched.getId());
@@ -104,6 +111,57 @@ public class AccessControlListServiceTest extends TestBase {
 	}
 	
 	@Test
+	public void updateAccessControlList() {
+		
+		Account account = new Account();
+		accountDao.save(account);
+		
+		User user = this.setUpUser();
+		this.setUp(account, user);
+		
+		AccessControlList acl = new AccessControlList("CALENDAR", "true", "true", "true", "true", "ADMIN");
+		aclDao.save(acl);	
+		AccessControlList aclFetched = aclService.updateAccessControlList(acl.getId(), 
+				"EVENT", "false", "false", "false", "false", "OWNER", account.getId(), user);
+		
+		Assert.assertNotNull(aclFetched);
+		assert acl.getId().equals(aclFetched.getId());
+		assert acl.getCanView().equals(aclFetched.getCanView());
+		assert acl.getCanInsert().equals(aclFetched.getCanInsert());
+		assert acl.getCanUpdate().equals(aclFetched.getCanUpdate());
+		assert acl.getCanDelete().equals(aclFetched.getCanDelete());
+		assert acl.getPermission().equals(aclFetched.getPermission());
+		
+		assert acl.getPermission().equals(Permission.EVENT);
+		assert acl.getCanView().equals(new Boolean("false"));
+		assert acl.getCanInsert().equals(new Boolean("false"));
+		assert acl.getCanUpdate().equals(new Boolean("false"));
+		assert acl.getCanDelete().equals(new Boolean("false"));
+		assert acl.getUserType().equals(UserType.OWNER);
+	}
+	
+	
+	@Test
+	public void deleteAccessControlList() {
+		
+		Account account = new Account();
+		accountDao.save(account);
+		
+		User user = this.setUpUser();
+		this.setUp(account, user);
+		
+		AccessControlList acl = new AccessControlList("CALENDAR", "true", "true", "true", "true", "ADMIN");
+		aclDao.save(acl);
+		
+		ofy().clear();
+		AccessControlList aclDeleted = aclDao.retrieve(acl.getId());
+		assert aclDeleted != null;
+		aclService.deleteAccessControlList(acl.getId(), account.getId(), user);
+		ofy().clear();
+		assert ofy().load().key(aclDeleted.getKey()).now() == null;
+	}
+	
+	@Test
 	public void listAccessControlList() {
 		
 		Account account = new Account();
@@ -113,7 +171,7 @@ public class AccessControlListServiceTest extends TestBase {
 		
 		AccessControlList acl = new AccessControlList(permission.toString(), "true", "true", "true", "true", "SUPERADMIN");
 		aclDao.save(acl);
-		Person p = new Person("username", "password", "SUPERADMIN", account, user);
+		Person p = new Person("username", "SUPERADMIN", account, user.getUserId());
 		personDao.save(p);
 		
 		AccessControlList acl1 = new AccessControlList("CALENDAR", "true", "true", "true", "true", "ADMIN");
@@ -127,11 +185,195 @@ public class AccessControlListServiceTest extends TestBase {
 		aclList.add(acl3);
 		
 		aclDao.save(aclList);
-		List<AccessControlList> aclFetched = aclService.listAcl(account.getId(), user);
+		List<AccessControlList> aclFetched = aclService.listAccessControlList(account.getId(), user);
 		
 		Assert.assertNotNull(aclFetched);
 		assert aclFetched.size() == aclList.size();
 		assert aclFetched.size() == 4;
 	}
+	
+	@Test
+	public void allowViewAccountSuperadmin() {
+		
+		Account account = new Account();
+		accountDao.save(account);
+		
+		User user = this.setUpUser();
+		
+		Person p = new Person("username", "SUPERADMIN", account, user.getUserId());
+		personDao.save(p);
+		
+		AccessControlList acl1 = new AccessControlList("ACCOUNT", "true", "false", "false", "false", "SUPERADMIN");
+		aclDao.save(acl1);
+		Assert.assertTrue(aclService.allowView(account.getId(), "ACCOUNT", user));
+		AccessControlList aclFetched1 = aclDao.retrieve(acl1.getId());
+		aclFetched1.setCanView(new Boolean("false"));
+		aclDao.save(aclFetched1);
+		Assert.assertFalse(aclService.allowView(account.getId(), "ACCOUNT", user));
+    }
+	
+	@Test
+	public void allowViewCalendarAdmin() {
+		
+		Account account = new Account();
+		accountDao.save(account);
+		
+		User user = this.setUpUser();
+		
+		Person p = new Person("username", "ADMIN", account, user.getUserId());
+		personDao.save(p);
+		
+		AccessControlList acl1 = new AccessControlList("CALENDAR", "true", "false", "false", "false", "ADMIN");
+		aclDao.save(acl1);
+		Assert.assertTrue(aclService.allowView(account.getId(), "CALENDAR", user));
+		AccessControlList aclFetched = aclDao.retrieve(acl1.getId());
+		aclFetched.setCanView(new Boolean("false"));
+		aclDao.save(aclFetched);
+		Assert.assertFalse(aclService.allowView(account.getId(), "CALENDAR", user));	
+	}
+	
+	@Test
+	public void allowViewEventOwner() {
+		
+		Account account = new Account();
+		accountDao.save(account);
+		
+		User user = this.setUpUser();
+		
+		Person p = new Person("username", "OWNER", account, user.getUserId());
+		personDao.save(p);
+		
+		AccessControlList acl = new AccessControlList("EVENT", "true", "false", "false", "false", "OWNER");
+		aclDao.save(acl);
+		
+		Assert.assertTrue(aclService.allowView(account.getId(), "EVENT", user));
+		AccessControlList aclFetched = aclDao.retrieve(acl.getId());
+		aclFetched.setCanView(new Boolean("false"));
+		aclDao.save(aclFetched);
+		Assert.assertFalse(aclService.allowView(account.getId(), "EVENT", user));
+	}
+	
+	
+	@Test
+	public void allowViewBookingInstructor() {
+		
+		Account account = new Account();
+		accountDao.save(account);
+		
+		User user = this.setUpUser();
+		
+		Person p = new Person("username", "OWNER", account, user.getUserId());
+		personDao.save(p);
+		
+		AccessControlList acl4 = new AccessControlList("BOOKING", "true", "false", "false", "false", "OWNER");
+		aclDao.save(acl4);
+		Assert.assertTrue(aclService.allowView(account.getId(), "BOOKING", user));
+		AccessControlList aclFetched4 = aclDao.retrieve(acl4.getId());
+		aclFetched4.setCanView(new Boolean("false"));
+		aclDao.save(aclFetched4);
+		Assert.assertFalse(aclService.allowView(account.getId(), "BOOKING", user));
+	}
+	
+	
+	@Test
+	public void allowViewUserAttendee () {
+	
+		Account account = new Account();
+		accountDao.save(account);
+		User user = this.setUpUser();
+		Person p = new Person("username", "ATTENDEE", account, user.getUserId());
+		personDao.save(p);
+		
+		AccessControlList acl5 = new AccessControlList("USER", "true", "false", "false", "false", "ATTENDEE");
+		aclDao.save(acl5);
+		Assert.assertTrue(aclService.allowView(account.getId(), "USER", user));
+		AccessControlList aclFetched5 = aclDao.retrieve(acl5.getId());
+		aclFetched5.setCanView(new Boolean("false"));
+		aclDao.save(aclFetched5);
+		Assert.assertFalse(aclService.allowView(account.getId(), "USER", user));
+	}
+			
+	@Test
+	public void allowViewAclAttendee () {
+		
+		Account account = new Account();
+		accountDao.save(account);
+		User user = this.setUpUser();
+		Person p = new Person("username", "ATTENDEE", account, user.getUserId());
+		personDao.save(p);
+		
+		AccessControlList acl6 = new AccessControlList("ACL", "true", "false", "false", "false", "ATTENDEE");
+		aclDao.save(acl6);
+		Assert.assertTrue(aclService.allowView(account.getId(), "ACL", user));
+		AccessControlList aclFetched6 = aclDao.retrieve(acl6.getId());
+		aclFetched6.setCanView(new Boolean("false"));
+		aclDao.save(aclFetched6);
+		Assert.assertFalse(aclService.allowView(account.getId(), "ACL", user));
+	}
+	
+	@Test
+	public void allowInsert() {
+		
+		Account account = new Account();
+		accountDao.save(account);
+		
+		User user = this.setUpUser();
+		this.setUp(account, user);
+		
+		AccessControlList acl = new AccessControlList("CALENDAR", "false", "true", "false", "false", "SUPERADMIN");
+		aclDao.save(acl);
+		
+		Assert.assertTrue(aclService.allowInsert(account.getId(), "CALENDAR", user));
+		
+		AccessControlList aclFetched = aclDao.retrieve(acl.getId());
+		aclFetched.setCanInsert(new Boolean("false"));
+		aclDao.save(aclFetched);
 
+		Assert.assertFalse(aclService.allowInsert(account.getId(), "CALENDAR", user));
+		
+    }
+
+	@Test
+	public void allowUpdate() {
+		
+		Account account = new Account();
+		accountDao.save(account);
+		
+		User user = this.setUpUser();
+		this.setUp(account, user);
+		
+		AccessControlList acl = new AccessControlList("CALENDAR", "false", "false", "true", "false", "SUPERADMIN");
+		aclDao.save(acl);
+		
+		Assert.assertTrue(aclService.allowUpdate(account.getId(), "CALENDAR", user));
+		
+		AccessControlList aclFetched = aclDao.retrieve(acl.getId());
+		aclFetched.setCanUpdate(new Boolean("false"));
+		aclDao.save(aclFetched);
+
+		Assert.assertFalse(aclService.allowUpdate(account.getId(), "CALENDAR", user));
+		
+    }
+	
+	@Test
+	public void allowDelete() {
+		
+		Account account = new Account();
+		accountDao.save(account);
+		
+		User user = this.setUpUser();
+		this.setUp(account, user);
+		
+		AccessControlList acl = new AccessControlList("CALENDAR", "false", "false", "false", "true", "SUPERADMIN");
+		aclDao.save(acl);
+		
+		Assert.assertTrue(aclService.allowDelete(account.getId(), "CALENDAR", user));
+		
+		AccessControlList aclFetched = aclDao.retrieve(acl.getId());
+		aclFetched.setCanDelete(new Boolean("false"));
+		aclDao.save(aclFetched);
+
+		Assert.assertFalse(aclService.allowDelete(account.getId(), "CALENDAR", user));
+		
+    }
 }

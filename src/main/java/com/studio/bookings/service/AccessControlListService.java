@@ -36,7 +36,6 @@ public class AccessControlListService extends BaseService {
     		@Named("account") Long accountId,
 			User user) {
 		AccessControlList acl = null;
-		Permission p = Permission.ACL;
     	if(user != null) { 
     		// TODO THROW UNAUTHORIZED EXCEPTION
     		if (this.allowInsert(accountId, aclPermission.toString(), user)) {
@@ -50,7 +49,7 @@ public class AccessControlListService extends BaseService {
 	}
 
     @ApiMethod(name = "calendar.findAcl", path="calendar.findAcl", httpMethod = "get")
-	public AccessControlList findAcl(
+	public AccessControlList findAccessControlList(
 			@Named("acl") Long aclId,
 			@Named("account") Long accountId,
 			User user) {
@@ -66,7 +65,7 @@ public class AccessControlListService extends BaseService {
 	}
 	
     @ApiMethod(name = "calendar.updateAcl", path="calendar.updateAcl", httpMethod = "post")
-	public AccessControlList updateAcl(
+	public AccessControlList updateAccessControlList(
 			@Named("acl") Long aclId,
 			@Named("permission") String permission,
     		@Named("canView") String canView,
@@ -74,33 +73,46 @@ public class AccessControlListService extends BaseService {
     		@Named("canUpdate") String canUpdate,
     		@Named("canDelete") String canDelete,
     		@Named("userType") String userType,
-    		@Named("account") Long accountId) {
+    		@Named("account") Long accountId,
+    		User user) {
+    	
 		AccessControlList aclFetched = aclDao.retrieve(aclId);
-		aclFetched.setPermission(Permission.valueOf(permission));
-		aclFetched.setCanView(Boolean.valueOf(canView));
-		aclFetched.setCanInsert(Boolean.valueOf(canInsert));
-		aclFetched.setCanUpdate(Boolean.valueOf(canUpdate));
-		aclFetched.setCanDelete(Boolean.valueOf(canDelete));
-		aclFetched.setUserType(UserType.valueOf(userType));
-		aclFetched.setCanDelete(Boolean.valueOf(canDelete));
-		aclDao.save(aclFetched);
+    	if(user != null) { 
+    		// TODO THROW UNAUTHORIZED EXCEPTION
+    		if (this.allowUpdate(accountId, aclPermission.toString(), user)) {
+				aclFetched.setPermission(Permission.valueOf(permission));
+				aclFetched.setCanView(Boolean.valueOf(canView));
+				aclFetched.setCanInsert(Boolean.valueOf(canInsert));
+				aclFetched.setCanUpdate(Boolean.valueOf(canUpdate));
+				aclFetched.setCanDelete(Boolean.valueOf(canDelete));
+				aclFetched.setUserType(UserType.valueOf(userType));
+				aclFetched.setCanDelete(Boolean.valueOf(canDelete));
+				aclDao.save(aclFetched);
+    		}
+    	}
 		return aclFetched;
 	}
 	
 
 	@ApiMethod(name = "calendar.deleteAcl", path="calendar.deleteAcl", httpMethod = "post")
-	public void deleteAcl(
+	public void deleteAccessControlList (
 			@Named("aclList") Long aclId,
-			@Named("account") Long accountId) {
-		aclDao.delete(aclId);
+			@Named("account") Long accountId,
+			User user) {
+
+    	if(user != null) { 
+    		if (this.allowDelete(accountId, aclPermission.toString(), user)) {
+    			aclDao.delete(aclId);
+    		}
+    	}
 	}
     
 	@ApiMethod(name = "calendar.listAcl", path="calendar.listAcl", httpMethod = "post")
-    public List<AccessControlList> listAcl(@Named("account") Long accountId, User user) {
+    public List<AccessControlList> listAccessControlList(@Named("account") Long accountId, User user) {
 		List<AccessControlList> aclList = null;
 		if(user != null) { 
     		// TODO THROW UNAUTHORIZED EXCEPTION
-    		if (this.allowInsert(accountId, aclPermission.toString(), user)) {
+    		if (this.allowView(accountId, aclPermission.toString(), user)) {
     			aclList = aclDao.list();    	
     		}
 		}
@@ -124,8 +136,8 @@ public class AccessControlListService extends BaseService {
 	
 	@ApiMethod(name = "calendar.isCanInsert", path="calendar.isCanInsert", httpMethod = "get")
     public Boolean allowInsert(@Named("account") Long accountId, @Named("permission") String permission, User user) {
-    	//Account accountFetched = accountDao.retrieve(accountId);
-    	UserType ut = UserType.SUPERADMIN;
+    	Account accountFetched = accountDao.retrieve(accountId);
+    	UserType ut = this.getUserType(accountFetched, user);
         return this.getByUserTypeAndPermission(ut, Permission.valueOf(permission)).getCanInsert();
     }
 

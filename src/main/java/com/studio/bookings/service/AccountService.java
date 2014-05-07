@@ -33,7 +33,6 @@ public class AccountService extends BaseService {
 			@Named("name") String name,
 			@Named("description") String description,
 			@Named("username") String username, 
-			@Named("password") String password, 
 			@Named("userType") String userType,
 			User user) {
 		
@@ -43,7 +42,7 @@ public class AccountService extends BaseService {
 			accountDao.save(account);
 			Calendar calendar = new Calendar(description, account);
 			calendarDao.save(calendar);
-			Person p = new Person(username, password, userType, account, user);
+			Person p = new Person(username, userType, account, user.getUserId());
 			personDao.save(p);
 		}
 		return account;
@@ -68,7 +67,6 @@ public class AccountService extends BaseService {
 		} else {
 			return null;
 		}
-		
 	}
 	
 	@ApiMethod(name = "account.updateAccount", path="calendar.updateAccount", httpMethod = "get")
