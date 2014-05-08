@@ -41,7 +41,9 @@ public class PersonService extends BaseService {
 		Person p = null;
 		if(user != null) { 
     		// TODO THROW UNAUTHORIZED EXCEPTION
-    		if (aclService.allowInsert(accountId, permission.toString(), user)) {
+			
+			// check if person with user_id already exists for this account, if not add
+    		if (aclService.allowInsert(accountId, permission.toString(), user)) {  // <- this won't work as user/person doesn't exist yet
 				Account account =  accountDao.retrieve(accountId);
 				p = new Person(username, userType, account, userId);
 				personDao.save(p);
@@ -58,7 +60,7 @@ public class PersonService extends BaseService {
 		Person p = null;
 		if(user != null) { 
     		// TODO THROW UNAUTHORIZED EXCEPTION
-    		if (aclService.allowView(accountId, permission.toString(), user)) {
+    		if (aclService.allowViewAll(accountId, permission.toString(), user)) {
 				Account account = accountDao.retrieve(accountId);
 				p = personDao.retrieveAncestor(personId, account);
     		}

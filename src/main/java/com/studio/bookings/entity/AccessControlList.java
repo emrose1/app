@@ -28,7 +28,10 @@ public class AccessControlList  {
     
 	@Getter @Setter
 	private Boolean canView;
-    
+
+	@Getter @Setter
+	private Boolean canViewAll;
+	
 	@Getter @Setter
 	private Boolean canInsert;
     
@@ -40,10 +43,11 @@ public class AccessControlList  {
 	
 	public AccessControlList(){}
 	
-	public AccessControlList(String permission, String canView, String canInsert, String canUpdate, 
+	public AccessControlList(String permission, String canView, String canViewAll, String canInsert, String canUpdate, 
 			String canDelete, String userType) {
 		this.permission = 	Permission.valueOf(permission);
 		this.canView = 		Boolean.valueOf(canView);
+		this.canViewAll = 	Boolean.valueOf(canViewAll);
 		this.canInsert = 	Boolean.valueOf(canInsert);
 		this.canUpdate = 	Boolean.valueOf(canUpdate);
 		this.canDelete = 	Boolean.valueOf(canDelete);

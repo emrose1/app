@@ -29,15 +29,20 @@ public class AccountService extends BaseService {
 
 	@ApiMethod(name = "account.addAccount", path="calendar.addAccount", httpMethod = "post")
 	public Account insertAccount(
-			@Named("account") Long userAccountId,
+			@Named("account") Long accountId,
 			@Named("name") String name,
 			@Named("description") String description,
 			@Named("username") String username, 
-			@Named("userType") String userType,
+			@Named("userType") String userType, // needs to be owner
 			User user) {
 		
 		Account account = null;
-		if (user != null && aclService.allowInsert(userAccountId, permission.toString(), user)) { 
+		// TODO:
+		// instead check if userId is person/owner of any other account, if not set up person as owner of account
+		// need to set up app entity as overall parent to do ancestor query filter userid and usertype
+		if (user != null && aclService.allowInsert(accountId, permission.toString(), user)) // this won't work
+		
+		{ 
 			account = new Account(name);
 			accountDao.save(account);
 			Calendar calendar = new Calendar(description, account);
@@ -50,19 +55,21 @@ public class AccountService extends BaseService {
 	
 	@ApiMethod(name = "account.findAccount", path="calendar.findAccount", httpMethod = "get")
 	public Account findAccount(
-			@Named("account") Long userAccountId,
+			@Named("account") Long accountId,
 			@Named("accountToFind") Long accountToFindId, 
 			User user) {
 		Account accountFetched = null;
-		if (user != null && aclService.allowView(userAccountId, permission.toString(), user)) {
+		// superadmin
+		if (user != null && aclService.allowViewAll(accountId, permission.toString(), user)) {
 			accountFetched = accountDao.retrieve(accountToFindId);
 		}
 		return accountFetched;
 	}
 	
 	@ApiMethod(name = "account.listAccounts", path="calendar.listAccounts", httpMethod = "get")
-	public List<Account> listAccounts(@Named("account") Long userAccountId, User user) {
-		if (user != null && aclService.allowView(userAccountId, permission.toString(), user)) {
+	public List<Account> listAccounts(@Named("account") Long accountId, User user) {
+		// must be superadmin 
+		if (user != null && aclService.allowViewAll(accountId, permission.toString(), user)) {
 			return accountDao.list();
 		} else {
 			return null;
@@ -71,12 +78,17 @@ public class AccountService extends BaseService {
 	
 	@ApiMethod(name = "account.updateAccount", path="calendar.updateAccount", httpMethod = "get")
 	public Account updateAccount(
-			@Named("account") Long userAccountId,
+			@Named("account") Long accountId,
 			@Named("accountToUpdate") Long accountToUpdateId, 
 			@Named("name") String name, 
 			User user) {
 		Account accountFetched = null;
-		if (user != null && aclService.allowUpdate(userAccountId, permission.toString(), user)) {
+		// TODO create allowUpdateAll for SuperAdmin 
+		// otherwise check accountId == accountToUpdateId
+		// check if user is owner of this account
+		// can be used by: owner, admin or superadmin
+		
+		if (user != null && aclService.allowUpdate(accountId, permission.toString(), user)) {
 			accountFetched = accountDao.retrieve(accountToUpdateId);
 			accountFetched.setName(name);
 			accountDao.save(accountFetched);
@@ -86,10 +98,11 @@ public class AccountService extends BaseService {
 	
 	@ApiMethod(name = "account.deleteAccount", path="calendar.deleteAccount", httpMethod = "get")
 	public void deleteAccount(
-			@Named("account") Long userAccountId, 
+			@Named("account") Long accountId, 
 			@Named("accountDelete") Long accountToDeleteId, 
 			User user) {
-		if (user != null && aclService.allowDelete(userAccountId, permission.toString(), user)) {
+		// has to be superadmin
+		if (user != null && aclService.allowDelete(accountId, permission.toString(), user)) {
 			accountDao.delete(accountToDeleteId);
 		}
 	}

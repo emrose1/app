@@ -29,6 +29,7 @@ public class AccessControlListService extends BaseService {
     public AccessControlList insertAccessControlList(
     		@Named("permission") String permission,
     		@Named("canView") String canView,
+    		@Named("canViewAll") String canViewAll,
     		@Named("canInsert") String canInsert,
     		@Named("canUpdate") String canUpdate,
     		@Named("canDelete") String canDelete,
@@ -40,7 +41,7 @@ public class AccessControlListService extends BaseService {
     		// TODO THROW UNAUTHORIZED EXCEPTION
     		if (this.allowInsert(accountId, aclPermission.toString(), user)) {
 				acl = new AccessControlList(
-						permission, canView, canInsert, canUpdate, 
+						permission, canView, canViewAll, canInsert, canUpdate, 
 						canDelete, userType);
 				aclDao.save(acl);
     		}
@@ -69,6 +70,7 @@ public class AccessControlListService extends BaseService {
 			@Named("acl") Long aclId,
 			@Named("permission") String permission,
     		@Named("canView") String canView,
+    		@Named("canViewAll") String canViewAll,
     		@Named("canInsert") String canInsert,
     		@Named("canUpdate") String canUpdate,
     		@Named("canDelete") String canDelete,
@@ -82,6 +84,7 @@ public class AccessControlListService extends BaseService {
     		if (this.allowUpdate(accountId, aclPermission.toString(), user)) {
 				aclFetched.setPermission(Permission.valueOf(permission));
 				aclFetched.setCanView(Boolean.valueOf(canView));
+				aclFetched.setCanViewAll(Boolean.valueOf(canViewAll));
 				aclFetched.setCanInsert(Boolean.valueOf(canInsert));
 				aclFetched.setCanUpdate(Boolean.valueOf(canUpdate));
 				aclFetched.setCanDelete(Boolean.valueOf(canDelete));
@@ -132,6 +135,13 @@ public class AccessControlListService extends BaseService {
     	Account accountFetched = accountDao.retrieve(accountId);
     	UserType ut = this.getUserType(accountFetched, user);
         return this.getByUserTypeAndPermission(ut, Permission.valueOf(permission)).getCanView();
+    }
+	
+	@ApiMethod(name = "calendar.isCanViewAll", path="calendar.isCanViewAll", httpMethod = "get")
+    public Boolean allowViewAll(@Named("account") Long accountId, @Named("permission") String permission, User user) {
+    	Account accountFetched = accountDao.retrieve(accountId);
+    	UserType ut = this.getUserType(accountFetched, user);
+        return this.getByUserTypeAndPermission(ut, Permission.valueOf(permission)).getCanViewAll();
     }
 	
 	@ApiMethod(name = "calendar.isCanInsert", path="calendar.isCanInsert", httpMethod = "get")

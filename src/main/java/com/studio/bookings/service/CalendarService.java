@@ -69,7 +69,7 @@ public class CalendarService extends BaseService {
 		List<Calendar> calendarList = null;
 		if(user != null) { 
     		// TODO THROW UNAUTHORIZED EXCEPTION
-    		if (aclService.allowView(accountId, aclPermission.toString(), user)) {
+    		if (aclService.allowViewAll(accountId, aclPermission.toString(), user)) {
     			Account accountFetched = accountDao.retrieve(accountId);
     			calendarList = calendarDao.listAncestors(accountFetched);
     		}
