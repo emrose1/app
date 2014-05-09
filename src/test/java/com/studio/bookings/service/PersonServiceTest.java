@@ -27,6 +27,7 @@ import com.studio.bookings.entity.Booking;
 import com.studio.bookings.entity.Calendar;
 import com.studio.bookings.entity.Person;
 import com.studio.bookings.enums.Permission;
+import com.studio.bookings.enums.UserType;
 import com.studio.bookings.util.TestBase;
 
 
@@ -93,49 +94,25 @@ public class PersonServiceTest extends TestBase  {
 	}
 	
 	
-	/*@Test
-	public void ListUsers() {
+	@Test
+	public void ListPersons() {
 		
-		Account userAccount = new Account();
-		Long userAccountId = accountDao.save(userAccount);
 		User user = this.setUpUser();
-		this.setUp(userAccount, user);
+		Account account = this.setUpAccount(user);
+		List<Person> peopleList = personService.listPersons(account.getId(),user);
+		assert peopleList.size() == 1;
 		
-		Account account = accountService.insertAccount(userAccountId, "Account", "test", "admin", "123", "ADMIN", user);
-		//User user1 = personDao.insertUser("username1", "password1", "ADMIN",  account.getId()); 
-		Long user2 = personDao.save(new Person("username2", "password2", "ADMIN",  account, user)); 
-		//List<User> usersFetched = userService.listUsers(account.getId());
-		//assert usersFetched.size() == 0;
-		
-		List<User> calList =  personDao.list();
-		assert calList.size() == 1;
-		
-		List <Person> users = com.studio.bookings.util.TestObjectifyService.ofy().
-				load().type(Person.class).ancestor(account).list();
-		
-		Account account = accountService.insertAccount("Account", "test", "admin", "123", "ADMIN");
-		User user = userService.insertUser("username", "password", "ADMIN",  account.getId()); 
-		User userFetched = userService.findUser(user.getId(), account.getId()); 
-		assert "username".equals(userFetched.getUsername());
-		assert "password".equals(userFetched.getPassword());
-		//assert account.getId().equals(userFetched.getAccount().getId());	
-		Assert.assertNotNull(users);
-	}*/
-	
-	/*	@Test
-	public void authUserSession() {
-		
-		Account userAccount = new Account();
-		Long userAccountId = accountDao.save(userAccount);
-		User user = this.setUpUser();
-		this.setUp(userAccount, user);
-		
-		Account account = accountService.insertAccount(userAccountId, "Account", "test", "admin", "123", "ADMIN", user);
-		Person p = personService.insertPerson("username", "password", "ADMIN",  account.getId(), user); 
-		Person userFetched = personService.authUserSession("username", "password", account.getId());
-		assert "username".equals(userFetched.getUsername());
-		assert "password".equals(userFetched.getPassword());
-		assert account.getId().equals(userFetched.getAccount().getId());
-	}*/
+		Person peop1 = new Person ("test1", "ADMIN", account, "1"); 
+		Person peop2 = new Person ("test2", "ADMIN", account, "2");  
 
+		peopleList.add(peop1);
+		peopleList.add(peop2);
+		personDao.save(peopleList);
+		
+		peopleList = personService.listPersons(account.getId(),user);
+		assert peopleList.size() == 3;
+
+		assert peopleList.get(0).getAccount().getId().equals(account.getId());
+		Assert.assertNotNull(peopleList);
+	}
 }

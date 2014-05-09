@@ -56,6 +56,14 @@ public class Person {
     
     public Person(){}
     
+    /*Update Constructor with these properties
+    email: "emjrose@gmail.com"
+    	family_name: ""
+    	given_name: ""
+    	id: "105854312734748005380"
+    	name: "emjose"
+    	verified_email: true
+    */
     public Person(String username, String userType, Account account, String userId) {
     	this.username = username;
     	this.userType = UserType.valueOf(userType);

@@ -31,6 +31,8 @@ public class PersonService extends BaseService {
 	public static AccessControlListService aclService = new AccessControlListService();
 	static Permission permission = Permission.USER;
 	
+	// TODO add Update and Delete
+	
 	@ApiMethod(name = "calendar.addPerson", path="calendar.addPerson", httpMethod = "post")
 	public Person insertPerson( 
 			@Named("username") String username,
@@ -60,7 +62,7 @@ public class PersonService extends BaseService {
 		Person p = null;
 		if(user != null) { 
     		// TODO THROW UNAUTHORIZED EXCEPTION
-    		if (aclService.allowViewAll(accountId, permission.toString(), user)) {
+    		if (aclService.allowView(accountId, permission.toString(), user)) {
 				Account account = accountDao.retrieve(accountId);
 				p = personDao.retrieveAncestor(personId, account);
     		}
@@ -69,10 +71,19 @@ public class PersonService extends BaseService {
 	}
 
 	
-	@ApiMethod(name = "calendar.listUsers", path="calendar.listUsers", httpMethod = "get")
-	public List<Person> listUsers(@Named("account") Long accountId) {
-		Account accountFetched = accountDao.retrieve(accountId);
-		return personDao.listAncestors(accountFetched);
+	@ApiMethod(name = "calendar.listPersons", path="calendar.listPersons", httpMethod = "get")
+	public List<Person> listPersons (
+			@Named("account") Long accountId,
+			User user) {
+		List<Person> persons = null;
+		if(user != null) { 
+    		// TODO THROW UNAUTHORIZED EXCEPTION
+    		if (aclService.allowViewAll(accountId, permission.toString(), user)) {
+    			Account accountFetched = accountDao.retrieve(accountId);
+    			persons = personDao.listAncestors(accountFetched);
+    		}
+		}
+		return persons;
 	}
 
 	
