@@ -12,9 +12,11 @@ import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.appengine.api.users.User;
 import com.studio.bookings.entity.Account;
+import com.studio.bookings.entity.Calendar;
 import com.studio.bookings.entity.Person;
 import com.studio.bookings.entity.UserSession;
 import com.studio.bookings.enums.Permission;
+import com.studio.bookings.enums.UserType;
 import com.studio.bookings.util.Constants;
 import com.studio.bookings.util.LoadDummyData;
 
@@ -31,25 +33,23 @@ public class PersonService extends BaseService {
 	public static AccessControlListService aclService = new AccessControlListService();
 	static Permission permission = Permission.USER;
 	
-	// TODO add Update and Delete
-	
 	@ApiMethod(name = "calendar.addPerson", path="calendar.addPerson", httpMethod = "post")
 	public Person insertPerson( 
 			@Named("username") String username,
-			@Named("userType") String userType,  
-			@Named("userId") String userId, 
+			@Named("email") String email,
+			@Named("familyname") String family_name,
+			@Named("givenname") String given_name,
+			@Named("userType") String userType,
 			@Named("account") Long accountId,
 			User user) {
 		Person p = null;
 		if(user != null) { 
+			Account account =  accountDao.retrieve(accountId);
     		// TODO THROW UNAUTHORIZED EXCEPTION
-			
-			// check if person with user_id already exists for this account, if not add
-    		if (aclService.allowInsert(accountId, permission.toString(), user)) {  // <- this won't work as user/person doesn't exist yet
-				Account account =  accountDao.retrieve(accountId);
-				p = new Person(username, userType, account, userId);
+			if(personDao.oneFilterAncestorQuery("userId", user.getUserId(), account) == null) {
+				p = new Person( account, user.getUserId(), username, email, family_name, given_name, userType);
 				personDao.save(p);
-    		}
+			}
 		}
 		return p; 
 	}
@@ -70,7 +70,6 @@ public class PersonService extends BaseService {
 		return p;
 	}
 
-	
 	@ApiMethod(name = "calendar.listPersons", path="calendar.listPersons", httpMethod = "get")
 	public List<Person> listPersons (
 			@Named("account") Long accountId,
@@ -84,6 +83,47 @@ public class PersonService extends BaseService {
     		}
 		}
 		return persons;
+	}
+	
+	
+	@ApiMethod(name = "calendar.updatePerson", path="calendar.updatePerson", httpMethod = "post")
+	public Person updatePerson(
+			@Named("person") Long personId,  
+			@Named("account") Long accountId, 
+			@Named("username") String username,
+			@Named("email") String email,
+			@Named("familyname") String family_name,
+			@Named("givenname") String given_name,
+			@Named("userType") String userType, 
+			User user) {
+		Person person = null;
+		if(user != null) {	
+			if (aclService.allowUpdate(accountId, permission.toString(), user)) {
+				Account accountFetched = accountDao.retrieve(accountId);
+				person = personDao.retrieveAncestor(personId, accountFetched);
+				person.setUsername(username);
+				person.setEmail(email);
+				person.setFamilyName(family_name);
+				person.setGivenName(given_name);
+				person.setUserType(UserType.valueOf(userType));
+				personDao.save(person);
+			}
+		}
+		return person;
+	}
+	
+	@ApiMethod(name = "calendar.deletePerson", path="calendar.deletePerson", httpMethod = "post")
+	public void deletePersons(
+			@Named("person") List<Long> personIds,
+			@Named("account") Long accountId,
+			User user) {
+		
+		if(user != null) {	
+			if (aclService.allowDelete(accountId, permission.toString(), user)) {
+				Account accountFetched = accountDao.retrieve(accountId);
+				calendarDao.deleteAncestors(personIds, accountFetched);
+			}
+		}
 	}
 
 	

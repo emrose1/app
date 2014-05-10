@@ -55,7 +55,7 @@ public class AccountServiceTest extends TestBase {
 	public void setUp(Account userAccount, User user) {
 		AccessControlList acl = new AccessControlList(permission.toString(), "true", "true", "true", "true", "true", "SUPERADMIN");
 		aclDao.save(acl);
-		Person p = new Person("username", "SUPERADMIN", userAccount, user.getUserId());
+		Person p = new Person(userAccount, user.getUserId(), "test1", "email", "family_name", "given_name", "SUPERADMIN");
 		personDao.save(p);
 	}
 		
@@ -67,9 +67,11 @@ public class AccountServiceTest extends TestBase {
 		User user = this.setUpUser();
 		this.setUp(userAccount, user);
 		
-		Account account = accountService.insertAccount(userAccountId, "Testing Account", "Testing Calendar", "username", "ADMIN", user);
-		Account accountFetched = accountDao.retrieve(account.getId());
+		Account account = accountService.insertAccount(userAccountId, "Testing Account", "Testing Calendar", 
+				user.getUserId(), "username", "email", "familyName", "givenName", "ADMIN", user);
 		
+		Account accountFetched = accountDao.retrieve(account.getId());
+				
 		Calendar calendarFetched = calendarDao.listAncestors(account).get(0);
 		assert "Testing Calendar".equals(calendarFetched.getDescription());
 		assert account.getId().equals(calendarFetched.getAccount().getId());

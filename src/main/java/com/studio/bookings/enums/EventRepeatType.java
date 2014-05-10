@@ -1,4 +1,4 @@
-package com.studio.bookings.entity;
+package com.studio.bookings.enums;
 
 public enum EventRepeatType {
 	DAILY,

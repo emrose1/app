@@ -92,18 +92,16 @@ public class CalendarService extends BaseService {
 		return calendar;
 	}
 	
-	@ApiMethod(name = "calendar.deleteCalendar", path="calendar.deleteCalendar", httpMethod = "post")
-	public void deleteCalendar(
-			@Named("calendar") Long calendarId,
+	@ApiMethod(name = "calendar.deleteCalendars", path="calendar.deleteCalendars", httpMethod = "post")
+	public void deleteCalendars(
+			@Named("calendar") List<Long> calendarIds,
 			@Named("account") Long accountId,
 			User user) {
 		
 		if(user != null) {	
 			if (aclService.allowDelete(accountId, aclPermission.toString(), user)) {
 				Account accountFetched = accountDao.retrieve(accountId);
-				List<Long> idsToDelete = new ArrayList<Long>();
-				idsToDelete.add(calendarId);
-				calendarDao.deleteAncestors(idsToDelete, accountFetched);
+				calendarDao.deleteAncestors(calendarIds, accountFetched);
 			}
 		}
 	}

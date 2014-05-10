@@ -38,11 +38,6 @@ public class Person {
     	accountRef = Ref.create(account); 
     }
 	
-    @Index
-    @Getter @Setter
-    private String username;
-    
-    @Index
     @Getter @Setter
     Date dateCreated;
     
@@ -50,26 +45,35 @@ public class Person {
     @Getter @Setter
     String userId;
     
+    @Getter @Setter
+    private String username;
+    
+    @Getter @Setter
+    String email;
+    
+    @Getter @Setter
+    String familyName;
+    
+    @Getter @Setter
+    String givenName;
+    
     @Index
     @Getter @Setter
     public UserType userType;
     
     public Person(){}
     
-    /*Update Constructor with these properties
-    email: "emjrose@gmail.com"
-    	family_name: ""
-    	given_name: ""
-    	id: "105854312734748005380"
-    	name: "emjose"
-    	verified_email: true
-    */
-    public Person(String username, String userType, Account account, String userId) {
-    	this.username = username;
-    	this.userType = UserType.valueOf(userType);
+    public Person(Account account, String userId, String username, String email, 
+    		String familyName, String givenName, String userType) {
     	this.setAccount(account);
-    	dateCreated = new Date();
     	this.userId = userId;
+    	this.username = username;
+    	this.email = email;
+    	this.familyName = familyName;
+    	this.givenName = givenName;
+    	this.userType = UserType.valueOf(userType);
+    	dateCreated = new Date();
+    	
     }
 
     @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)

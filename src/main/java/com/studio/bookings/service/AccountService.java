@@ -31,8 +31,12 @@ public class AccountService extends BaseService {
 	public Account insertAccount(
 			@Named("account") Long accountId,
 			@Named("name") String name,
-			@Named("description") String description,
-			@Named("username") String username, 
+			@Named("description") String description,			
+			@Named("userId") String userId, 
+			@Named("username") String username,
+			@Named("email") String email,
+			@Named("username") String family_name,
+			@Named("username") String given_name,
 			@Named("userType") String userType, // needs to be owner
 			User user) {
 		
@@ -47,7 +51,7 @@ public class AccountService extends BaseService {
 			accountDao.save(account);
 			Calendar calendar = new Calendar(description, account);
 			calendarDao.save(calendar);
-			Person p = new Person(username, userType, account, user.getUserId());
+			Person p = new Person(account, user.getUserId(), username, email, family_name, given_name, userType);
 			personDao.save(p);
 		}
 		return account;

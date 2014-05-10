@@ -33,10 +33,10 @@ import com.studio.bookings.entity.EventAttribute;
 import com.studio.bookings.entity.EventCategory;
 import com.studio.bookings.entity.EventItem;
 import com.studio.bookings.entity.EventItemDetails;
-import com.studio.bookings.entity.EventRepeatType;
 import com.studio.bookings.entity.Instructor;
 import com.studio.bookings.entity.Person;
 import com.studio.bookings.entity.UserSession;
+import com.studio.bookings.enums.EventRepeatType;
 import com.studio.bookings.util.Constants;
 import com.studio.bookings.util.LoadDummyData;
 

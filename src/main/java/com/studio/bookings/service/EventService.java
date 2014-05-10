@@ -23,8 +23,8 @@ import com.studio.bookings.entity.EventAttribute;
 import com.studio.bookings.entity.EventCategory;
 import com.studio.bookings.entity.EventItem;
 import com.studio.bookings.entity.EventItemDetails;
-import com.studio.bookings.entity.EventRepeatType;
 import com.studio.bookings.entity.Instructor;
+import com.studio.bookings.enums.EventRepeatType;
 
 
 public class EventService extends BaseService {

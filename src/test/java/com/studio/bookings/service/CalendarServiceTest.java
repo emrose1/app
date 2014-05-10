@@ -51,7 +51,7 @@ public class CalendarServiceTest extends TestBase {
 	public void setUp(Account userAccount, User user) {
 		AccessControlList acl = new AccessControlList(permission.toString(), "true", "true", "true", "true", "true", "SUPERADMIN");
 		aclDao.save(acl);
-		Person p = new Person("username", "SUPERADMIN", userAccount, user.getUserId());
+		Person p = new Person(userAccount, user.getUserId(), "test1", "email", "family_name", "given_name", "SUPERADMIN");
 		personDao.save(p);
 	}
 
@@ -166,16 +166,28 @@ public class CalendarServiceTest extends TestBase {
 		User user = this.setUpUser();
 		this.setUp(account, user);
 		
-		Calendar cal = new Calendar ("calendar1", account);
-		calendarDao.save(cal);
+		Calendar cal1 = new Calendar ("calendar1", account);
+		calendarDao.save(cal1);
+		
+		Calendar cal2 = new Calendar ("calendar2", account);
+		calendarDao.save(cal2);
 		
 		ofy().clear();
-		Calendar calendarToDelete = calendarDao.retrieveAncestor(cal.getId(), account);
-		assert calendarToDelete != null;
-		calendarService.deleteCalendar(calendarToDelete.getId(), accountId, user);
+		Calendar calendarToDelete1 = calendarDao.retrieveAncestor(cal1.getId(), account);
+		Calendar calendarToDelete2 = calendarDao.retrieveAncestor(cal2.getId(), account);
+		
+		assert calendarToDelete1 != null;
+		assert calendarToDelete2 != null;
+		
+		List<Long> calendarList = new ArrayList<Long>();
+		calendarList.add(calendarToDelete1.getId());
+		calendarList.add(calendarToDelete2.getId());
+		
+		calendarService.deleteCalendars(calendarList, accountId, user);
 		ofy().clear();
 		
-		assert ofy().load().key(calendarToDelete.getKey()).now() == null;
+		assert ofy().load().key(calendarToDelete1.getKey()).now() == null;
+		assert ofy().load().key(calendarToDelete2.getKey()).now() == null;
 	}
 	
 	
