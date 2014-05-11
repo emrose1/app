@@ -1,42 +1,40 @@
 
-<section data-ng-view="" id="content" class="animate-fade-up ng-scope">
-	<div class="page page-dashboard ng-scope">
+<div class="page page-dashboard ng-scope">
 
-		<h1>ACCOUNTS</h1>
+	<h1>ACCOUNTS</h1>
 
-		<select ng-model="accountList" id="select-input" ng-init="accountList = accounts[0]" class="form-control" ng-change="loadAccount()"
-		ng-options="c.name for c in accounts"></select>
-	    <section>
-	        <div class="row">
-	            <div class="col-md-6">
-	                <div class="panel panel-default">
-	                    <div class="panel-heading">
-	                    	<strong>
-	                    		<span class="glyphicon glyphicon-th"></span>
-	                    		<span data-i18n="Accounts">Accounts</span>
-	                    	</strong>
-	                    </div>
-	                    <table class="table">
-	                        <thead>
-	                            <tr>
-	                                <th>#</th>
-	                                <th>Account</th>
-	                                <th>Manager</th>
-	                                <th>Status</th>
-	                            </tr>
-	                        </thead>
-	                        <tbody ng-repeat="account in accounts | orderBy:name">
-	                            <tr>
-	                                <td>{{account.name}}</td>
-	                                <td>{{account.accountSettings.repeatEventFinalDate | date: 'h:mma'}}</td>
-	                                <td><span class="label label-info">Pending</span></td>
-	                            </tr>
-	                        </tbody>
-	                    </table>
-	                </div>
-	            </div>
-	            <div class="col-md-6"></div>
-	        </div>
-	    </section>
-	</div>
-</section>
+	<select ng-model="accountList" id="select-input" ng-init="accountList = accounts[0]" class="form-control" ng-change="loadAccount()"
+	ng-options="c.name for c in accounts"></select>
+    <section>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                    	<strong>
+                    		<span class="glyphicon glyphicon-th"></span>
+                    		<span data-i18n="Accounts">Accounts</span>
+                    	</strong>
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Account</th>
+                                <th>Manager</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody ng-repeat="account in accounts | orderBy:name">
+                            <tr>
+                                <td>{{account.name}}</td>
+                                <td>{{account.accountSettings.repeatEventFinalDate | date: 'h:mma'}}</td>
+                                <td><span class="label label-info">Pending</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-md-6"></div>
+        </div>
+    </section>
+</div>

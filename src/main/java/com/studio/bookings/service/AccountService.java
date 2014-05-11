@@ -2,25 +2,23 @@ package com.studio.bookings.service;
 
 import java.util.List;
 
-import javax.inject.Named;
-
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
+import com.google.api.server.spi.config.Named;
 import com.google.appengine.api.users.User;
 import com.studio.bookings.entity.Account;
 import com.studio.bookings.entity.Calendar;
 import com.studio.bookings.entity.Person;
 import com.studio.bookings.enums.Permission;
 import com.studio.bookings.util.Constants;
-import com.studio.bookings.util.LoadDummyData;
 
 @Api(
-	    name = "booking",
-	    version = "v1",
-	    scopes = {Constants.EMAIL_SCOPE},
-	    clientIds = {Constants.WEB_CLIENT_ID},
-	    audiences = {Constants.ANDROID_AUDIENCE}
-	)
+    name = "booking",
+    version = "v1",
+    scopes = {Constants.EMAIL_SCOPE},
+    clientIds = {Constants.WEB_CLIENT_ID},
+    audiences = {Constants.ANDROID_AUDIENCE}
+)
 
 public class AccountService extends BaseService {
 

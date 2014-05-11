@@ -103,7 +103,11 @@ angular.module('application', [
             if(--apisToLoad === 0) {
                 $rootScope.$broadcast('EventLoaded');
                 var request = gapi.client.booking.calendar.dummyUsers();
-                request.execute(function (resp) {console.log(resp)});
+                request.execute(
+                    function (resp) {
+                        console.log(resp)
+                    }
+                );
             }
         };
         gapi.client.load('booking', 'v1', callback, 'http://localhost:8080/_ah/api');

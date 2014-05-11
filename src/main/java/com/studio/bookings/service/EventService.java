@@ -9,8 +9,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Named;
-
 import org.joda.time.DateTime;
 
 import com.google.api.server.spi.config.ApiMethod;
