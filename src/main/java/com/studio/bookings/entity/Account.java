@@ -1,5 +1,6 @@
 package com.studio.bookings.entity;
 import java.io.Serializable;
+import java.util.Date;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -27,11 +28,15 @@ public class Account implements Serializable  {
 	@Getter @Setter
 	private AccountSettings accountSettings;
 	
+	@Index
+	Date dateCreated;
+	
 	public Account(){};
 	
 	public Account(String name) {
 		this.name = name;
 		this.accountSettings = new AccountSettings();
+		dateCreated = new Date();
 	}
 	
 	public String toString() {

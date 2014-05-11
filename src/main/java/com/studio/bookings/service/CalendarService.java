@@ -35,7 +35,7 @@ public class CalendarService extends BaseService {
 		Long oId = new Long(accountId);
 		if(user != null) { 
     		// TODO THROW UNAUTHORIZED EXCEPTION
-    		if (aclService.allowInsert(accountId, aclPermission.toString(), user)) {
+    		if (aclService.allowInsert(accountId, aclPermission.toString(), user).get(0)) {
 				Account account =  accountDao.retrieve(oId);
 				calendar = new Calendar(description, account);
 				calendarDao.save(calendar);
@@ -53,7 +53,7 @@ public class CalendarService extends BaseService {
 		Calendar calendar = null;
 		if(user != null) { 
     		// TODO THROW UNAUTHORIZED EXCEPTION
-    		if (aclService.allowView(accountId, aclPermission.toString(), user)) {
+    		if (aclService.allowView(accountId, aclPermission.toString(), user).get(0)) {
     			Account account = accountDao.retrieve(accountId);
     			calendar = calendarDao.retrieveAncestor(calendarId, account);
     		}
@@ -69,7 +69,7 @@ public class CalendarService extends BaseService {
 		List<Calendar> calendarList = null;
 		if(user != null) { 
     		// TODO THROW UNAUTHORIZED EXCEPTION
-    		if (aclService.allowViewAll(accountId, aclPermission.toString(), user)) {
+    		if (aclService.allowViewAll(accountId, aclPermission.toString(), user).get(0)) {
     			Account accountFetched = accountDao.retrieve(accountId);
     			calendarList = calendarDao.listAncestors(accountFetched);
     		}
@@ -82,7 +82,7 @@ public class CalendarService extends BaseService {
 			@Named("description") String description, User user) {
 		Calendar calendar = null;
 		if(user != null) {	
-			if (aclService.allowUpdate(accountId, aclPermission.toString(), user)) {
+			if (aclService.allowUpdate(accountId, aclPermission.toString(), user).get(0)) {
 				Account accountFetched = accountDao.retrieve(accountId);
 				calendar = calendarDao.retrieveAncestor(calendarId, accountFetched);
 				calendar.setDescription(description);
@@ -99,7 +99,7 @@ public class CalendarService extends BaseService {
 			User user) {
 		
 		if(user != null) {	
-			if (aclService.allowDelete(accountId, aclPermission.toString(), user)) {
+			if (aclService.allowDelete(accountId, aclPermission.toString(), user).get(0)) {
 				Account accountFetched = accountDao.retrieve(accountId);
 				calendarDao.deleteAncestors(calendarIds, accountFetched);
 			}

@@ -205,11 +205,11 @@ public class AccessControlListServiceTest extends TestBase {
 		
 		AccessControlList acl1 = new AccessControlList("ACCOUNT", "true", "false", "false", "false", "false", "SUPERADMIN");
 		aclDao.save(acl1);
-		Assert.assertTrue(aclService.allowView(account.getId(), "ACCOUNT", user));
+		Assert.assertTrue(aclService.allowView(account.getId(), "ACCOUNT", user).get(0));
 		AccessControlList aclFetched1 = aclDao.retrieve(acl1.getId());
 		aclFetched1.setCanView(new Boolean("false"));
 		aclDao.save(aclFetched1);
-		Assert.assertFalse(aclService.allowView(account.getId(), "ACCOUNT", user));
+		Assert.assertFalse(aclService.allowView(account.getId(), "ACCOUNT", user).get(0));
     }
 	
 	@Test
@@ -225,11 +225,11 @@ public class AccessControlListServiceTest extends TestBase {
 		
 		AccessControlList acl1 = new AccessControlList("CALENDAR", "true", "false", "false", "false", "false", "ADMIN");
 		aclDao.save(acl1);
-		Assert.assertTrue(aclService.allowView(account.getId(), "CALENDAR", user));
+		Assert.assertTrue(aclService.allowView(account.getId(), "CALENDAR", user).get(0));
 		AccessControlList aclFetched = aclDao.retrieve(acl1.getId());
 		aclFetched.setCanView(new Boolean("false"));
 		aclDao.save(aclFetched);
-		Assert.assertFalse(aclService.allowView(account.getId(), "CALENDAR", user));	
+		Assert.assertFalse(aclService.allowView(account.getId(), "CALENDAR", user).get(0));	
 	}
 	
 	@Test
@@ -246,11 +246,11 @@ public class AccessControlListServiceTest extends TestBase {
 		AccessControlList acl = new AccessControlList("EVENT", "true", "false", "false", "false", "false", "OWNER");
 		aclDao.save(acl);
 		
-		Assert.assertTrue(aclService.allowView(account.getId(), "EVENT", user));
+		Assert.assertTrue(aclService.allowView(account.getId(), "EVENT", user).get(0));
 		AccessControlList aclFetched = aclDao.retrieve(acl.getId());
 		aclFetched.setCanView(new Boolean("false"));
 		aclDao.save(aclFetched);
-		Assert.assertFalse(aclService.allowView(account.getId(), "EVENT", user));
+		Assert.assertFalse(aclService.allowView(account.getId(), "EVENT", user).get(0));
 	}
 	
 	
@@ -267,11 +267,11 @@ public class AccessControlListServiceTest extends TestBase {
 		
 		AccessControlList acl4 = new AccessControlList("BOOKING", "true", "false", "false", "false", "false", "OWNER");
 		aclDao.save(acl4);
-		Assert.assertTrue(aclService.allowView(account.getId(), "BOOKING", user));
+		Assert.assertTrue(aclService.allowView(account.getId(), "BOOKING", user).get(0));
 		AccessControlList aclFetched4 = aclDao.retrieve(acl4.getId());
 		aclFetched4.setCanView(new Boolean("false"));
 		aclDao.save(aclFetched4);
-		Assert.assertFalse(aclService.allowView(account.getId(), "BOOKING", user));
+		Assert.assertFalse(aclService.allowView(account.getId(), "BOOKING", user).get(0));
 	}
 	
 	
@@ -286,11 +286,11 @@ public class AccessControlListServiceTest extends TestBase {
 		
 		AccessControlList acl5 = new AccessControlList("USER", "true", "false", "false", "false", "false", "ATTENDEE");
 		aclDao.save(acl5);
-		Assert.assertTrue(aclService.allowView(account.getId(), "USER", user));
+		Assert.assertTrue(aclService.allowView(account.getId(), "USER", user).get(0));
 		AccessControlList aclFetched5 = aclDao.retrieve(acl5.getId());
 		aclFetched5.setCanView(new Boolean("false"));
 		aclDao.save(aclFetched5);
-		Assert.assertFalse(aclService.allowView(account.getId(), "USER", user));
+		Assert.assertFalse(aclService.allowView(account.getId(), "USER", user).get(0));
 	}
 			
 	@Test
@@ -304,11 +304,11 @@ public class AccessControlListServiceTest extends TestBase {
 		
 		AccessControlList acl6 = new AccessControlList("ACL", "true", "false", "false", "false", "false", "ATTENDEE");
 		aclDao.save(acl6);
-		Assert.assertTrue(aclService.allowView(account.getId(), "ACL", user));
+		Assert.assertTrue(aclService.allowView(account.getId(), "ACL", user).get(0));
 		AccessControlList aclFetched6 = aclDao.retrieve(acl6.getId());
 		aclFetched6.setCanView(new Boolean("false"));
 		aclDao.save(aclFetched6);
-		Assert.assertFalse(aclService.allowView(account.getId(), "ACL", user));
+		Assert.assertFalse(aclService.allowView(account.getId(), "ACL", user).get(0));
 	}
 	
 	@Test
@@ -322,11 +322,11 @@ public class AccessControlListServiceTest extends TestBase {
 		
 		AccessControlList acl6 = new AccessControlList("ACL", "true", "false", "false", "false", "false", "ATTENDEE");
 		aclDao.save(acl6);
-		Assert.assertTrue(aclService.allowView(account.getId(), "ACL", user));
+		Assert.assertTrue(aclService.allowView(account.getId(), "ACL", user).get(0));
 		AccessControlList aclFetched6 = aclDao.retrieve(acl6.getId());
 		aclFetched6.setCanView(new Boolean("false"));
 		aclDao.save(aclFetched6);
-		Assert.assertFalse(aclService.allowView(account.getId(), "ACL", user));
+		Assert.assertFalse(aclService.allowView(account.getId(), "ACL", user).get(0));
 	}
 	
 	@Test
@@ -341,13 +341,13 @@ public class AccessControlListServiceTest extends TestBase {
 		AccessControlList acl = new AccessControlList("CALENDAR", "false", "false", "true", "false", "false", "SUPERADMIN");
 		aclDao.save(acl);
 		
-		Assert.assertTrue(aclService.allowInsert(account.getId(), "CALENDAR", user));
+		Assert.assertTrue(aclService.allowInsert(account.getId(), "CALENDAR", user).get(0));
 		
 		AccessControlList aclFetched = aclDao.retrieve(acl.getId());
 		aclFetched.setCanInsert(new Boolean("false"));
 		aclDao.save(aclFetched);
 
-		Assert.assertFalse(aclService.allowInsert(account.getId(), "CALENDAR", user));
+		Assert.assertFalse(aclService.allowInsert(account.getId(), "CALENDAR", user).get(0));
 		
     }
 
@@ -363,13 +363,13 @@ public class AccessControlListServiceTest extends TestBase {
 		AccessControlList acl = new AccessControlList("CALENDAR", "false", "false", "false", "true", "false", "SUPERADMIN");
 		aclDao.save(acl);
 		
-		Assert.assertTrue(aclService.allowUpdate(account.getId(), "CALENDAR", user));
+		Assert.assertTrue(aclService.allowUpdate(account.getId(), "CALENDAR", user).get(0));
 		
 		AccessControlList aclFetched = aclDao.retrieve(acl.getId());
 		aclFetched.setCanUpdate(new Boolean("false"));
 		aclDao.save(aclFetched);
 
-		Assert.assertFalse(aclService.allowUpdate(account.getId(), "CALENDAR", user));
+		Assert.assertFalse(aclService.allowUpdate(account.getId(), "CALENDAR", user).get(0));
 		
     }
 	
@@ -385,13 +385,13 @@ public class AccessControlListServiceTest extends TestBase {
 		AccessControlList acl = new AccessControlList("CALENDAR", "false", "false", "false", "false", "true", "SUPERADMIN");
 		aclDao.save(acl);
 		
-		Assert.assertTrue(aclService.allowDelete(account.getId(), "CALENDAR", user));
+		Assert.assertTrue(aclService.allowDelete(account.getId(), "CALENDAR", user).get(0));
 		
 		AccessControlList aclFetched = aclDao.retrieve(acl.getId());
 		aclFetched.setCanDelete(new Boolean("false"));
 		aclDao.save(aclFetched);
 
-		Assert.assertFalse(aclService.allowDelete(account.getId(), "CALENDAR", user));
+		Assert.assertFalse(aclService.allowDelete(account.getId(), "CALENDAR", user).get(0));
 		
     }
 }

@@ -67,7 +67,7 @@ public class AccountServiceTest extends TestBase {
 		User user = this.setUpUser();
 		this.setUp(userAccount, user);
 		
-		Account account = accountService.insertAccount(userAccountId, "Testing Account", "Testing Calendar", 
+		Account account = accountService.insertAccount("Testing Account", "Testing Calendar", 
 				user.getUserId(), "username", "email", "familyName", "givenName", "ADMIN", user);
 		
 		Account accountFetched = accountDao.retrieve(account.getId());

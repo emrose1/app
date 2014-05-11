@@ -177,4 +177,14 @@ public class PersonServiceTest extends TestBase  {
 		assert ofy().load().key(personToDelete1.getKey()).now() == null;
 		assert ofy().load().key(personToDelete2.getKey()).now() == null;
 	}
+	
+	@Test
+	public void dummyUsers(){
+		List<Account> accounts = personService.dummyUsers();
+		List<Account> accountsFetched = accountDao.list();
+		//List<Person> persons = personDao.list();
+		assert accounts.size() == 3;
+		assert accountsFetched.size() == 3;
+		
+	}
 }

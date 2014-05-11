@@ -1,63 +1,128 @@
 package com.studio.bookings.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.appengine.api.oauth.OAuthRequestException;
 import com.google.appengine.api.oauth.OAuthService;
 import com.google.appengine.api.oauth.OAuthServiceFactory;
 import com.google.appengine.api.users.User;
 import com.studio.bookings.dao.BaseDao;
 import com.studio.bookings.dao.BookingDao;
+import com.studio.bookings.dao.ChildBaseDao;
 import com.studio.bookings.dao.EventAttributeDao;
 import com.studio.bookings.dao.EventCategoryDao;
 import com.studio.bookings.dao.EventDao;
 import com.studio.bookings.entity.AccessControlList;
 import com.studio.bookings.entity.Account;
+import com.studio.bookings.entity.Calendar;
 import com.studio.bookings.entity.Person;
 import com.studio.bookings.enums.Permission;
 import com.studio.bookings.enums.UserType;
+import com.studio.bookings.service.AccessControlListService;
 import com.studio.bookings.service.AccountService;
 import com.studio.bookings.service.BaseService;
+import com.studio.bookings.service.CalendarService;
+import com.studio.bookings.service.PersonService;
 
 public class LoadDummyData extends BaseService {
 	
-	public static EventDao eventDao = new EventDao();
-	public static EventAttributeDao eventAttributeDao = new EventAttributeDao();
-	public static EventCategoryDao eventCategoryDao = new EventCategoryDao();
-
-	public static BookingDao bookingDao = new BookingDao();
-	
 	public static AccountService accountService = new AccountService();
-	BaseDao<Account> accountDao = new BaseDao<Account>(Account.class);
+	static BaseDao<Account> accountDao = new BaseDao<Account>(Account.class);
+	
+	public static PersonService personService = new PersonService();
+	public static ChildBaseDao<Person, Account> personDao = new ChildBaseDao<Person, Account>(Person.class, Account.class);
+	
+	
+	CalendarService calendarService = new CalendarService();
+	ChildBaseDao<Calendar, Account> calendarDao = new ChildBaseDao<Calendar, Account>(Calendar.class, Account.class);
+	
+	AccessControlListService aclService = new AccessControlListService();
+	BaseDao<AccessControlList> aclDao = new BaseDao<AccessControlList>(AccessControlList.class);
+	
+	public Account setUpAccount(String accountName) {
+		Account account = new Account(accountName);
+		accountDao.save(account);
+		return account;
+	}
+	
+	public void setUpPerson(String username, Integer userId, Account account){
+	
+		List<String> userTypeList = new ArrayList<String>();
+		userTypeList.add("SUPERADMIN"); 
+		userTypeList.add("ADMIN");
+		userTypeList.add("OWNER");
+		userTypeList.add("INSTRUCTOR");
+		userTypeList.add("ATTENDEE");
+
+		Person p = new Person(account, userId.toString(), username, "email", 
+	    		"family_name", "given_name", userTypeList.get(0));
+		personDao.save(p);
+		
+	}
+	
+	public void setUpAcl() {
+		
+		List<String> permissionList = new ArrayList<String>();
+		permissionList.add("ACCOUNT"); 
+		permissionList.add("CALENDAR");
+		permissionList.add("EVENT");
+		permissionList.add("BOOKING");
+		permissionList.add("USER");
+		permissionList.add("ACL");
+	
+		List<String> userTypeList = new ArrayList<String>();
+		userTypeList.add("SUPERADMIN"); 
+		userTypeList.add("ADMIN");
+		userTypeList.add("OWNER");
+		userTypeList.add("INSTRUCTOR");
+		userTypeList.add("ATTENDEE");
+
+		
+		for (String p : permissionList) {
+			for (String ut : userTypeList) {
+				AccessControlList acl = new AccessControlList(p, "true", "true", "true", "true", "true", ut);
+				aclDao.save(acl);
+			}
+		}
+	}
 	
 	public void initSetup() {
 		
-		OAuthService oauth = OAuthServiceFactory.getOAuthService();
+		setUpAcl();
+		
+		List<String> accounts = new ArrayList<String>();
+		List<String> persons = new ArrayList<String>();
+		
+		accounts.add("Testing Account1");
+		accounts.add("Testing Accounts2");
+		accounts.add("Testing Accounts3");
+		
+		persons.add("Person 1");
+		persons.add("Person 2");
+		persons.add("Person 3");
+		
+		int index = 0;
+		
+		for (String accountName : accounts)
+		{
+			Account account = setUpAccount(accountName);
+			for (String personName : persons) {
+				setUpPerson(personName, index++, account);
+			}
+		}
+
+		
+		/*OAuthService oauth = OAuthServiceFactory.getOAuthService();
 	    User user = null;
 		try {
 			user = oauth.getCurrentUser();
 		} catch (OAuthRequestException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		
-		/*Account account = accountService.insertAccount("Testing Account", "test", "admin", "123", "ADMIN", user);
-		Account account2 = accountService.insertAccount("Testing Account2", "test", "admin", "123", "ADMIN", user);
-		Account account3 = accountService.insertAccount("Testing Account3", "test", "admin", "123", "ADMIN", user);
-		*/
+		}*/
 	
-		/*CalendarDao calendarDao = new CalendarDao();
-		EventDao eventDao = new EventDao();
-		
-		// TODO Create new owner and Settings Service
-		Settings setting = new Settings();
-		Key<Settings> settingsKey = settingsDao.save(setting);
-		Owner owner = new Owner("Big C's", settingsKey);
-		Key<Owner> ownerKey = ownerDao.save(owner);
-		Owner ownerFetched = ownerDao.find(ownerKey);
-	
-		Calendar calendar1 = new Calendar("calendar1", ownerFetched);
-		calendarDao.save(calendar1);
-	
-		Calendar calendar2 = new Calendar("calendar2", ownerFetched);
+/*		Calendar calendar2 = new Calendar("calendar2", ownerFetched);
 		Key<Calendar> calendar3 = calendarDao.save(calendar2);
 	
 		EventCategory ec1 = new EventCategory("Pilates Matwork", calendar1);
@@ -103,17 +168,17 @@ public class LoadDummyData extends BaseService {
 		Event event6 = new Event(calendar1,btrue, repeatDaily);
 		eventDao.save(event6);*/
 		
-
-		/*Permission bookingPermission = Permission.BOOKING;
+/*
+		Permission bookingPermission = Permission.BOOKING;
 		Permission eventPermission = Permission.EVENT;
 		Permission calendarPermission = Permission.CALENDAR;
 
-		AccessControlList adminBooking = new AccessControlList(bookingPermission, true, true, true, true, UserType.ADMIN, account);
-		AccessControlList adminEvent = new AccessControlList(eventPermission, false, false, false, false, UserType.ADMIN, account);
-		AccessControlList adminCalendar = new AccessControlList(calendarPermission, true, true, true, true, UserType.ADMIN, account);
+		AccessControlList adminBooking = new AccessControlList(bookingPermission, true, true, true, true, UserType.ADMIN, account1);
+		AccessControlList adminEvent = new AccessControlList(eventPermission, false, false, false, false, UserType.ADMIN, account1);
+		AccessControlList adminCalendar = new AccessControlList(calendarPermission, true, true, true, true, UserType.ADMIN, account1);
 
-		AccessControlList ownerBooking = new AccessControlList(bookingPermission, true, true, true, true, UserType.OWNER, account);
-		AccessControlList ownerEvent = new AccessControlList(eventPermission, true, true, true, true, UserType.OWNER, account);
+		AccessControlList ownerBooking = new AccessControlList(bookingPermission, true, true, true, true, UserType.OWNER, account1);
+		AccessControlList ownerEvent = new AccessControlList(eventPermission, true, true, true, true, UserType.OWNER, account1);
 		AccessControlList ownerCalendar = new AccessControlList(calendarPermission, false, false, false, false, UserType.OWNER, account);
 
 		AccessControlList organizerBooking = new AccessControlList(bookingPermission, true, true, true, true, UserType.INSTRUCTOR, account);
@@ -130,9 +195,9 @@ public class LoadDummyData extends BaseService {
 
 		accessControlListDao.save(organizerBooking);
 		accessControlListDao.save(organizerEvent);
-		accessControlListDao.save(organizerCalendar);*/
+		accessControlListDao.save(organizerCalendar);
 
-		/*Person user1 = new Person("admin", "123", "ADMIN", account, user);
+		Person user1 = new Person("admin", "123", "ADMIN", account, user);
 		Person user2 = new Person("owner", "123", "OWNER", account, user);
 		Person user3 = new Person("organizer", "123", "INSTRUCTOR", account, user);
 		Person user4 = new Person("attendee", "123", "ATTENDEE", account, user);

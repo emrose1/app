@@ -41,7 +41,8 @@ public class Calendar {
 	private String description;
 
 	@Index
-	Date dateCreated = new Date();
+	Date dateCreated;
+	
 	@Index
 	Date dateUpdated = new Date();
 
@@ -50,6 +51,7 @@ public class Calendar {
 	public Calendar(String description, Account account) {
 		this.description = description;
 		this.setAccount(account);
+		dateCreated = new Date();
 	};
 
 	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
