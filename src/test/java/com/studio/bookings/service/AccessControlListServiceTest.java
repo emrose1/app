@@ -5,41 +5,22 @@ import static com.studio.bookings.util.TestObjectifyService.ofy;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Named;
-
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.google.api.server.spi.config.ApiMethod;
 import com.google.appengine.api.oauth.OAuthRequestException;
 import com.google.appengine.api.oauth.OAuthService;
 import com.google.appengine.api.oauth.OAuthServiceFactory;
 import com.google.appengine.api.users.User;
-import com.studio.bookings.dao.BaseDao;
-import com.studio.bookings.dao.ChildBaseDao;
 import com.studio.bookings.entity.AccessControlList;
 import com.studio.bookings.entity.Account;
-import com.studio.bookings.entity.Calendar;
 import com.studio.bookings.entity.Person;
 import com.studio.bookings.enums.Permission;
 import com.studio.bookings.enums.UserType;
 import com.studio.bookings.util.TestBase;
 
 public class AccessControlListServiceTest extends TestBase {
-	
-	public static AccountService accountService = new AccountService();
-	static BaseDao<Account> accountDao = new BaseDao<Account>(Account.class);
-	
-	public static AccessControlListService aclService = new AccessControlListService();
-	public static BaseDao<AccessControlList> aclDao = new BaseDao<AccessControlList>(AccessControlList.class);
-	
-	public static CalendarService calendarService = new CalendarService();
-	BaseDao<Calendar> calendarDao = new BaseDao<Calendar>(Calendar.class);
-	
-	public static PersonService personService = new PersonService();
-	public static ChildBaseDao<Person, Account> personDao = new ChildBaseDao<Person, Account>(Person.class, Account.class);
-	
-	
+
 	
 	static Permission permission = Permission.ACL;
 	

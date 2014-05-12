@@ -8,6 +8,7 @@ import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.Named;
 import com.studio.bookings.entity.AccessControlList;
 import com.studio.bookings.entity.Account;
+import com.studio.bookings.entity.Application;
 import com.studio.bookings.entity.Person;
 import com.studio.bookings.enums.Permission;
 import com.studio.bookings.util.Constants;
@@ -20,7 +21,7 @@ import com.studio.bookings.util.Constants;
     audiences = {Constants.ANDROID_AUDIENCE}
 )
 
-public class DummyLoginService  extends BaseService {
+public class DummySetupService  extends BaseService {
 	
 	public static AccessControlListService aclService = new AccessControlListService();
 	Permission permission = Permission.ACCOUNT;
@@ -54,27 +55,28 @@ public class DummyLoginService  extends BaseService {
 	}
 	
 	public void setUpAcl() {
+		if(aclDao.list().size() == 0) { 
+			List<String> permissionList = new ArrayList<String>();
+			permissionList.add("ACCOUNT"); 
+			permissionList.add("CALENDAR");
+			permissionList.add("EVENT");
+			permissionList.add("BOOKING");
+			permissionList.add("USER");
+			permissionList.add("ACL");
 		
-		List<String> permissionList = new ArrayList<String>();
-		permissionList.add("ACCOUNT"); 
-		permissionList.add("CALENDAR");
-		permissionList.add("EVENT");
-		permissionList.add("BOOKING");
-		permissionList.add("USER");
-		permissionList.add("ACL");
+			List<String> userTypeList = new ArrayList<String>();
+			userTypeList.add("SUPERADMIN"); 
+			userTypeList.add("ADMIN");
+			userTypeList.add("OWNER");
+			userTypeList.add("INSTRUCTOR");
+			userTypeList.add("ATTENDEE");
 	
-		List<String> userTypeList = new ArrayList<String>();
-		userTypeList.add("SUPERADMIN"); 
-		userTypeList.add("ADMIN");
-		userTypeList.add("OWNER");
-		userTypeList.add("INSTRUCTOR");
-		userTypeList.add("ATTENDEE");
-
-		
-		for (String p : permissionList) {
-			for (String ut : userTypeList) {
-				AccessControlList acl = new AccessControlList(p, "true", "true", "true", "true", "true", ut);
-				aclDao.save(acl);
+			
+			for (String p : permissionList) {
+				for (String ut : userTypeList) {
+					AccessControlList acl = new AccessControlList(p, "true", "true", "true", "true", "true", ut);
+					aclDao.save(acl);
+				}
 			}
 		}
 	}
@@ -98,10 +100,12 @@ public class DummyLoginService  extends BaseService {
 		
 		int index = 0;
 		for (String accountName : accounts) {
-			Account account = setUpAccount(accountName);
-			accountList.add(account);
-			for (String personName : persons) {
-				setUpPerson(personName, index++, account);
+			if(accountDao.list().size() == 0) {
+				Account account = setUpAccount(accountName);
+				accountList.add(account);
+				for (String personName : persons) {
+					setUpPerson(personName, index++, account);
+				}
 			}
 		}
 		return accountList;

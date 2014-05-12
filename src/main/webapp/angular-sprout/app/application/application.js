@@ -105,7 +105,7 @@ angular.module('application', [
                 var request = gapi.client.booking.calendar.dummyUsers();
                 request.execute(
                     function (resp) {
-                        console.log(resp)
+                        console.log(resp);
                     }
                 );
             }

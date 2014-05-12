@@ -9,6 +9,7 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
 import com.studio.bookings.entity.AccessControlList;
 import com.studio.bookings.entity.Account;
+import com.studio.bookings.entity.Application;
 import com.studio.bookings.entity.Calendar;
 import com.studio.bookings.entity.Person;
 
@@ -18,10 +19,11 @@ public class BaseDao<T> {
 	
 	
 	static{
+		ObjectifyService.register(AccessControlList.class);
 		ObjectifyService.register(Account.class);
+		ObjectifyService.register(Application.class);
 		ObjectifyService.register(Calendar.class);
 		ObjectifyService.register(Person.class);
-		ObjectifyService.register(AccessControlList.class);
 	}
 	
 	private Class<T> t;

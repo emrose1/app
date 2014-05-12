@@ -1,16 +1,7 @@
 package com.studio.bookings.dao;
 import static com.studio.bookings.util.OfyService.ofy;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
-import com.googlecode.objectify.Key;
-import com.googlecode.objectify.NotFoundException;
-import com.googlecode.objectify.ObjectifyService;
-import com.studio.bookings.entity.Account;
-import com.studio.bookings.entity.Calendar;
-import com.studio.bookings.entity.EventItemDetails;
 
 //http://stackoverflow.com/questions/21036934/objectify-the-list-from-query-result-contains-null
 
@@ -43,6 +34,7 @@ public class ChildBaseDao<T, S> extends BaseDao<T> {
 	public T twoFilterAncestorQuery(String filter, String value, String filter2, String value2, S e) {
         return ofy().load().type(t).ancestor(e).filter(filter, value).filter(filter2, value2).first().now();
 	}
+	
 	
 	public void deleteAncestors(List<Long> aclIds, S e) {
 		ofy().delete().type(t).parent(e).ids(aclIds);

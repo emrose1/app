@@ -12,6 +12,7 @@ import com.studio.bookings.dao.EventItemDao;
 import com.studio.bookings.dao.InstructorDao;
 import com.studio.bookings.entity.AccessControlList;
 import com.studio.bookings.entity.Account;
+import com.studio.bookings.entity.Application;
 import com.studio.bookings.entity.Calendar;
 import com.studio.bookings.entity.Event;
 import com.studio.bookings.entity.Person;
@@ -31,16 +32,16 @@ import com.studio.bookings.util.Constants;
 public class BaseService {
 	
 	public static ArrayList<Event> events = new ArrayList<Event>();
+	public static BaseDao<Application> applicationDao = new BaseDao<Application>(Application.class);
+	public static BaseDao<Account> accountDao = new BaseDao<Account>(Account.class);
+	public static BaseDao<AccessControlList> aclDao = new BaseDao<AccessControlList>(AccessControlList.class);
+	public static ChildBaseDao<Calendar, Account> calendarDao = new ChildBaseDao<Calendar, Account>(Calendar.class, Account.class);
 	public static EventDao eventDao = new EventDao();
 	public static EventItemDao eventItemDao = new EventItemDao();
 	public static EventAttributeDao eventAttributeDao = new EventAttributeDao();
 	public static EventCategoryDao eventCategoryDao = new EventCategoryDao();
 	public static InstructorDao instructorDao = new InstructorDao();
-
-	public static BaseDao<Account> accountDao = new BaseDao<Account>(Account.class);
-	public static BaseDao<AccessControlList> aclDao = new BaseDao<AccessControlList>(AccessControlList.class);
-
-	public static ChildBaseDao<Calendar, Account> calendarDao = new ChildBaseDao<Calendar, Account>(Calendar.class, Account.class);
 	public static ChildBaseDao<Person, Account> personDao = new ChildBaseDao<Person, Account>(Person.class, Account.class);
+	public static ChildBaseDao<Person, Application> personAppDao = new ChildBaseDao<Person, Application>(Person.class, Application.class);
 	
 }

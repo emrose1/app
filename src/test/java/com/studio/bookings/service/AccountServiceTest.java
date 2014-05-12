@@ -13,8 +13,6 @@ import com.google.appengine.api.oauth.OAuthRequestException;
 import com.google.appengine.api.oauth.OAuthService;
 import com.google.appengine.api.oauth.OAuthServiceFactory;
 import com.google.appengine.api.users.User;
-import com.studio.bookings.dao.BaseDao;
-import com.studio.bookings.dao.ChildBaseDao;
 import com.studio.bookings.entity.AccessControlList;
 import com.studio.bookings.entity.Account;
 import com.studio.bookings.entity.Calendar;
@@ -25,20 +23,7 @@ import com.studio.bookings.util.TestBase;
 
 public class AccountServiceTest extends TestBase {
 	
-	public static AccountService accountService = new AccountService();
-	static BaseDao<Account> accountDao = new BaseDao<Account>(Account.class);
-	
-	public static CalendarService calendarService = new CalendarService();
-	public static ChildBaseDao<Calendar, Account> calendarDao = new ChildBaseDao<Calendar, Account>(Calendar.class, Account.class);
-	
-	public static PersonService personService = new PersonService();
-	public static ChildBaseDao<Person, Account> personDao = new ChildBaseDao<Person, Account>(Person.class, Account.class);
-	
-	BaseDao<User> userTestDao = new BaseDao<User>(User.class);
-
 	static Permission permission = Permission.ACCOUNT;
-	public static ChildBaseDao<AccessControlList, Account> aclDao = new ChildBaseDao<AccessControlList, Account>(AccessControlList.class, Account.class);
-	
 
 	public User setUpUser() {
 		OAuthService oauth = OAuthServiceFactory.getOAuthService();
@@ -63,7 +48,8 @@ public class AccountServiceTest extends TestBase {
 	public void insertAccount() {
 		
 		Account userAccount = new Account();
-		Long userAccountId = accountDao.save(userAccount);
+		accountDao.save(userAccount);
+		
 		User user = this.setUpUser();
 		this.setUp(userAccount, user);
 		

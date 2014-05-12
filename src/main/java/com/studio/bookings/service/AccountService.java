@@ -1,12 +1,14 @@
 package com.studio.bookings.service;
 
 import java.util.List;
+import static com.studio.bookings.util.OfyService.ofy;
 
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.Named;
 import com.google.appengine.api.users.User;
 import com.studio.bookings.entity.Account;
+import com.studio.bookings.entity.Application;
 import com.studio.bookings.entity.Calendar;
 import com.studio.bookings.entity.Person;
 import com.studio.bookings.enums.Permission;
@@ -38,12 +40,8 @@ public class AccountService extends BaseService {
 			User user) {
 		
 		Account account = null;
-		// TODO:
-		// instead check if userId is person/owner of any other account, if not set up person as owner of account
-		// need to set up app entity as overall parent to do ancestor query filter userid and usertype
-		//if (user != null && aclService.allowInsert(accountId, permission.toString(), user).get(0)) // this won't work
 		
-		//{ 
+		//if(ofy().load().type(Person.class).filter("userId", userId).filter("userType", "OWNER") == null) { 
 			account = new Account(name);
 			accountDao.save(account);
 			Calendar calendar = new Calendar(description, account);
@@ -61,7 +59,7 @@ public class AccountService extends BaseService {
 			User user) {
 		Account accountFetched = null;
 		// superadmin
-		if (user != null && aclService.allowViewAll(accountId, permission.toString(), user).get(0)) {
+		if (user != null && aclService.allowView(accountId, permission.toString(), user).get(0)) {
 			accountFetched = accountDao.retrieve(accountToFindId);
 		}
 		return accountFetched;

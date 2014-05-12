@@ -1,4 +1,4 @@
-package com.studio.bookings.service;
+/*package com.studio.bookings.service;
 
 import java.util.List;
 
@@ -13,19 +13,9 @@ import com.studio.bookings.entity.Person;
 import com.studio.bookings.enums.Permission;
 import com.studio.bookings.util.TestBase;
 
-public class DummyLoginServiceTest extends TestBase {
+public class DummySetupServiceTest extends TestBase {
 	
-	AccountService accountService = new AccountService();
-	BaseDao<Account> accountDao = new BaseDao<Account>(Account.class);
-	
-	CalendarService calendarService = new CalendarService();
-	BaseDao<Calendar> calendarDao = new BaseDao<Calendar>(Calendar.class);
-	
-	ChildBaseDao<Person, Account> personDao = new ChildBaseDao<Person, Account>(Person.class, Account.class);
-	PersonService personService = new PersonService();
-	
-	DummyLoginService dummyService = new DummyLoginService();
-	ChildBaseDao<AccessControlList, Account> aclDao = new ChildBaseDao<AccessControlList, Account>(AccessControlList.class, Account.class);
+	DummySetupService dummyService = new DummySetupService();
 	Permission permission = Permission.USER;
 		
 	@Test
@@ -45,3 +35,4 @@ public class DummyLoginServiceTest extends TestBase {
 		assert accountsFetched.size() == 3;
 	}
 }
+*/

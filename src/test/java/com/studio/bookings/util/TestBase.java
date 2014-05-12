@@ -11,10 +11,22 @@ import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.EntityNotFoundException;
+import com.google.appengine.api.users.User;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyFilter;
+import com.studio.bookings.dao.BaseDao;
+import com.studio.bookings.dao.ChildBaseDao;
+import com.studio.bookings.entity.AccessControlList;
+import com.studio.bookings.entity.Account;
+import com.studio.bookings.entity.Application;
+import com.studio.bookings.entity.Calendar;
+import com.studio.bookings.entity.Person;
+import com.studio.bookings.service.AccessControlListService;
+import com.studio.bookings.service.AccountService;
+import com.studio.bookings.service.CalendarService;
+import com.studio.bookings.service.PersonService;
 
 /**
  * All tests should extend this class to set up the GAE environment.
@@ -22,8 +34,25 @@ import com.googlecode.objectify.ObjectifyFilter;
  *
  * @author Jeff Schnitzer <jeff@infohazard.org>
  */
-public class TestBase
-{
+public class TestBase {
+
+	public AccountService accountService = new AccountService();
+	public BaseDao<Account> accountDao = new BaseDao<Account>(Account.class);
+	
+	public AccessControlListService aclService = new AccessControlListService();
+	public BaseDao<AccessControlList> aclDao = new BaseDao<AccessControlList>(AccessControlList.class);
+	
+	public BaseDao<Application> applicationDao = new BaseDao<Application>(Application.class);
+	
+	public CalendarService calendarService = new CalendarService();
+	public ChildBaseDao<Calendar, Account> calendarDao = new ChildBaseDao<Calendar, Account>(Calendar.class, Account.class);
+	
+	public PersonService personService = new PersonService();
+	public ChildBaseDao<Person, Account> personDao = new ChildBaseDao<Person, Account>(Person.class, Account.class);
+		
+	public BaseDao<User> userTestDao = new BaseDao<User>(User.class);
+
+
 	/** */
 	@SuppressWarnings("unused")
 	private static Logger log = Logger.getLogger(TestBase.class.getName());
