@@ -8,12 +8,15 @@ import java.util.List;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import com.google.api.server.spi.config.ApiMethod;
+import com.google.api.server.spi.config.Named;
 import com.google.appengine.api.oauth.OAuthRequestException;
 import com.google.appengine.api.oauth.OAuthService;
 import com.google.appengine.api.oauth.OAuthServiceFactory;
 import com.google.appengine.api.users.User;
 import com.studio.bookings.entity.AccessControlList;
 import com.studio.bookings.entity.Account;
+import com.studio.bookings.entity.Application;
 import com.studio.bookings.entity.Person;
 import com.studio.bookings.enums.Permission;
 import com.studio.bookings.enums.UserType;
@@ -71,10 +74,50 @@ public class PersonServiceTest extends TestBase  {
 		Account account = this.setUpAccount(user);
 		Person p = new Person(account, user.getUserId(), "username", "email", "family_name", "given_name", "SUPERADMIN");
 		personDao.save(p);
-		Person userFetched = personService.findPerson(p.getId(), account.getId(), user); 
+		Person userFetched = personService.findPersonInAccount(p.getId(), account.getId(), user); 
 		
 		assert "username".equals(userFetched.getUsername());
 		assert account.getId().equals(userFetched.getAccount().getId());
+	}
+	
+	@Test
+	public void findPersonInApplication() {
+		User user = this.setUpUser();
+		
+		Application app = new Application();
+		applicationDao.save(app);
+		
+		Account account = new Account("test", app);
+		accountDao.save(account);
+		
+		Person p = new Person(account, user.getUserId(), "username", "email", "family_name", "given_name", "OWNER");
+		personDao.save(p);
+
+		Person pFetched = personAppDao.twoFilterAncestorQuery("userId", user.getUserId(), "userType", "OWNER", app);
+		
+		
+		assert "username".equals(pFetched.getUsername());
+		assert account.getId().equals(pFetched.getAccount().getId());
+	}
+	
+	
+	@ApiMethod(name = "calendar.findPersonInApplication", path="calendar.findPersonInApplication", httpMethod = "post")
+	public Person findPersonInApplication (
+			@Named("person") Long personId,
+			@Named("account") Long accountId,
+			@Named("user") String userId,
+			@Named("application") Long applicationId, 
+			User user) {
+		Person p = null;
+		if(user != null) { 
+			
+    		// TODO THROW UNAUTHORIZED EXCEPTION
+    		if (aclService.allowViewAll(accountId, permission.toString(), user).get(0)) {
+    			Application application = applicationDao.retrieve(applicationId);
+    			p = personAppDao.twoFilterAncestorQuery("userId", userId, "userType", "OWNER", application);
+    		}
+		}
+		return p;
 	}
 	
 	@Test

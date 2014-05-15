@@ -23,7 +23,7 @@ public class Account   {
 	@Getter @Setter
 	@Id Long id;
 	
-/*	@Parent
+	@Parent
 	@Load
     @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
     private Ref<Application> applicationRef;
@@ -36,7 +36,7 @@ public class Account   {
 	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
     public void setApplication(Application application) { 
     	applicationRef = Ref.create(application); 
-    }*/
+    }
 
 	@Getter @Setter
 	private String name;
@@ -54,7 +54,13 @@ public class Account   {
 		this.name = name;
 		this.accountSettings = new AccountSettings();
 		dateCreated = new Date();
-		//this.setApplication(app);
+	}
+	
+	public Account(String name, Application app) {
+		this.name = name;
+		this.accountSettings = new AccountSettings();
+		dateCreated = new Date();
+		this.setApplication(app);
 	}
 	
 	public String toString() {

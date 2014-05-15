@@ -49,7 +49,7 @@ public class TestBase {
 	
 	public PersonService personService = new PersonService();
 	public ChildBaseDao<Person, Account> personDao = new ChildBaseDao<Person, Account>(Person.class, Account.class);
-		
+	public ChildBaseDao<Person, Application> personAppDao = new ChildBaseDao<Person, Application>(Person.class, Application.class);	
 	public BaseDao<User> userTestDao = new BaseDao<User>(User.class);
 
 

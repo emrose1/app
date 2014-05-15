@@ -3,6 +3,8 @@ import static com.studio.bookings.util.OfyService.ofy;
 
 import java.util.List;
 
+import com.studio.bookings.entity.Application;
+
 //http://stackoverflow.com/questions/21036934/objectify-the-list-from-query-result-contains-null
 
 public class ChildBaseDao<T, S> extends BaseDao<T> {
@@ -39,4 +41,5 @@ public class ChildBaseDao<T, S> extends BaseDao<T> {
 	public void deleteAncestors(List<Long> aclIds, S e) {
 		ofy().delete().type(t).parent(e).ids(aclIds);
 	}
+
 }

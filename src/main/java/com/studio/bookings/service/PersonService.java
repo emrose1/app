@@ -11,15 +11,13 @@ import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.Named;
 import com.google.appengine.api.users.User;
-import com.studio.bookings.entity.AccessControlList;
 import com.studio.bookings.entity.Account;
-import com.studio.bookings.entity.Calendar;
+import com.studio.bookings.entity.Application;
 import com.studio.bookings.entity.Person;
 import com.studio.bookings.entity.UserSession;
 import com.studio.bookings.enums.Permission;
 import com.studio.bookings.enums.UserType;
 import com.studio.bookings.util.Constants;
-import com.studio.bookings.util.LoadDummyData;
 
 @Api(
 	    name = "booking",
@@ -56,7 +54,7 @@ public class PersonService extends BaseService {
 	}
 	
 	@ApiMethod(name = "calendar.findPerson", path="calendar.findPerson", httpMethod = "post")
-	public Person findPerson(
+	public Person findPersonInAccount (
 			@Named("person") Long personId, 
 			@Named("account") Long accountId, 
 			User user) {
@@ -71,6 +69,25 @@ public class PersonService extends BaseService {
 		return p;
 	}
 
+	@ApiMethod(name = "calendar.findPersonInApplication", path="calendar.findPersonInApplication", httpMethod = "post")
+	public Person findPersonInApplication (
+			@Named("person") Long personId,
+			@Named("account") Long accountId,
+			@Named("user") String userId,
+			@Named("application") Long applicationId, 
+			User user) {
+		Person p = null;
+		if(user != null) { 
+			
+    		// TODO THROW UNAUTHORIZED EXCEPTION
+    		if (aclService.allowViewAll(accountId, permission.toString(), user).get(0)) {
+    			Application application = applicationDao.retrieve(applicationId);
+    			p = personAppDao.twoFilterAncestorQuery("userId", userId, "userType", "OWNER", application);
+    		}
+		}
+		return p;
+	}
+	
 	@ApiMethod(name = "calendar.listPersons", path="calendar.listPersons", httpMethod = "get")
 	public List<Person> listPersons (
 			@Named("account") Long accountId,
