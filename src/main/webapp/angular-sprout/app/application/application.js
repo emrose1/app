@@ -27,7 +27,7 @@ angular.module('application', [
 
 .config(function($stateProvider, $urlRouterProvider, USER_ROLES) {
 
-    $urlRouterProvider.otherwise( '/login' );
+    $urlRouterProvider.otherwise( '/accounts' );
 
     $stateProvider
         .state('loading', {
@@ -71,7 +71,7 @@ angular.module('application', [
         ;
 })
 
-.run(function ($state, $rootScope, AUTH_EVENTS, auth, $window, $location, alerts) {
+.run(function ($state, $rootScope, AUTH_EVENTS, auth, session, $window, $location, alerts) {
     $rootScope.$on('$stateChangeStart', function (event, next) {
         if(next.data && next.data.authorizedRoles) {
             var authorizedRoles = next.data.authorizedRoles;
@@ -104,8 +104,17 @@ angular.module('application', [
                 $rootScope.$broadcast('EventLoaded');
                 var request = gapi.client.booking.calendar.dummyUsers();
                 request.execute(
+
                     function (resp) {
                         console.log(resp);
+                        if(resp.items.length > 0) {
+                            console.log('dummy user response');
+                            console.log(resp);
+                            console.log(resp.items[0]);
+                            console.log(resp.items[0].id);
+                            session.setAccount(resp.items[0].id);
+                            $rootScope.$broadcast('AccountLoaded');
+                        }
                     }
                 );
             }

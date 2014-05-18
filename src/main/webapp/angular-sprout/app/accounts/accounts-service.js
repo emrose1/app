@@ -1,12 +1,15 @@
-Application.Services.service('accountService', function ($q) {
+Application.Services.service('accountService', function ($q, session) {
 
-	this.listAccounts = function($scope){
+	this.list = function($scope){
         var deferred = $q.defer();
 
-        var request = gapi.client.booking.account.listAccounts();
+        console.log(session.accountId);
+
+        var request = gapi.client.booking.account.listAccounts({'account' : session.accountId.toString()});
+        console.log(session.accountId);
 
         request.execute(function (resp) {
-
+            console.log(resp);
             if (resp && resp.items) {
                 console.log(resp);
                 deferred.resolve(resp);

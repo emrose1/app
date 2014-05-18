@@ -38,6 +38,12 @@ Application.Services.service('auth', function (session, $q, AUTH_EVENTS) {
 
  })
 .service('session', function () {
+
+    this.setAccount = function (accountId) {
+        console.log('creating account session');
+        console.log(accountId);
+        this.accountId = accountId;
+    };
     this.create = function (userId, userRole) {
         console.log('creating session');
         console.log(userId);

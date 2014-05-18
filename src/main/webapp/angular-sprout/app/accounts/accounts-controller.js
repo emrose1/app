@@ -1,22 +1,28 @@
 
-Application.Controllers.controller( 'accountsController', ['$scope', 'alerts', 'accountService',
-    function ($scope,  alerts, accountService) {
+Application.Controllers.controller( 'accountsController', ['$rootScope', '$scope', 'alerts', 'accountService',
+    function ($rootScope, $scope,  alerts, accountService) {
 
-    accountService.listAccounts()
-    .then(function (data) {
-        alerts.clear();
-        console.log(data.items);
-        $scope.accounts = data.items;
+    console.log('listing accounts');
 
-    }, function (reason) {
-        alerts.setAlert({
-            'alertMessage': "Server Error can't retrieve accounts",
-            'alertType': 'alert-danger'});
-    });
+    var listAccounts = function(){
+        accountService.list()
+        .then(function (data) {
+            alerts.clear();
+            console.log(data.items);
+            $scope.accounts = data.items;
 
-    $scope.loadAccount = function(){
-        console.log($scope.accountList.id);
+        }, function (reason) {
+            alerts.setAlert({
+                'alertMessage': "Server Error can't retrieve accounts",
+                'alertType': 'alert-danger'});
+        });
+
+        $scope.loadAccount = function(){
+            console.log($scope.accountList.id);
+        };
     };
+
+    $rootScope.$on('AccountLoaded', listAccounts);
 
 }])
 

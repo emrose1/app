@@ -1,32 +1,14 @@
 [
 	{
-		"id" : "about",
-		"name" : "about",
-		"description" : "item 1 details",
-		"timestamp" : "1349539521000"
+		"id" : "item_1",
+		"name" : "item 1",
+		"description" : "item 1 details",	
+		"timestamp" : "1349539521000"	
 	},
 	{
-		"id" : "error",
-		"name" : "error",
+		"id" : "item_2",
+		"name" : "item 2",
 		"description" : "item 2 details",
-		"timestamp" : "1349651343000"
-	},
-	{
-		"id" : "details",
-		"name" : "details",
-		"description" : "item 2 details",
-		"timestamp" : "1349651343000"
-	},
-	{
-		"id" : "login",
-		"name" : "login",
-		"description" : "login details",
-		"timestamp" : "1349651343000"
-	},
-	{
-		"id" : "accounts",
-		"name" : "accounts",
-		"description" : "accounts list",
-		"timestamp" : "1349651343000"
+		"timestamp" : "1349651343000"	
 	}
 ]

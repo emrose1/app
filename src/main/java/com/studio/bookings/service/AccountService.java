@@ -68,11 +68,11 @@ public class AccountService extends BaseService {
 	@ApiMethod(name = "account.listAccounts", path="calendar.listAccounts", httpMethod = "get")
 	public List<Account> listAccounts(@Named("account") Long accountId, User user) {
 		// must be superadmin 
-		if (user != null && aclService.allowViewAll(accountId, permission.toString(), user).get(0)) {
+		//if (user != null && aclService.allowViewAll(accountId, permission.toString(), user).get(0)) {
 			return accountDao.list();
-		} else {
-			return null;
-		}
+		//} else {
+			//return null;
+		//}
 	}
 	
 	@ApiMethod(name = "account.updateAccount", path="calendar.updateAccount", httpMethod = "get")
