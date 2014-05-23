@@ -6,6 +6,10 @@ import java.util.List;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.Named;
+import com.google.appengine.api.oauth.OAuthRequestException;
+import com.google.appengine.api.oauth.OAuthService;
+import com.google.appengine.api.oauth.OAuthServiceFactory;
+import com.google.appengine.api.users.User;
 import com.studio.bookings.entity.AccessControlList;
 import com.studio.bookings.entity.Account;
 import com.studio.bookings.entity.Application;
@@ -39,7 +43,7 @@ public class DummySetupService  extends BaseService {
 	
 	public void setUpPerson(
 			@Named("username") String username, 
-			@Named("user") Integer userId, 
+			@Named("userId") String userId, 
 			Account account){
 	
 		List<String> userTypeList = new ArrayList<String>();
@@ -49,8 +53,8 @@ public class DummySetupService  extends BaseService {
 		userTypeList.add("INSTRUCTOR");
 		userTypeList.add("ATTENDEE");
 
-		Person p = new Person(account, userId.toString(), username, "email", 
-	    		"family_name", "given_name", userTypeList.get(0));
+		Person p = new Person(account, userId, username, "email", 
+	    		"family_name", "given_name", "SUPERADMIN");
 		personDao.save(p);
 	}
 	
@@ -81,12 +85,50 @@ public class DummySetupService  extends BaseService {
 		}
 	}
 	
+	public User setUpUser() {
+		OAuthService oauth = OAuthServiceFactory.getOAuthService();
+		User user = null;
+		try {
+			user = oauth.getCurrentUser();
+		} catch (OAuthRequestException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return user;
+	}
+	
+	public void setUp(Account userAccount, User user) {
+		AccessControlList acl = new AccessControlList(permission.toString(), "true", "true", "true", "true", "true", "SUPERADMIN");
+		aclDao.save(acl);
+		Person p = new Person(userAccount, user.getUserId(), "test1", "email", "family_name", "given_name", "SUPERADMIN");
+		personDao.save(p);
+	}
+	
+	
 	@ApiMethod(name = "calendar.dummyUsers", path="calendar.dummyUsers", httpMethod = "get")
 	public List<Account> dummyUsers() {
 		
 		setUpAcl();
+	
+		// from test
+		/*Account userAccount = new Account();
+		Long userAccountId = accountDao.save(userAccount);
+		User user = this.setUpUser();
+		this.setUp(userAccount, user);
 		
+		Account account1 = new Account("Account 1");
+		Account account2 = new Account("Account 2");
+				
 		List<Account> accountList = new ArrayList<Account>();
+		accountList.add(userAccount);
+		accountList.add(account1);
+		accountList.add(account2);
+		
+		accountDao.save(accountList);
+		//
+*/		
+		
+		List<Account> accountList2 = new ArrayList<Account>();
 		List<String> accounts = new ArrayList<String>();
 		List<String> persons = new ArrayList<String>();
 		
@@ -100,15 +142,17 @@ public class DummySetupService  extends BaseService {
 		
 		int index = 0;
 		for (String accountName : accounts) {
-			if(accountDao.list().size() == 0) {
-				Account account = setUpAccount(accountName);
-				accountList.add(account);
+			while(accountDao.list().size() < 3) {
+				Account account = new Account(accountName);
+				accountDao.save(account);
+				accountList2.add(account);
 				for (String personName : persons) {
-					setUpPerson(personName, index++, account);
+					setUpPerson(personName, "105854312734748005380", account);
+					setUpPerson(personName, "0", account);
 				}
 			}
 		}
-		return accountList;
+		return accountList2;
 	}
 	
 }

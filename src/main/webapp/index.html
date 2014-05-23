@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en" ng-app="application">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Web Application</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+        <link href="http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic" rel="stylesheet" type="text/css">
+        <!-- needs images, font... therefore can not be part of ui.css -->
+        <link rel="stylesheet" href="../lib/font-awesome/css/font-awesome.min.css">
+
+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="application/css/application.css"/>
+        <link rel="stylesheet" href="application/css/main.css"/>
+        <link rel="stylesheet" href="application/css/ui.css"/>
+        <link rel="stylesheet" href="login/login.css"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+        <style type="text/css">
+            .progress-backend-ready {
+                width:50%;
+                margin: 50px auto;
+            }
+        </style>
+    </head>
+    <body>
+
+        <div ng-controller="application">
+
+            <div ng-hide="" data-ng-cloak="">
+                <section ng-include=" 'header/header-partial.html' " id="header" class="top-header"></section>
+                <aside id="nav-container">
+                    <ng-include src="'menu/menu-partial.html'"/>
+                </aside>
+            </div>
+
+            <div class="view-container" id="content">
+
+                <div class="progress progress-striped progress-backend-ready" ng-if="!backendReady">
+                    <div class="progress-bar progress-bar-info" role="progressbar"
+                        aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                        <span class="sr-only"></span>
+                    </div>
+                </div>
+                <div progress-bar progressinfo="progressbarService.loadingProgress"></div>
+                <div alert-modal alertinfo="alerts.alertMessage"></div>
+
+                <a ng-if="signin" class="btn" ng-click="authenticate()">Sign out</a>
+                <a ng-if="!signin" class="btn" ng-click="authenticate()">Sign in</a>
+
+                <section ui-view  ng-if="backendReady" class="animate-fade-up"></section>
+
+            </div>
+
+        </div>
+    <!-- In production use:
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular.min.js"></script>
+    -->
+    <script src="lib/bower_components/angular/angular.js"></script>
+    <script src="lib/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+    <script src="lib/localization/localize.js"></script>
+    <script src="lib/i18n/resources-locale_en-US.js"></script>
+
+    <script src="application/application.js"></script>
+    <script src="application/configuration-constants.js"></script>
+
+    <script src="common/auth-service/auth-service.js"></script>
+
+    <script src="accounts/accounts-service.js"></script>
+    <script src="accounts/accounts-controller.js"></script>
+    <script src="about/about-controller.js"></script>
+
+    <script src="alerts/alert-directive.js"></script>
+    <script src="alerts/alert-service.js"></script>
+
+    <script src="progressbar/progressbar-directive.js"></script>
+    <script src="progressbar/progressbar-service.js"></script>
+
+    <script src="menu/menu-service.js"></script>
+    <script src="application/application-controller.js"></script>
+    <script src="login/login-controller.js"></script>
+    <script src="details/details-controller.js"></script>
+    <script src="menu/menu-controller.js"></script>
+    <script src="menu/menu-item-directive.js"></script>
+    <script src="date-time/to-date-string-filter.js"></script>
+
+
+
+
+
+
+    <script>
+        var init = function() {
+            console.log('bookings init called');
+            window.initialise();
+        };
+    </script>
+    <script src="https://apis.google.com/js/client.js?onload=init"></script>
+
+    </body>
+</html>

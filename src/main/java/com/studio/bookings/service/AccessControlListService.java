@@ -7,6 +7,7 @@ import javax.inject.Named;
 
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
+import com.google.api.server.spi.response.NotFoundException;
 import com.google.appengine.api.users.User;
 import com.studio.bookings.entity.AccessControlList;
 import com.studio.bookings.entity.Account;
@@ -127,50 +128,94 @@ public class AccessControlListService extends BaseService {
 		return aclDao.twoFilterQuery("userType", userType.toString(), "permission", permission.toString());
     }
 	
-	private UserType getUserType(Account account, User user) {
-    	return personDao.oneFilterAncestorQuery("userId", user.getUserId(), account).getUserType();
+	private UserType getUserType(Account account, User user) throws Exception {
+    	UserType userType = personDao.oneFilterAncestorQuery("userId", user.getUserId(), account).getUserType();
+    	if (userType == null) {
+    		throw new NotFoundException("User doesn't have a user type for this account");
+    	}
+    	return userType;
 	}
 
 	@ApiMethod(name = "calendar.isCanView", path="calendar.isCanView", httpMethod = "get")
-    public List<Boolean> allowView(@Named("account") Long accountId, @Named("permission") String permission, User user) {
+    public List<Boolean> allowView(
+    		@Named("account") Long accountId, 
+    		@Named("permission") String permission, 
+    		User user) {
     	Account accountFetched = accountDao.retrieve(accountId);
-    	UserType ut = this.getUserType(accountFetched, user);
+    	UserType ut = null;
+		try {
+			ut = this.getUserType(accountFetched, user);
+    	} catch (Exception e) {
+    		ut = UserType.ATTENDEE;
+    	}
     	List<Boolean> result = new ArrayList<Boolean>();
     	result.add(getByUserTypeAndPermission(ut, Permission.valueOf(permission)).getCanView());
         return result;
     }
 	
 	@ApiMethod(name = "calendar.isCanViewAll", path="calendar.isCanViewAll", httpMethod = "get")
-    public List<Boolean> allowViewAll(@Named("account") Long accountId, @Named("permission") String permission, User user) {
-    	Account accountFetched = accountDao.retrieve(accountId);
-    	UserType ut = this.getUserType(accountFetched, user);
+    public List<Boolean> allowViewAll(
+    		@Named("account") Long accountId, 
+    		@Named("permission") String permission, 
+    		User user) {
+		Account accountFetched = accountDao.retrieve(accountId);
+		UserType ut = null;
+		try {
+			ut = this.getUserType(accountFetched, user);
+    	} catch (Exception e) {
+    		ut = UserType.ATTENDEE;
+    	}
     	List<Boolean> result = new ArrayList<Boolean>();
         result.add(this.getByUserTypeAndPermission(ut, Permission.valueOf(permission)).getCanViewAll());
         return result;
     }
 	
 	@ApiMethod(name = "calendar.isCanInsert", path="calendar.isCanInsert", httpMethod = "get")
-    public List<Boolean> allowInsert(@Named("account") Long accountId, @Named("permission") String permission, User user) {
-    	Account accountFetched = accountDao.retrieve(accountId);
-    	UserType ut = this.getUserType(accountFetched, user);
+    public List<Boolean> allowInsert(
+    		@Named("account") Long accountId, 
+    		@Named("permission") String permission, 
+    		User user) {
+		Account accountFetched = accountDao.retrieve(accountId);
+		UserType ut = null;
+		try {
+			ut = this.getUserType(accountFetched, user);
+    	} catch (Exception e) {
+    		ut = UserType.ATTENDEE;
+    	}
     	List<Boolean> result = new ArrayList<Boolean>();
     	result.add(this.getByUserTypeAndPermission(ut, Permission.valueOf(permission)).getCanInsert());
         return result;
     }
 
 	@ApiMethod(name = "calendar.isCanUpdate", path="calendar.isCanUpdate", httpMethod = "get")
-    public List<Boolean> allowUpdate(@Named("account") Long accountId, @Named("permission") String permission, User user)  {
+    public List<Boolean> allowUpdate(
+    		@Named("account") Long accountId, 
+    		@Named("permission") String permission, 
+    		User user)  {
     	Account accountFetched = accountDao.retrieve(accountId);
-    	UserType ut = this.getUserType(accountFetched, user);
+		UserType ut = null;
+		try {
+			ut = this.getUserType(accountFetched, user);
+    	} catch (Exception e) {
+    		ut = UserType.ATTENDEE;
+    	}
     	List<Boolean> result = new ArrayList<Boolean>();
     	result.add(this.getByUserTypeAndPermission(ut, Permission.valueOf(permission)).getCanUpdate());
     	return result;
     }
 
 	@ApiMethod(name = "calendar.isCanDelete", path="calendar.isCanDelete", httpMethod = "get")
-    public List<Boolean> allowDelete(@Named("account") Long accountId, @Named("permission") String permission, User user)  {
-    	Account accountFetched = accountDao.retrieve(accountId);
-    	UserType ut = this.getUserType(accountFetched, user);
+    public List<Boolean> allowDelete(
+    		@Named("account") Long accountId, 
+    		@Named("permission") String permission, 
+    		User user)  {
+		Account accountFetched = accountDao.retrieve(accountId);
+		UserType ut = null;
+		try {
+			ut = this.getUserType(accountFetched, user);
+    	} catch (Exception e) {
+    		ut = UserType.ATTENDEE;
+    	}
     	List<Boolean> result = new ArrayList<Boolean>();
     	result.add(this.getByUserTypeAndPermission(ut, Permission.valueOf(permission)).getCanDelete());
     	return result;

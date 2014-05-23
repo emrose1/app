@@ -1,14 +1,13 @@
 package com.studio.bookings.service;
 
+import java.util.ArrayList;
 import java.util.List;
-import static com.studio.bookings.util.OfyService.ofy;
 
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.Named;
 import com.google.appengine.api.users.User;
 import com.studio.bookings.entity.Account;
-import com.studio.bookings.entity.Application;
 import com.studio.bookings.entity.Calendar;
 import com.studio.bookings.entity.Person;
 import com.studio.bookings.enums.Permission;
@@ -65,8 +64,35 @@ public class AccountService extends BaseService {
 		return accountFetched;
 	}
 	
-	@ApiMethod(name = "account.listAccounts", path="calendar.listAccounts", httpMethod = "get")
-	public List<Account> listAccounts(@Named("account") Long accountId, User user) {
+	@ApiMethod(name = "account.listAccounts", path="account.listAccounts", httpMethod = "get")
+	public List<Account> listAccounts(
+			@Named("account") Long accountId, 
+			User user) {
+		// must be superadmin
+		List<Account> aclList = null;
+		if (user != null) {
+	 		if (aclService.allowViewAll(new Long(accountId), permission.toString(), user).get(0)) {
+	 			aclList = accountDao.list();
+			} 
+		}
+ 		return aclList;
+	}
+	
+	@ApiMethod(name = "account.listTestUser", path="account.listTestUser", httpMethod = "get")
+	public List<String> listTestUser(User user) {
+		// must be superadmin 
+		List<String> str = new ArrayList<String>();
+ 		if (user != null ) {//&& aclService.allowViewAll(accountId, permission.toString(), user).get(0)) {
+ 			str.add("user not null" + user.getEmail() + " " + user.getUserId());
+		} else {
+			str.add("user null" + user.getEmail() + " " + user.getUserId());
+		}
+ 		return str;
+	}
+	
+
+	@ApiMethod(name = "account.listAccountsWithoutUser", path="account.listAccountsWithoutUser", httpMethod = "get")
+	public List<Account> listTestAccountsWithoutUser() {
 		// must be superadmin 
 		//if (user != null && aclService.allowViewAll(accountId, permission.toString(), user).get(0)) {
 			return accountDao.list();

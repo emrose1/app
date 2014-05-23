@@ -68,7 +68,7 @@ public class AccessControlListServiceTest extends TestBase {
 	}
 	
 	@Test
-	public void findAccessControlList() {
+	public void findAccessControlList() throws Exception {
 		
 		Account account = new Account();
 		accountDao.save(account);
@@ -143,7 +143,7 @@ public class AccessControlListServiceTest extends TestBase {
 	}
 	
 	@Test
-	public void listAccessControlList() {
+	public void listAccessControlList() throws Exception {
 		
 		Account account = new Account();
 		accountDao.save(account);
@@ -174,7 +174,7 @@ public class AccessControlListServiceTest extends TestBase {
 	}
 	
 	@Test
-	public void allowViewAccountSuperadmin() {
+	public void allowViewAccountSuperadmin() throws Exception {
 		
 		Account account = new Account();
 		accountDao.save(account);
@@ -194,7 +194,7 @@ public class AccessControlListServiceTest extends TestBase {
     }
 	
 	@Test
-	public void allowViewCalendarAdmin() {
+	public void allowViewCalendarAdmin() throws Exception {
 		
 		Account account = new Account();
 		accountDao.save(account);
@@ -214,7 +214,7 @@ public class AccessControlListServiceTest extends TestBase {
 	}
 	
 	@Test
-	public void allowViewEventOwner() {
+	public void allowViewEventOwner() throws Exception {
 		
 		Account account = new Account();
 		accountDao.save(account);
@@ -236,7 +236,7 @@ public class AccessControlListServiceTest extends TestBase {
 	
 	
 	@Test
-	public void allowViewBookingInstructor() {
+	public void allowViewBookingInstructor() throws Exception {
 		
 		Account account = new Account();
 		accountDao.save(account);
@@ -257,7 +257,7 @@ public class AccessControlListServiceTest extends TestBase {
 	
 	
 	@Test
-	public void allowViewUserAttendee () {
+	public void allowViewUserAttendee () throws Exception {
 	
 		Account account = new Account();
 		accountDao.save(account);
@@ -275,7 +275,7 @@ public class AccessControlListServiceTest extends TestBase {
 	}
 			
 	@Test
-	public void allowViewAclAttendee () {
+	public void allowViewAclAttendee () throws Exception {
 		
 		Account account = new Account();
 		accountDao.save(account);
@@ -293,7 +293,7 @@ public class AccessControlListServiceTest extends TestBase {
 	}
 	
 	@Test
-	public void allowViewAllAclAttendee () {
+	public void allowViewAllAclAttendee () throws Exception {
 		
 		Account account = new Account();
 		accountDao.save(account);
