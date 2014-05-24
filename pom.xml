@@ -13,6 +13,10 @@
         <appengine.target.version>1.9.4</appengine.target.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+    
+    <prerequisites>
+        <maven>3.1.0</maven>
+    </prerequisites>
 
     <dependencies>
         <!-- Compile/runtime dependencies -->
@@ -26,6 +30,12 @@
             <artifactId>appengine-endpoints</artifactId>
             <version>${appengine.target.version}</version>
         </dependency>
+        
+        <dependency>
+		    <groupId>org.apache.maven</groupId>
+		    <artifactId>maven-plugin-api</artifactId>
+		    <version>3.1.0</version>
+		</dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
@@ -128,16 +138,12 @@
                 <artifactId>appengine-maven-plugin</artifactId>
                 <version>${appengine.target.version}</version>
                 <configuration>
-                    <enableJarClasses>false</enableJarClasses>
-                    <!-- Comment in the below snippet to bind to all IPs instead of just localhost -->
-                    <!-- address>0.0.0.0</address>
-                    <port>8080</port -->
-                    <!-- Comment in the below snippet to enable local debugging with a remove debugger
-                         like those included with Eclipse or IntelliJ -->
-                    <!-- jvmFlags>
-                      <jvmFlag>-agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=n</jvmFlag>
-                    </jvmFlags -->
-                </configuration>
+                    <fullScanSeconds>1</fullScanSeconds>
+			        <jvmFlags>
+			            <jvmFlag>-Dappengine.fullscan.seconds=-1</jvmFlag>
+			        </jvmFlags>
+			        <disableUpdateCheck>true</disableUpdateCheck>
+			    </configuration>
                 <executions>
                     <execution>
                         <goals>

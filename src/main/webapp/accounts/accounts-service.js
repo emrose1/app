@@ -1,21 +1,16 @@
-Application.Services.service('accountService', function ($q, session) {
+Application.Services.service('accountService', ['$q', 'sessionService', function ($q, session) {
 
 	this.list = function(account){
         var deferred = $q.defer();
-        console.log(account);
         var request = gapi.client.booking.account.listAccounts({'account' : account.id });
 
         request.execute(function (resp) {
-            console.log(resp);
             if (resp && resp.items) {
-                console.log(resp);
                 deferred.resolve(resp);
             } else {
-                console.log(resp);
                 deferred.reject('error');
             }
         });
-
         return deferred.promise;
     };
 
@@ -24,12 +19,9 @@ Application.Services.service('accountService', function ($q, session) {
         var request = gapi.client.booking.account.listAccountsWithoutUser();
 
         request.execute(function (resp) {
-            console.log(resp);
             if (resp && resp.items) {
-                console.log(resp);
                 deferred.resolve(resp);
             } else {
-                console.log(resp);
                 deferred.reject('error');
             }
         });
@@ -37,4 +29,4 @@ Application.Services.service('accountService', function ($q, session) {
         return deferred.promise;
     };
 
-});
+}]);

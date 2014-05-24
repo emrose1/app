@@ -16,8 +16,7 @@ import com.studio.bookings.entity.Person;
 //http://stackoverflow.com/questions/21036934/objectify-the-list-from-query-result-contains-null
 
 public class BaseDao<T> {
-	
-	
+
 	static{
 		ObjectifyService.register(AccessControlList.class);
 		ObjectifyService.register(Account.class);

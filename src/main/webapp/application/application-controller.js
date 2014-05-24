@@ -6,7 +6,7 @@ Application.Controllers.controller( 'application',[
     'auth',
     'USER_ROLES',
     'AUTH_EVENTS',
-    'session',
+    'sessionService',
     'alerts',
     'progressbarService',
     'accountService',
@@ -29,16 +29,13 @@ Application.Controllers.controller( 'application',[
      * Presents the user with the authorization popup.
      */
 
-    $scope.signin = false;
+    $scope.signedin = false;
+
 
     $scope.authenticate = function() {
         console.log("authenticate");
-        //if (!auth.isAuthenticated) {
-            auth.signin(false, auth.userAuthed);
-            $scope.signin = true;
-        //} else {
-          //  $scope.signin = false;
-        //}
+        auth.authenticate(false);
+        //$rootScope.$broadcast(AUTH_EVENTS.loginFailed);
     };
 
     $scope.logout = function () {

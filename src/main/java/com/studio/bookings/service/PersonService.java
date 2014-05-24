@@ -32,6 +32,25 @@ public class PersonService extends BaseService {
 	public static AccessControlListService aclService = new AccessControlListService();
 	static Permission permission = Permission.USER;
 	
+	@ApiMethod(name = "calendar.authorizePerson", path="calendar.authorizePerson", httpMethod = "post")
+	public Person authorizePerson( 
+			@Named("name") String name,
+			@Named("email") String email,
+			@Named("account") String accountId,
+			User user) {
+		Person p = null;
+		if(user != null) { 
+			Account account =  accountDao.retrieve(new Long(accountId));
+			p = personDao.oneFilterAncestorQuery("userId", user.getUserId(), account);
+    		// TODO THROW UNAUTHORIZED EXCEPTION
+			if(p == null) {
+				p = new Person( account, user.getUserId(), name, email, "", "", "ATTENDEE");
+				personDao.save(p);
+			}
+		}
+		return p; 
+	}
+	
 	@ApiMethod(name = "calendar.addPerson", path="calendar.addPerson", httpMethod = "post")
 	public Person insertPerson( 
 			@Named("username") String username,
@@ -61,10 +80,10 @@ public class PersonService extends BaseService {
 		Person p = null;
 		if(user != null) { 
     		// TODO THROW UNAUTHORIZED EXCEPTION
-    		if (aclService.allowView(accountId, permission.toString(), user).get(0)) {
+    		//if (aclService.allowView(accountId, permission.toString(), user).get(0)) {
 				Account account = accountDao.retrieve(accountId);
 				p = personDao.retrieveAncestor(personId, account);
-    		}
+    		//}
 		}
 		return p;
 	}

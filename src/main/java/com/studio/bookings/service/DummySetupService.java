@@ -142,7 +142,7 @@ public class DummySetupService  extends BaseService {
 		
 		int index = 0;
 		for (String accountName : accounts) {
-			while(accountDao.list().size() < 3) {
+			if (accountDao.list().size() < 3) {
 				Account account = new Account(accountName);
 				accountDao.save(account);
 				accountList2.add(account);

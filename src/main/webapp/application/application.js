@@ -1,6 +1,17 @@
 var gapi = gapi || {};
 gapi.client = gapi.client || {};
 
+
+// Utility functions
+Storage.prototype.setObject = function(key, value) {
+    this.setItem(key, JSON.stringify(value));
+};
+
+Storage.prototype.getObject = function(key) {
+    var value = this.getItem(key);
+    return value && JSON.parse(value);
+};
+
 /**
 * The application file bootstraps the angular app by  initializing the main module and
 * creating namespaces and moduled for controllers, filters, services, and directives.
@@ -71,7 +82,7 @@ angular.module('application', [
         ;
 })
 
-.run(function ($state, $rootScope, AUTH_EVENTS, auth, session, $window, $location, alerts) {
+.run(function ($state, $rootScope, AUTH_EVENTS, auth, sessionService, $window, $location, alerts) {
     $rootScope.$on('$stateChangeStart', function (event, next) {
         if(next.data && next.data.authorizedRoles) {
             var authorizedRoles = next.data.authorizedRoles;
@@ -101,21 +112,24 @@ angular.module('application', [
 
         var callback = function() {
             if(--apisToLoad === 0) {
+
+                // if has userid cookie, might be page refresh so check if authenticated
+                console.log("reauthenticate");
+                auth.authenticate(true);
+
                 $rootScope.$broadcast('EventLoaded');
+
+                // setup dummy users
                 var request = gapi.client.booking.calendar.dummyUsers();
                 request.execute(
-
                     function (resp) {
                         console.log(resp);
                         if(resp.items.length > 0) {
-                            console.log('dummy user response');
-                            console.log(resp);
-                            console.log(resp.items[0]);
-                            console.log(resp.items[0].id);
-                            session.setAccount(resp.items[0].id);
+                            sessionService.setAccount(resp.items[0].id);
                         }
                     }
                 );
+
             }
         };
         gapi.client.load('booking', 'v1', callback, 'http://localhost:8080/_ah/api');

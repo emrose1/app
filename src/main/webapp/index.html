@@ -1,4 +1,4 @@
-<!doctype html>
+^<!doctype html>
 <html lang="en" ng-app="application">
     <head>
         <meta charset="utf-8">
@@ -9,7 +9,7 @@
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
         <link href="http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic" rel="stylesheet" type="text/css">
         <!-- needs images, font... therefore can not be part of ui.css -->
-        <link rel="stylesheet" href="../lib/font-awesome/css/font-awesome.min.css">
+        <link rel="stylesheet" href="lib/font-awesome/css/font-awesome.min.css">
 
         <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="application/css/application.css"/>
@@ -48,8 +48,8 @@
                 <div progress-bar progressinfo="progressbarService.loadingProgress"></div>
                 <div alert-modal alertinfo="alerts.alertMessage"></div>
 
-                <a ng-if="signin" class="btn" ng-click="authenticate()">Sign out</a>
-                <a ng-if="!signin" class="btn" ng-click="authenticate()">Sign in</a>
+                <a ng-if="signedin" class="btn" ng-click="authenticate()">Sign out</a>
+                <a ng-if="!signedin" class="btn" ng-click="authenticate()">Sign in</a>
 
                 <section ui-view  ng-if="backendReady" class="animate-fade-up"></section>
 
@@ -67,7 +67,8 @@
     <script src="application/application.js"></script>
     <script src="application/configuration-constants.js"></script>
 
-    <script src="common/auth-service/auth-service.js"></script>
+    <script src="authentication/session-service.js"></script>
+    <script src="authentication/auth-service.js"></script>
 
     <script src="accounts/accounts-service.js"></script>
     <script src="accounts/accounts-controller.js"></script>
@@ -86,11 +87,6 @@
     <script src="menu/menu-controller.js"></script>
     <script src="menu/menu-item-directive.js"></script>
     <script src="date-time/to-date-string-filter.js"></script>
-
-
-
-
-
 
     <script>
         var init = function() {
