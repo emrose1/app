@@ -1,8 +1,8 @@
-Application.Services.service('sessionService', ['$q', 'alerts', function ($q, alerts) {
+Application.Services.service('sessionService', ['$q', 'alerts', '$rootScope', function ($q, alerts, $rootScope) {
 
 	this.authorizeUser = function (data) {
 		var deferred = $q.defer();
-
+        console.log(this.getAccount());
 		var message = {
 			"name" : data.name,
 			"email" : data.email,
@@ -14,17 +14,18 @@ Application.Services.service('sessionService', ['$q', 'alerts', function ($q, al
 				console.log(resp);
                 deferred.resolve(resp);
             } else {
+                console.log(resp);
                 deferred.reject('error');
             }
         });
         return deferred.promise;
 	};
 
-    this.setAccount = function (accountId) {
-        this.accountId = accountId;
+    this.setAccount = function (account) {
+        this.account = account;
     };
-    this.getAccount = function (accountId) {
-        return this.accountId;
+    this.getAccount = function () {
+        return this.account;
     };
     this.createUserDetails = function (data) {
 		this.authorizeUser(data)
@@ -32,11 +33,12 @@ Application.Services.service('sessionService', ['$q', 'alerts', function ($q, al
             alerts.clear();
             this.userName = data.username;
             this.userRole = data.userType;
+            $rootScope.$broadcast('EventLoaded');
         }, function (reason) {
             //$location.path('/home');
             //this.destroy();
             alerts.setAlert({
-                'alertMessage': "Sorry you could not be authenticated " + reason,
+                'alertMessage': "create user Sorry you could not be authenticated " + reason,
                 'alertType': 'alert-danger'});
         });
     };

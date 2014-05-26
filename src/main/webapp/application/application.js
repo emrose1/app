@@ -79,10 +79,15 @@ angular.module('application', [
             controller: 'accountsController',
             templateUrl: 'accounts/accounts-partial.html'
         })
+        .state('persons', {
+            url: '/persons',
+            controller: 'personsController',
+            templateUrl: 'persons/persons-partial.html'
+        })
         ;
 })
 
-.run(function ($state, $rootScope, AUTH_EVENTS, auth, sessionService, $window, $location, alerts) {
+.run(function ($state, $rootScope, AUTH_EVENTS, auth, sessionService, accountService, $window, $location, alerts) {
     $rootScope.$on('$stateChangeStart', function (event, next) {
         if(next.data && next.data.authorizedRoles) {
             var authorizedRoles = next.data.authorizedRoles;
@@ -113,23 +118,42 @@ angular.module('application', [
         var callback = function() {
             if(--apisToLoad === 0) {
 
-                // if has userid cookie, might be page refresh so check if authenticated
-                console.log("reauthenticate");
-                auth.authenticate(true);
 
-                $rootScope.$broadcast('EventLoaded');
 
                 // setup dummy users
                 var request = gapi.client.booking.calendar.dummyUsers();
                 request.execute(
                     function (resp) {
-                        console.log(resp);
+
+                        // Setting up newly loaded DB
                         if(resp.items.length > 0) {
-                            sessionService.setAccount(resp.items[0].id);
+                            console.log('dummies');
+                            console.log(resp);
+                            sessionService.setAccount(resp.items[0]);
+                            accountService.setAccounts(resp.items);
+                             //console.log('setting accounts');
+                            // TODO: detect existing session cookie
+                            // if has userid cookie, might be page refresh so check if authenticated
+                            auth.authenticate(true);
+                        } else {
+
+                            // Setting up user account from DB
+                            accountService.listWithoutUser()
+                            .then(function (data) {
+                                console.log('list accounts');
+                                console.log('data');
+                                console.log(data);
+                                sessionService.setAccount(data.items[0]);
+                                accountService.setAccounts(data.items);
+                                auth.authenticate(true);
+
+                            }, function (reason) {
+                                console.log(reason);
+                            });
                         }
+
                     }
                 );
-
             }
         };
         gapi.client.load('booking', 'v1', callback, 'http://localhost:8080/_ah/api');

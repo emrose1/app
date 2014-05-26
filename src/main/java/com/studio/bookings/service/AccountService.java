@@ -7,6 +7,8 @@ import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.Named;
 import com.google.appengine.api.users.User;
+import com.google.api.server.spi.response.UnauthorizedException;
+
 import com.studio.bookings.entity.Account;
 import com.studio.bookings.entity.Calendar;
 import com.studio.bookings.entity.Person;
@@ -103,8 +105,8 @@ public class AccountService extends BaseService {
 	
 	@ApiMethod(name = "account.updateAccount", path="calendar.updateAccount", httpMethod = "get")
 	public Account updateAccount(
-			@Named("account") Long accountId,
-			@Named("accountToUpdate") Long accountToUpdateId, 
+			@Named("account") String accountId,
+			@Named("accountToUpdate") String accountToUpdateId, 
 			@Named("name") String name, 
 			User user) {
 		Account accountFetched = null;
@@ -113,8 +115,8 @@ public class AccountService extends BaseService {
 		// check if user is owner of this account
 		// can be used by: owner, admin or superadmin
 		
-		if (user != null && aclService.allowUpdate(accountId, permission.toString(), user).get(0)) {
-			accountFetched = accountDao.retrieve(accountToUpdateId);
+		if (user != null && aclService.allowUpdate(Long.valueOf(accountId), permission.toString(), user).get(0)) {
+			accountFetched = accountDao.retrieve(Long.valueOf(accountToUpdateId));
 			accountFetched.setName(name);
 			accountDao.save(accountFetched);
 		}
@@ -123,12 +125,13 @@ public class AccountService extends BaseService {
 	
 	@ApiMethod(name = "account.deleteAccount", path="calendar.deleteAccount", httpMethod = "get")
 	public void deleteAccount(
-			@Named("account") Long accountId, 
-			@Named("accountDelete") Long accountToDeleteId, 
-			User user) {
-		// has to be superadmin
-		if (user != null && aclService.allowDelete(accountId, permission.toString(), user).get(0)) {
-			accountDao.delete(accountToDeleteId);
+			@Named("account") String accountId, 
+			@Named("accountDelete") String accountToDeleteId, 
+			User user) throws UnauthorizedException {
+		if (user != null && aclService.allowDelete(new Long(accountId), permission.toString(), user).get(0)) {
+ 			accountDao.delete(new Long(accountToDeleteId));
+ 		} else {
+			throw new UnauthorizedException("You are not authorized.");
 		}
 	}
 }

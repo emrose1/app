@@ -69,8 +69,8 @@ Application.Controllers.controller( 'application',[
     });
 
     var apiLoadedSuccess = function () {
+        console.log('event loaded');
         $scope.backendReady = true;
-        $scope.$apply();
     };
 
     $rootScope.$on('EventLoaded', apiLoadedSuccess);

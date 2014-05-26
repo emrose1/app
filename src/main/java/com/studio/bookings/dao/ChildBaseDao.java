@@ -38,8 +38,8 @@ public class ChildBaseDao<T, S> extends BaseDao<T> {
 	}
 	
 	
-	public void deleteAncestors(List<Long> aclIds, S e) {
-		ofy().delete().type(t).parent(e).ids(aclIds);
+	public void deleteAncestors(Long aclId, S e) {
+		ofy().delete().type(t).parent(e).id(aclId);
 	}
 
 }

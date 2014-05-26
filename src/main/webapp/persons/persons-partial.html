@@ -1,56 +1,42 @@
 
 <div class="page page-dashboard ng-scope">
 
-	<h1>ACOUNTS</h1>
-
-    <select ng-model="accountList" id="select-input" class="form-control" ng-change="loadAccount()"
--   ng-options="c.name for c in accounts"></select>
+	<h1>Persons</h1>
 
     <section>
-
-    <button ng-click="loadAccounts()" class="btn btn-danger">
-        <span  class="glyphicon glyphicon-remove-circle"></span>
-        List Accounts
-    </button>
         <div class="row">
             <div class="col-md-12">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                     	<strong>
                     		<span class="glyphicon glyphicon-th"></span>
-                    		<span data-i18n="Accounts">Accounts</span>
+                    		<span data-i18n="Accounts">Persons</span>
                     	</strong>
                     </div>
                     <table class="table">
                         <thead>
                             <tr>
-                                <th>Account</th>
-                                <th></th>
-                                <th></th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>User Type</th>
                                 <th></th>
                             </tr>
                         </thead>
-                        <tbody ng-repeat="account in accounts | orderBy:name">
+                        <tbody ng-repeat="person in persons | orderBy:username">
                             <tr>
-                                <td>{{account.name}}</td>
-                                <td></td>
+                                <td>{{person.username}}</td>
+                                <td>{{person.email}}</td>
+                                <td>{{person.userType}}</td>
                                 <td>
-                                    <button type="button" go-click="/accounts" class="btn btn-default">
+                                    <button type="button" go-click="/go/to/this" class="btn btn-default">
                                         <span  class="glyphicon glyphicon-pencil"></span>
                                         Edit
                                     </button>
                                 </td>
                                 <td>
-                                    <button ng-click="deleteAccount(account.id)" class="btn btn-danger">
+                                    <button ng-click="deletePerson(account.id)" class="btn btn-danger">
                                         <span  class="glyphicon glyphicon-remove-circle"></span>
                                         Delete
-                                    </button>
-                                </td>
-
-                                <td>
-                                    <button type="button" go-click="/persons" class="btn btn-default">
-                                        <span  class="glyphicon glyphicon-pencil"></span>
-                                        Persons
                                     </button>
                                 </td>
 

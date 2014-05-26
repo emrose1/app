@@ -147,8 +147,8 @@ public class DummySetupService  extends BaseService {
 				accountDao.save(account);
 				accountList2.add(account);
 				for (String personName : persons) {
-					setUpPerson(personName, "105854312734748005380", account);
-					setUpPerson(personName, "0", account);
+					setUpPerson(personName + " " +  account, "105854312734748005380", account);
+					setUpPerson(personName + " " +  account, "0", account);
 				}
 			}
 		}

@@ -50,6 +50,34 @@ public class PersonServiceTest extends TestBase  {
 		personDao.save(p);
 		return account;
 	}
+	
+	@Test
+	public void authorizePerson() {
+		
+		User user = this.setUpUser();
+		Account account = new Account();
+		accountDao.save(account);
+		AccessControlList acl = new AccessControlList(permission.toString(), "true", "true", "true", "true", "true", "SUPERADMIN");
+		aclDao.save(acl);
+
+		assert personDao.oneFilterAncestorQuery("userId", user.getUserId(), account) == null;
+		Person p = personService.authorizePerson("username", "email", account.getId().toString(), user);
+		Person userFetched = personService.findPersonInAccount(p.getId(), account.getId(), user); 
+		
+		UserType defaultUt = UserType.ATTENDEE;
+		UserType superUt = UserType.SUPERADMIN;
+		// NEW USER GET USERTYPE ATTENDEE
+		assert defaultUt.equals(userFetched.getUserType());
+		assert account.getId().equals(userFetched.getAccount().getId());
+		
+		// EXISTING USER KEEPS THEIR USERTYPE
+		assert personDao.oneFilterAncestorQuery("userId", user.getUserId(), account) != null;
+		userFetched.setUserType(superUt);
+		personDao.save(userFetched);
+		Person userFetched2 = personService.authorizePerson("username", "email", account.getId().toString(), user);
+		assert superUt.equals(userFetched2.getUserType());
+		assert account.getId().equals(userFetched.getAccount().getId());
+	}
 
 	@Test
 	public void insertPerson() {
@@ -69,7 +97,7 @@ public class PersonServiceTest extends TestBase  {
 	}
 	
 	@Test
-	public void findPerson() {
+	public void findPersonInAccount() {
 		User user = this.setUpUser();
 		Account account = this.setUpAccount(user);
 		Person p = new Person(account, user.getUserId(), "username", "email", "family_name", "given_name", "SUPERADMIN");
@@ -125,7 +153,7 @@ public class PersonServiceTest extends TestBase  {
 		
 		User user = this.setUpUser();
 		Account account = this.setUpAccount(user);
-		List<Person> peopleList = personService.listPersons(account.getId(),user);
+		List<Person> peopleList = personService.listPersons(account.getId().toString(),user);
 		assert peopleList.size() == 1;
 		
 		Person peop1 = new Person(account, "1", "test1", "email", "family_name", "given_name", "SUPERADMIN");
@@ -135,7 +163,7 @@ public class PersonServiceTest extends TestBase  {
 		peopleList.add(peop2);
 		personDao.save(peopleList);
 		
-		peopleList = personService.listPersons(account.getId(),user);
+		peopleList = personService.listPersons(account.getId().toString(),user);
 		assert peopleList.size() == 3;
 
 		assert peopleList.get(0).getAccount().getId().equals(account.getId());
@@ -189,11 +217,13 @@ public class PersonServiceTest extends TestBase  {
 		assert personToDelete1 != null;
 		assert personToDelete2 != null;
 		
-		List<Long> personList = new ArrayList<Long>();
-		personList.add(personToDelete1.getId());
-		personList.add(personToDelete2.getId());
+		String personId1 = personToDelete1.getId().toString();
+		String personId2 = personToDelete1.getId().toString();
+		String accountId = account.getId().toString();
 		
-		personService.deletePersons(personList, account.getId(), user);
+		personService.deletePersons(personId1, accountId, user);
+		personService.deletePersons(personId2, accountId, user);
+		
 		ofy().clear();
 		
 		assert ofy().load().key(personToDelete1.getKey()).now() == null;

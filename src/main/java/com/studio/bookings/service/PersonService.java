@@ -40,7 +40,7 @@ public class PersonService extends BaseService {
 			User user) {
 		Person p = null;
 		if(user != null) { 
-			Account account =  accountDao.retrieve(new Long(accountId));
+			Account account =  accountDao.retrieve(Long.valueOf(accountId));
 			p = personDao.oneFilterAncestorQuery("userId", user.getUserId(), account);
     		// TODO THROW UNAUTHORIZED EXCEPTION
 			if(p == null) {
@@ -109,13 +109,13 @@ public class PersonService extends BaseService {
 	
 	@ApiMethod(name = "calendar.listPersons", path="calendar.listPersons", httpMethod = "get")
 	public List<Person> listPersons (
-			@Named("account") Long accountId,
+			@Named("account") String accountId,
 			User user) {
 		List<Person> persons = null;
 		if(user != null) { 
     		// TODO THROW UNAUTHORIZED EXCEPTION
-    		if (aclService.allowViewAll(accountId, permission.toString(), user).get(0)) {
-    			Account accountFetched = accountDao.retrieve(accountId);
+    		if (aclService.allowViewAll(new Long(accountId), permission.toString(), user).get(0)) {
+    			Account accountFetched = accountDao.retrieve(new Long(accountId));
     			persons = personDao.listAncestors(accountFetched);
     		}
 		}
@@ -151,14 +151,14 @@ public class PersonService extends BaseService {
 	
 	@ApiMethod(name = "calendar.deletePerson", path="calendar.deletePerson", httpMethod = "post")
 	public void deletePersons(
-			@Named("person") List<Long> personIds,
-			@Named("account") Long accountId,
+			@Named("person") String personId,
+			@Named("account") String accountId,
 			User user) {
 		
 		if(user != null) {	
-			if (aclService.allowDelete(accountId, permission.toString(), user).get(0)) {
-				Account accountFetched = accountDao.retrieve(accountId);
-				calendarDao.deleteAncestors(personIds, accountFetched);
+			if (aclService.allowDelete(Long.valueOf(accountId), permission.toString(), user).get(0)) {
+				Account accountFetched = accountDao.retrieve(Long.valueOf(accountId));
+				calendarDao.deleteAncestors(Long.valueOf(personId), accountFetched);
 			}
 		}
 	}

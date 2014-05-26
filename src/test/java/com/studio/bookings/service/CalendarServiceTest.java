@@ -179,11 +179,12 @@ public class CalendarServiceTest extends TestBase {
 		assert calendarToDelete1 != null;
 		assert calendarToDelete2 != null;
 		
-		List<Long> calendarList = new ArrayList<Long>();
-		calendarList.add(calendarToDelete1.getId());
-		calendarList.add(calendarToDelete2.getId());
+		String calId1 = calendarToDelete1.getId().toString();
+		String calId2 = calendarToDelete2.getId().toString();
+		String accountId2 = account.getId().toString();
 		
-		calendarService.deleteCalendars(calendarList, accountId, user);
+		calendarService.deleteCalendars(calId1, accountId2, user);
+		calendarService.deleteCalendars(calId2, accountId2, user);
 		ofy().clear();
 		
 		assert ofy().load().key(calendarToDelete1.getKey()).now() == null;

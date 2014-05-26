@@ -9,6 +9,7 @@ import java.util.List;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import com.google.api.server.spi.response.UnauthorizedException;
 import com.google.appengine.api.oauth.OAuthRequestException;
 import com.google.appengine.api.oauth.OAuthService;
 import com.google.appengine.api.oauth.OAuthServiceFactory;
@@ -141,7 +142,7 @@ public class AccountServiceTest extends TestBase {
 		Account account = new Account("Account 1");
 		accountDao.save(account);
 		
-		Account accountUpdated = accountService.updateAccount(userAccountId, account.getId(), "updated Account", user);
+		Account accountUpdated = accountService.updateAccount(userAccountId.toString(), account.getId().toString(), "updated Account", user);
 		assert account.getName().equals("updated Account");
 		assert account.getName().equals(accountUpdated.getName());
 		assert account.getId().equals(accountUpdated.getId());
@@ -161,7 +162,12 @@ public class AccountServiceTest extends TestBase {
 		ofy().clear();
 		Account accountDeleted = accountDao.retrieve(account.getId());
 		assert accountDeleted != null;
-		accountService.deleteAccount(userAccountId, account.getId(), user);
+		try {
+			accountService.deleteAccount(userAccountId.toString(), account.getId().toString(), user);
+		} catch (UnauthorizedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		ofy().clear();
 		assert ofy().load().key(accountDeleted.getKey()).now() == null;
 	}

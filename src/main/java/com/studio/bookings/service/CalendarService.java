@@ -1,6 +1,5 @@
 package com.studio.bookings.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.google.api.server.spi.config.Api;
@@ -93,14 +92,14 @@ public class CalendarService extends BaseService {
 	
 	@ApiMethod(name = "calendar.deleteCalendars", path="calendar.deleteCalendars", httpMethod = "post")
 	public void deleteCalendars(
-			@Named("calendar") List<Long> calendarIds,
-			@Named("account") Long accountId,
+			@Named("calendar") String calendarId,
+			@Named("account") String accountId,
 			User user) {
 		
 		if(user != null) {	
-			if (aclService.allowDelete(accountId, aclPermission.toString(), user).get(0)) {
-				Account accountFetched = accountDao.retrieve(accountId);
-				calendarDao.deleteAncestors(calendarIds, accountFetched);
+			if (aclService.allowDelete(Long.valueOf(accountId), aclPermission.toString(), user).get(0)) {
+				Account accountFetched = accountDao.retrieve(Long.valueOf(accountId));
+				calendarDao.deleteAncestors(Long.valueOf(calendarId), accountFetched);
 			}
 		}
 	}
