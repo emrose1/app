@@ -1,7 +1,5 @@
 Application.Services.service('accountService', ['$q', 'sessionService', 'alerts', function ($q, session, alerts) {
 
-
-
 	this.listWithoutUser = function(){
         var self = this;
         var deferred = $q.defer();
@@ -9,7 +7,6 @@ Application.Services.service('accountService', ['$q', 'sessionService', 'alerts'
 
         request.execute(function (resp) {
             if (resp && resp.items) {
-                console.log(resp.items);
                 this.accounts = self.setAccounts(resp.items);
                 deferred.resolve(resp);
             } else {
@@ -31,26 +28,19 @@ Application.Services.service('accountService', ['$q', 'sessionService', 'alerts'
     this.delete = function(accountToDelete){
         var deferred = $q.defer();
         var message = {
-            'account' : session.getAccount().id.toString(),
+            'account_id' : session.getAccount().id.toString(),
             'accountDelete' : accountToDelete.toString()
         };
-        console.log('delete');
-        console.log(message);
-        var request = gapi.client.booking.account.deleteAccount(message);
 
+        var request = gapi.client.booking.account.removeAccount(message);
         request.execute(function (resp) {
 
             if (typeof resp == 'undefined') {
                 deferred.resolve(resp);
-            } else { //if (resp.code) {
-                console.log(resp);
+            } else {
                 deferred.reject('error');
-                //deferred.reject(resp);
             }
         });
         return deferred.promise;
     };
-
-
-
 }]);

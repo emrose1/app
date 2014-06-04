@@ -1,5 +1,6 @@
 
-Application.Controllers.controller( 'accountsController', ['$rootScope', '$scope', 'alerts', 'accountService', 'sessionService',
+Application.Controllers.controller( 'accountsController', [
+    '$rootScope', '$scope', 'alerts', 'accountService', 'sessionService',
     function ($rootScope, $scope,  alerts, accountService, sessionService) {
 
 

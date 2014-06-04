@@ -27,8 +27,9 @@
                                 <td>{{person.username}}</td>
                                 <td>{{person.email}}</td>
                                 <td>{{person.userType}}</td>
+                                <td><a href="#/persons/{{person.id}}">view details</a>
                                 <td>
-                                    <button type="button" go-click="/go/to/this" class="btn btn-default">
+                                    <button type="button" go-click="/persons/{{person.id}}" class="btn btn-default">
                                         <span  class="glyphicon glyphicon-pencil"></span>
                                         Edit
                                     </button>

@@ -11,14 +11,28 @@ Application.Services.service('personService', ['$q', 'sessionService', 'alerts',
     this.list = function(account){
         var self = this;
         var deferred = $q.defer();
-        console.log('listing persons');
-        console.log(session.getAccount());
-        var request = gapi.client.booking.calendar.listPersons({'account' : session.getAccount().id });
-
+        var request = gapi.client.booking.person.listPersons({'account_id' : session.getAccount().id });
         request.execute(function (resp) {
             if (resp && resp.items) {
-                console.log(resp.items);
                 this.persons = self.setPersons(resp.items);
+                deferred.resolve(resp);
+            } else {
+                console.log(resp);
+                deferred.reject('error');
+            }
+        });
+        return deferred.promise;
+    };
+
+    this.delete = function(accountToDelete){
+        var deferred = $q.defer();
+        var message = {
+            'person' : {},
+            'account' : session.getAccount().id
+        };
+        var request = gapi.client.booking.person.removePerson(message);
+        request.execute(function (resp) {
+            if (resp && resp.items) {
                 deferred.resolve(resp);
             } else {
                 deferred.reject('error');
@@ -27,27 +41,21 @@ Application.Services.service('personService', ['$q', 'sessionService', 'alerts',
         return deferred.promise;
     };
 
-/*    this.delete = function(accountToDelete){
+    this.find = function(personId){
         var deferred = $q.defer();
         var message = {
-            'personIds' : {},
-            'accountId' : session.accountId.toString()
+            'id' : personId,
+            'account_id' : session.getAccount().id
         };
-        console.log('delete');
-        console.log(message);
-        var request = gapi.client.booking.account.deleteAccount(message);
-
+        var request = gapi.client.booking.person.getPerson(message);
         request.execute(function (resp) {
-            if (resp && resp.items) {
-                console.log(resp);
+            if (resp) {
                 deferred.resolve(resp);
-            } else { //if (resp.code) {
-                console.log(resp);
+            } else {
                 deferred.reject('error');
-                //deferred.reject(resp);
             }
         });
         return deferred.promise;
-    };*/
-
+    };
 }]);
+

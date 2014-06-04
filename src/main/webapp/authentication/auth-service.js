@@ -8,14 +8,12 @@ Application.Services.service('auth', ['sessionService', '$q', 'AUTH_EVENTS', 'GA
         var request = gapi.client.oauth2.userinfo.get().execute(function(resp) {
             if (!resp.code) {
                 console.log(resp);
-                console.log('quack quack');
                 sessionService.createUserDetails(resp);
                 alerts.clear();
                 //var token = gapi.auth.getToken();
                 //token.access_token = token.id_token;
                 //gapi.auth.setToken(token);
             } else {
-                console.log('woot');
                 alerts.setAlert({
                 'alertMessage': "Sorry you could not be authenticated",
                 'alertType': 'alert-danger'});

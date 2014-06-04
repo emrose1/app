@@ -55,8 +55,7 @@ public class LoadDummyData extends BaseService {
 		userTypeList.add("INSTRUCTOR");
 		userTypeList.add("ATTENDEE");
 
-		Person p = new Person(account, userId.toString(), username, "email", 
-	    		"family_name", "given_name", userTypeList.get(0));
+		Person p = new Person(account, userId.toString(), username, "email", userTypeList.get(0));
 		personDao.save(p);
 		
 	}

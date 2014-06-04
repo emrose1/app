@@ -5,14 +5,15 @@ import java.util.List;
 
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
+import com.google.api.server.spi.config.ApiMethod.HttpMethod;
 import com.google.api.server.spi.config.Named;
-import com.google.appengine.api.users.User;
 import com.google.api.server.spi.response.UnauthorizedException;
-
+import com.google.appengine.api.users.User;
 import com.studio.bookings.entity.Account;
 import com.studio.bookings.entity.Calendar;
 import com.studio.bookings.entity.Person;
 import com.studio.bookings.enums.Permission;
+import com.studio.bookings.enums.UserType;
 import com.studio.bookings.util.Constants;
 
 @Api(
@@ -27,57 +28,88 @@ public class AccountService extends BaseService {
 
 	public static AccessControlListService aclService = new AccessControlListService();
 	Permission permission = Permission.ACCOUNT;
+	
+	
+	//////////----------------------------//////////////
+	////////// --------- CRUD ------------//////////////
+	//////////----------------------------/////////////
 
-	@ApiMethod(name = "account.addAccount", path="calendar.addAccount", httpMethod = "post")
+	@ApiMethod(name = "account.insertAccount", path="account")
 	public Account insertAccount(
 			@Named("name") String name,
-			@Named("description") String description,			
-			@Named("userId") String userId, 
-			@Named("username") String username,
-			@Named("email") String email,
-			@Named("familyname") String family_name,
-			@Named("givenname") String given_name,
-			@Named("userType") String userType, // needs to be owner
 			User user) {
-		
 		Account account = null;
 		
 		//if(ofy().load().type(Person.class).filter("userId", userId).filter("userType", "OWNER") == null) { 
 			account = new Account(name);
 			accountDao.save(account);
-			Calendar calendar = new Calendar(description, account);
-			calendarDao.save(calendar);
-			Person p = new Person(account, user.getUserId(), username, email, family_name, given_name, userType);
-			personDao.save(p);
 		//}
 		return account;
 	}
 	
-	@ApiMethod(name = "account.findAccount", path="calendar.findAccount", httpMethod = "get")
-	public Account findAccount(
-			@Named("account") Long accountId,
-			@Named("accountToFind") Long accountToFindId, 
+	@ApiMethod(name = "account.getAccount", path="account/{id}", httpMethod = HttpMethod.GET)
+	public Account getAccount(
+			@Named("id") Long accountId, 
 			User user) {
 		Account accountFetched = null;
 		// superadmin
-		if (user != null && aclService.allowView(accountId, permission.toString(), user).get(0)) {
-			accountFetched = accountDao.retrieve(accountToFindId);
-		}
+		//if (user != null && aclService.allowView(accountId, permission.toString(), user).get(0)) {
+			accountFetched = accountDao.retrieve(accountId);
+		//}
 		return accountFetched;
 	}
 	
-	@ApiMethod(name = "account.listAccounts", path="account.listAccounts", httpMethod = "get")
-	public List<Account> listAccounts(
-			@Named("account") Long accountId, 
-			User user) {
-		// must be superadmin
+	@ApiMethod(name = "account.listAccounts", path="account", httpMethod = HttpMethod.GET)
+	public List<Account> listAccounts(User user) {
+		// TODO create allowDeleteAll for SuperAdmin 
 		List<Account> aclList = null;
-		if (user != null) {
-	 		if (aclService.allowViewAll(new Long(accountId), permission.toString(), user).get(0)) {
+		//if (user != null) {
+	 		//if (aclService.allowViewAll(new Long(accountId), permission.toString(), user).get(0)) {
 	 			aclList = accountDao.list();
-			} 
-		}
+			//} 
+		//}
  		return aclList;
+	}
+	
+	@ApiMethod(name = "account.updateAccount", path="account/{id}", httpMethod = HttpMethod.PUT)
+	public Account updateAccount(
+			@Named("id") String accountId,
+			@Named("name") String name, 
+			User user) {
+		Account accountFetched = null;
+		// TODO create allowUpdateAll for SuperAdmin 
+		//if (user != null && aclService.allowUpdateAll(permission.toString(), user).get(0)) {
+			accountFetched = accountDao.retrieve(Long.valueOf(accountId));
+			accountFetched.setName(name);
+			accountDao.save(accountFetched);
+		//}
+		return accountFetched;
+	}
+	
+	@ApiMethod(name = "account.removeAccount", path="account/{id}", httpMethod = HttpMethod.DELETE)
+	public void removeAccount(
+			@Named("id") String accountId, 
+			User user) throws UnauthorizedException {
+		// TODO create allowDeleteAll for SuperAdmin 
+		//if (user != null && aclService.allowDeleteAll(permission.toString(), user).get(0)) {
+ 			accountDao.delete(new Long(accountId));
+ 		//} else {
+			//throw new UnauthorizedException("You are not authorized.");
+		//}
+	}
+	
+	//////////----------------------------//////////////
+	////////// ---- HELPER METHODS -------//////////////
+	//////////----------------------------/////////////
+	
+	@ApiMethod(name = "account.listAccountsWithoutUser", path="account.listAccountsWithoutUser", httpMethod = HttpMethod.GET)
+	public List<Account> listTestAccountsWithoutUser() {
+		// must be superadmin 
+		//if (user != null && aclService.allowViewAll(accountId, permission.toString(), user).get(0)) {
+			return accountDao.list();
+		//} else {
+			//return null;
+		//}
 	}
 	
 	@ApiMethod(name = "account.listTestUser", path="account.listTestUser", httpMethod = "get")
@@ -90,48 +122,5 @@ public class AccountService extends BaseService {
 			str.add("user null" + user.getEmail() + " " + user.getUserId());
 		}
  		return str;
-	}
-	
-
-	@ApiMethod(name = "account.listAccountsWithoutUser", path="account.listAccountsWithoutUser", httpMethod = "get")
-	public List<Account> listTestAccountsWithoutUser() {
-		// must be superadmin 
-		//if (user != null && aclService.allowViewAll(accountId, permission.toString(), user).get(0)) {
-			return accountDao.list();
-		//} else {
-			//return null;
-		//}
-	}
-	
-	@ApiMethod(name = "account.updateAccount", path="calendar.updateAccount", httpMethod = "get")
-	public Account updateAccount(
-			@Named("account") String accountId,
-			@Named("accountToUpdate") String accountToUpdateId, 
-			@Named("name") String name, 
-			User user) {
-		Account accountFetched = null;
-		// TODO create allowUpdateAll for SuperAdmin 
-		// otherwise check accountId == accountToUpdateId
-		// check if user is owner of this account
-		// can be used by: owner, admin or superadmin
-		
-		if (user != null && aclService.allowUpdate(Long.valueOf(accountId), permission.toString(), user).get(0)) {
-			accountFetched = accountDao.retrieve(Long.valueOf(accountToUpdateId));
-			accountFetched.setName(name);
-			accountDao.save(accountFetched);
-		}
-		return accountFetched;
-	}
-	
-	@ApiMethod(name = "account.deleteAccount", path="calendar.deleteAccount", httpMethod = "get")
-	public void deleteAccount(
-			@Named("account") String accountId, 
-			@Named("accountDelete") String accountToDeleteId, 
-			User user) throws UnauthorizedException {
-		if (user != null && aclService.allowDelete(new Long(accountId), permission.toString(), user).get(0)) {
- 			accountDao.delete(new Long(accountToDeleteId));
- 		} else {
-			throw new UnauthorizedException("You are not authorized.");
-		}
 	}
 }

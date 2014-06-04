@@ -39,7 +39,7 @@ public class AccessControlListServiceTest extends TestBase {
 	public void setUp(Account userAccount, User user) {
 		AccessControlList acl = new AccessControlList(permission.toString(), "true", "true", "true", "true", "true", "SUPERADMIN");
 		aclDao.save(acl);
-		Person p = new Person(userAccount, user.getUserId(), "test1", "email", "family_name", "given_name", "SUPERADMIN");
+		Person p = new Person(userAccount, user.getUserId(), "test1", "email", "SUPERADMIN");
 		personDao.save(p);
 	}
 		
@@ -152,7 +152,7 @@ public class AccessControlListServiceTest extends TestBase {
 		
 		AccessControlList acl = new AccessControlList(permission.toString(), "true", "true", "true", "true", "true", "SUPERADMIN");
 		aclDao.save(acl);
-		Person p = new Person(account, user.getUserId(), "test1", "email", "family_name", "given_name", "SUPERADMIN");
+		Person p = new Person(account, user.getUserId(), "test1", "email", "SUPERADMIN");
 		personDao.save(p);
 		
 		AccessControlList acl1 = new AccessControlList("CALENDAR", "true", "true", "true", "true", "true", "ADMIN");
@@ -181,7 +181,7 @@ public class AccessControlListServiceTest extends TestBase {
 		
 		User user = this.setUpUser();
 		
-		Person p = new Person(account, user.getUserId(), "test1", "email", "family_name", "given_name", "SUPERADMIN");
+		Person p = new Person(account, user.getUserId(), "test1", "email", "SUPERADMIN");
 		personDao.save(p);
 		
 		AccessControlList acl1 = new AccessControlList("ACCOUNT", "true", "false", "false", "false", "false", "SUPERADMIN");
@@ -201,7 +201,7 @@ public class AccessControlListServiceTest extends TestBase {
 		
 		User user = this.setUpUser();
 		
-		Person p = new Person(account, user.getUserId(), "test1", "email", "family_name", "given_name", "ADMIN");
+		Person p = new Person(account, user.getUserId(), "test1", "email", "ADMIN");
 		personDao.save(p);
 		
 		AccessControlList acl1 = new AccessControlList("CALENDAR", "true", "false", "false", "false", "false", "ADMIN");
@@ -221,7 +221,7 @@ public class AccessControlListServiceTest extends TestBase {
 		
 		User user = this.setUpUser();
 		
-		Person p = new Person(account, user.getUserId(), "test1", "email", "family_name", "given_name", "OWNER");
+		Person p = new Person(account, user.getUserId(), "test1", "email", "OWNER");
 		personDao.save(p);
 		
 		AccessControlList acl = new AccessControlList("EVENT", "true", "false", "false", "false", "false", "OWNER");
@@ -243,7 +243,7 @@ public class AccessControlListServiceTest extends TestBase {
 		
 		User user = this.setUpUser();
 		
-		Person p = new Person(account, user.getUserId(), "test1", "email", "family_name", "given_name", "OWNER");
+		Person p = new Person(account, user.getUserId(), "test1", "email", "OWNER");
 		personDao.save(p);
 		
 		AccessControlList acl4 = new AccessControlList("BOOKING", "true", "false", "false", "false", "false", "OWNER");
@@ -262,7 +262,7 @@ public class AccessControlListServiceTest extends TestBase {
 		Account account = new Account();
 		accountDao.save(account);
 		User user = this.setUpUser();
-		Person p = new Person(account, user.getUserId(), "test1", "email", "family_name", "given_name", "ATTENDEE");
+		Person p = new Person(account, user.getUserId(), "test1", "email", "ATTENDEE");
 		personDao.save(p);
 		
 		AccessControlList acl5 = new AccessControlList("USER", "true", "false", "false", "false", "false", "ATTENDEE");
@@ -280,7 +280,7 @@ public class AccessControlListServiceTest extends TestBase {
 		Account account = new Account();
 		accountDao.save(account);
 		User user = this.setUpUser();
-		Person p = new Person(account, user.getUserId(), "test1", "email", "family_name", "given_name", "ATTENDEE");
+		Person p = new Person(account, user.getUserId(), "test1", "email", "ATTENDEE");
 		personDao.save(p);
 		
 		AccessControlList acl6 = new AccessControlList("ACL", "true", "false", "false", "false", "false", "ATTENDEE");
@@ -298,7 +298,7 @@ public class AccessControlListServiceTest extends TestBase {
 		Account account = new Account();
 		accountDao.save(account);
 		User user = this.setUpUser();
-		Person p = new Person(account, user.getUserId(), "test1", "email", "family_name", "given_name", "ATTENDEE");
+		Person p = new Person(account, user.getUserId(), "test1", "email", "ATTENDEE");
 		personDao.save(p);
 		
 		AccessControlList acl6 = new AccessControlList("ACL", "true", "false", "false", "false", "false", "ATTENDEE");

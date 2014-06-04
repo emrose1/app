@@ -2,19 +2,16 @@ Application.Services.service('sessionService', ['$q', 'alerts', '$rootScope', fu
 
 	this.authorizeUser = function (data) {
 		var deferred = $q.defer();
-        console.log(this.getAccount());
 		var message = {
 			"name" : data.name,
 			"email" : data.email,
 			"account" : this.getAccount().id
 		};
 
-        var request = gapi.client.booking.calendar.authorizePerson(message).execute(function(resp) {
+        var request = gapi.client.booking.person.authorizePerson(message).execute(function(resp) {
             if (!resp.code) {
-				console.log(resp);
                 deferred.resolve(resp);
             } else {
-                console.log(resp);
                 deferred.reject('error');
             }
         });
@@ -27,12 +24,14 @@ Application.Services.service('sessionService', ['$q', 'alerts', '$rootScope', fu
     this.getAccount = function () {
         return this.account;
     };
+
     this.createUserDetails = function (data) {
 		this.authorizeUser(data)
 		.then(function (data) {
             alerts.clear();
             this.userName = data.username;
             this.userRole = data.userType;
+            this.email = data.email;
             $rootScope.$broadcast('EventLoaded');
         }, function (reason) {
             //$location.path('/home');
@@ -48,3 +47,4 @@ Application.Services.service('sessionService', ['$q', 'alerts', '$rootScope', fu
     };
     return this;
 }]);
+

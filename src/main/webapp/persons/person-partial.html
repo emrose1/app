@@ -1,0 +1,26 @@
+<div>
+    <div class="container">
+        <h1 ng-show="persons.length">Persons</h1>
+        <table class="table table-striped" ng-show="persons.length">
+            <thead>
+                <th>Title</th>
+            </thead>
+            <tbody>
+                <tr ng-repeat="person in persons">
+                    <td ng-click="activePerson(person)">{{person.username}}</td>
+                    <td ng-click="activePerson(person)">{{person.email}}</td>
+                    <td><button class="btn btn-danger" ng-click="delete(person)">Delete</button></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3 ng-if="!editing">New Person</h3>
+        <h3 ng-if="editing">Edit Person</h3>
+        <form ng-submit="save(person)">
+            <input ng-model="person.username">
+            <input ng-model="person.email">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+        <button ng-if="editing" class="btn btn-success" ng-click="newPerson()">New Post</button>
+    </div>
+</div>

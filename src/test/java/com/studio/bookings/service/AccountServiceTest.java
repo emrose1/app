@@ -41,7 +41,7 @@ public class AccountServiceTest extends TestBase {
 	public void setUp(Account userAccount, User user) {
 		AccessControlList acl = new AccessControlList(permission.toString(), "true", "true", "true", "true", "true", "SUPERADMIN");
 		aclDao.save(acl);
-		Person p = new Person(userAccount, user.getUserId(), "test1", "email", "family_name", "given_name", "SUPERADMIN");
+		Person p = new Person(userAccount, user.getUserId(), "test1", "email", "SUPERADMIN");
 		personDao.save(p);
 	}
 		
@@ -54,19 +54,17 @@ public class AccountServiceTest extends TestBase {
 		User user = this.setUpUser();
 		this.setUp(userAccount, user);
 		
-		Account account = accountService.insertAccount("Testing Account", "Testing Calendar", 
-				user.getUserId(), "username", "email", "familyName", "givenName", "ADMIN", user);
-		
+		Account account = accountService.insertAccount("Testing Account", user);
 		Account accountFetched = accountDao.retrieve(account.getId());
 				
-		Calendar calendarFetched = calendarDao.listAncestors(account).get(0);
+		/*Calendar calendarFetched = calendarDao.listAncestors(account).get(0);
 		assert "Testing Calendar".equals(calendarFetched.getDescription());
 		assert account.getId().equals(calendarFetched.getAccount().getId());
 		
 		Person usersFetched = personDao.oneFilterAncestorQuery("userId", user.getUserId() , account);
 		
 		assert "username".equals(usersFetched.getUsername());
-		assert account.getId().equals(usersFetched.getAccount().getId());
+		assert account.getId().equals(usersFetched.getAccount().getId());*/
 		
 		assert account.getId().equals(accountFetched.getId());
 		assert account.getName().equals(accountFetched.getName());
@@ -81,7 +79,7 @@ public class AccountServiceTest extends TestBase {
 	}
 	
 	@Test
-	public void findAccount() {
+	public void getAccount() {
 		
 		Account userAccount = new Account();
 		Long userAccountId = accountDao.save(userAccount);
@@ -94,8 +92,8 @@ public class AccountServiceTest extends TestBase {
 		accountDao.save(account1);
 		accountDao.save(account2);
 
-		Account accountFetched1 = accountService.findAccount(userAccountId, account1.getId(), user);
-		Account accountFetched2 = accountService.findAccount(userAccountId, account2.getId(), user);
+		Account accountFetched1 = accountService.getAccount(account1.getId(), user);
+		Account accountFetched2 = accountService.getAccount(account2.getId(), user);
 		
 		assert accountFetched1.getId().equals(account1.getId());
 		assert accountFetched1.getName().equals(account1.getName());
@@ -124,7 +122,7 @@ public class AccountServiceTest extends TestBase {
 		accountList.add(account2);
 		
 		accountDao.save(accountList);
-		List<Account> accountsFetched = accountService.listAccounts(userAccountId, user);
+		List<Account> accountsFetched = accountService.listAccounts(user);
 		
 		Assert.assertNotNull(accountsFetched);
 		assert accountsFetched.size() == accountList.size();
@@ -142,14 +140,14 @@ public class AccountServiceTest extends TestBase {
 		Account account = new Account("Account 1");
 		accountDao.save(account);
 		
-		Account accountUpdated = accountService.updateAccount(userAccountId.toString(), account.getId().toString(), "updated Account", user);
+		Account accountUpdated = accountService.updateAccount(account.getId().toString(), "updated Account", user);
 		assert account.getName().equals("updated Account");
 		assert account.getName().equals(accountUpdated.getName());
 		assert account.getId().equals(accountUpdated.getId());
 	}
 	
 	@Test
-	public void deleteAccount() {
+	public void removeAccount() {
 		
 		Account userAccount = new Account();
 		Long userAccountId = accountDao.save(userAccount);
@@ -163,7 +161,7 @@ public class AccountServiceTest extends TestBase {
 		Account accountDeleted = accountDao.retrieve(account.getId());
 		assert accountDeleted != null;
 		try {
-			accountService.deleteAccount(userAccountId.toString(), account.getId().toString(), user);
+			accountService.removeAccount(account.getId().toString(), user);
 		} catch (UnauthorizedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

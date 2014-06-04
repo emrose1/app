@@ -33,7 +33,6 @@ Application.Controllers.controller( 'application',[
 
 
     $scope.authenticate = function() {
-        console.log("authenticate");
         auth.authenticate(false);
         //$rootScope.$broadcast(AUTH_EVENTS.loginFailed);
     };
@@ -69,7 +68,6 @@ Application.Controllers.controller( 'application',[
     });
 
     var apiLoadedSuccess = function () {
-        console.log('event loaded');
         $scope.backendReady = true;
     };
 

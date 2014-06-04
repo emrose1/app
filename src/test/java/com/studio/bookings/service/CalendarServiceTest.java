@@ -51,7 +51,7 @@ public class CalendarServiceTest extends TestBase {
 	public void setUp(Account userAccount, User user) {
 		AccessControlList acl = new AccessControlList(permission.toString(), "true", "true", "true", "true", "true", "SUPERADMIN");
 		aclDao.save(acl);
-		Person p = new Person(userAccount, user.getUserId(), "test1", "email", "family_name", "given_name", "SUPERADMIN");
+		Person p = new Person(userAccount, user.getUserId(), "test1", "email", "SUPERADMIN");
 		personDao.save(p);
 	}
 
@@ -87,7 +87,7 @@ public class CalendarServiceTest extends TestBase {
 	}
 	
 	@Test
-	public void findCalendar() {
+	public void getCalendar() {
 		
 		Account account1 = new Account("account1");
 		Account account2 = new Account("account2");
@@ -102,8 +102,8 @@ public class CalendarServiceTest extends TestBase {
 		calendarDao.save(cal1);
 		calendarDao.save(cal2);
 		
-		Calendar calendarFetched1 = calendarService.findCalendar(cal1.getId(), account1.getId(), user); 
-		Calendar calendarFetched2 = calendarService.findCalendar(cal2.getId(), account2.getId(), user); 
+		Calendar calendarFetched1 = calendarService.getCalendar(cal1.getId(), account1.getId(), user); 
+		Calendar calendarFetched2 = calendarService.getCalendar(cal2.getId(), account2.getId(), user); 
 		
 		assert calendarFetched1.getId().equals(cal1.getId());
 		assert calendarFetched1.getDescription().equals(cal1.getDescription());
@@ -158,7 +158,7 @@ public class CalendarServiceTest extends TestBase {
 	}
 	
 	@Test
-	public void deleteCalendar() {
+	public void removeCalendar() {
 		
 		Account account = new Account("account");
 		Long accountId = accountDao.save(account);
@@ -183,8 +183,8 @@ public class CalendarServiceTest extends TestBase {
 		String calId2 = calendarToDelete2.getId().toString();
 		String accountId2 = account.getId().toString();
 		
-		calendarService.deleteCalendars(calId1, accountId2, user);
-		calendarService.deleteCalendars(calId2, accountId2, user);
+		calendarService.removeCalendar(calId1, accountId2, user);
+		calendarService.removeCalendar(calId2, accountId2, user);
 		ofy().clear();
 		
 		assert ofy().load().key(calendarToDelete1.getKey()).now() == null;

@@ -5,7 +5,6 @@ Application.Directives.directive('alertModal', ['$parse', function($parse) {
 
     link: function(scope, elem, attrs) {
       var alertMessageAttr = attrs['alertinfo'];
-      console.log(alertMessageAttr);
       scope.alertMessage = null;
 
       scope.$watch(alertMessageAttr, function(newVal) {

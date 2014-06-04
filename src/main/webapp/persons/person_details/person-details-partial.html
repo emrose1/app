@@ -1,0 +1,50 @@
+<div class="page page-dashboard ng-scope">
+	<h1>Persons</h1>
+    <section>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <strong>
+                            <span class="glyphicon glyphicon-th"></span>
+                            Profile Info
+                        </strong>
+                    </div>
+                    <div class="panel-body">
+                        <div class="media">
+                            <div class="media-body">
+                                <ul class="list-unstyled list-info">
+                                    <li class="ng-binding">
+                                        <span class="icon glyphicon glyphicon-user"></span>
+                                        <label>User name</label>
+                                        <span ng-bind="person.username"></span>
+                                    </li>
+                                    <li>
+                                        <span class="icon glyphicon glyphicon-envelope"></span>
+                                        <label>Email</label>
+                                        <span ng-bind="person.email"></span>
+                                    </li>
+                                    <li>
+                                        <span class="icon glyphicon glyphicon-home"></span>
+                                        <label>Address</label>
+                                        Street 123, Avenue 45, Country
+                                    </li>
+                                    <li>
+                                        <span class="icon glyphicon glyphicon-earphone"></span>
+                                        <label>Contact</label>
+                                        (+012) 345 6789
+                                    </li>
+
+                                    <li>
+                                        <a href="#/persons/edit/{{person.id}}">Edit</a>
+                                    </li>
+                                </ul>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

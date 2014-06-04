@@ -53,8 +53,7 @@ public class DummySetupService  extends BaseService {
 		userTypeList.add("INSTRUCTOR");
 		userTypeList.add("ATTENDEE");
 
-		Person p = new Person(account, userId, username, "email", 
-	    		"family_name", "given_name", "SUPERADMIN");
+		Person p = new Person(account, userId, username, "email", "SUPERADMIN");
 		personDao.save(p);
 	}
 	
@@ -100,7 +99,7 @@ public class DummySetupService  extends BaseService {
 	public void setUp(Account userAccount, User user) {
 		AccessControlList acl = new AccessControlList(permission.toString(), "true", "true", "true", "true", "true", "SUPERADMIN");
 		aclDao.save(acl);
-		Person p = new Person(userAccount, user.getUserId(), "test1", "email", "family_name", "given_name", "SUPERADMIN");
+		Person p = new Person(userAccount, user.getUserId(), "test1", "email", "SUPERADMIN");
 		personDao.save(p);
 	}
 	

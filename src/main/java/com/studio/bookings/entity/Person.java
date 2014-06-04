@@ -51,26 +51,17 @@ public class Person {
     @Getter @Setter
     String email;
     
-    @Getter @Setter
-    String familyName;
-    
-    @Getter @Setter
-    String givenName;
-    
     @Index
     @Getter @Setter
     public UserType userType;
     
     public Person(){}
     
-    public Person(Account account, String userId, String username, String email, 
-    		String familyName, String givenName, String userType) {
+    public Person(Account account, String userId, String username, String email, String userType) {
     	this.setAccount(account);
     	this.userId = userId;
     	this.username = username;
     	this.email = email;
-    	this.familyName = familyName;
-    	this.givenName = givenName;
     	this.userType = UserType.valueOf(userType);
     	dateCreated = new Date();
     	

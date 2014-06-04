@@ -1,0 +1,24 @@
+<div>
+    <div class="container">
+        <h1 ng-show="accounts.length">Accounts</h1>
+        <table class="table table-striped" ng-show="accounts.length">
+            <thead>
+                <th>Title</th>
+            </thead>
+            <tbody>
+                <tr ng-repeat="account in accounts">
+                    <td ng-click="activeAccount(account)">{{account.name}}</td>
+                    <td><button class="btn btn-danger" ng-click="delete(account)">Delete</button></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3 ng-if="!editing">New Account</h3>
+        <h3 ng-if="editing">Edit Account</h3>
+        <form ng-submit="save(account)">
+            <input ng-model="account.name">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+        <button ng-if="editing" class="btn btn-success" ng-click="newAccount()">New Post</button>
+    </div>
+</div>

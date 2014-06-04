@@ -1,5 +1,5 @@
 // Karma configuration
-// Generated on Sat May 17 2014 09:21:45 GMT+0100 (BST)
+// Generated on Wed Jun 04 2014 20:24:17 GMT+0100 (BST)
 
 module.exports = function(config) {
   config.set({
@@ -15,40 +15,17 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      //'app/**/*.js'
-        'bower_components/angular/angular.js',
-        'bower_components/angular-mocks/angular-mocks.js',
-        'bower_components/angular-ui-router/release/angular-ui-router.js',
-        //'lib/localization/localize.js',
-        //'i18n/resources-locale_en-US.js',
+        'lib/bower_components/angular/angular.min.js',
+        'lib/bower_components/angular-resource/angular-resource.min.js',
+        'lib/bower_components/angular-mocks/angular-mocks.js',
+        'lib/bower_components/angular-ui-router',
+        'application/application.js',
+        'accounts/account-resource-test.js',
+        'authentication/session-service-test.js',
+        'accounts/account-controller.test.js',
+        'accounts/account-controller-test.js'
 
-        'app/application/application.js',
-        'app/application/configuration-constants.js',
-        'app/application/application-controller.js',
-
-        //'common/auth-service/auth-service.js',
-        //'accounts/accounts-service.js',
-        //'accounts/accounts-controller.js',
-        //'about/about-controller.js',
-
-        //'alerts/alert-directive.js',
-        //'alerts/alert-service.js',
-
-        //'progressbar/progressbar-directive.js',
-        //'progressbar/progressbar-service.js',
-        'app/people/people-list-controller.js',
-        'app/people/people-list-controller-test.js',
-        'app/basic/basic-service.js',
-        'app/basic/basic-service-test.js'
-        //'app/menu/items.json',
-        //'app/menu/*.js',
-        //'menu/menu-controller.js',
-        //'menu/menu-item-directive.js',
-        //'login/login-controer.js',
-        //'details/details-controller.js',
-
-        //'date-time/to-date-strg-filter.js'
-        ],
+    ],
 
 
     // list of files to exclude

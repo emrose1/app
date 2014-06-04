@@ -17,6 +17,9 @@ Storage.prototype.getObject = function(key) {
 * creating namespaces and moduled for controllers, filters, services, and directives.
 */
 
+
+var app = angular.module('app', []); // for tests
+
 var Application = Application || {};
 
 Application.Constants = angular.module('application.constants', []);
@@ -28,6 +31,7 @@ Application.Directives = angular.module('application.directives', []);
 
 angular.module('application', [
     'ui.router',
+    'ngResource',
     'localization',
     'application.filters',
     'application.services',
@@ -84,6 +88,21 @@ angular.module('application', [
             controller: 'personsController',
             templateUrl: 'persons/persons-partial.html'
         })
+        .state('personDetails', {
+            url: "/persons/:personId",
+            controller: 'personDetailsController',
+            templateUrl: 'persons/person_details/person-details-partial.html'
+        })
+        .state('account', {
+            url: '/account',
+            controller: 'MainCtrl',
+            templateUrl: 'accounts/account-partial.html'
+        })
+        .state('person', {
+            url: '/person',
+            controller: 'personCtrl',
+            templateUrl: 'persons/person-partial.html'
+        })
         ;
 })
 
@@ -118,8 +137,6 @@ angular.module('application', [
         var callback = function() {
             if(--apisToLoad === 0) {
 
-
-
                 // setup dummy users
                 var request = gapi.client.booking.calendar.dummyUsers();
                 request.execute(
@@ -127,28 +144,21 @@ angular.module('application', [
 
                         // Setting up newly loaded DB
                         if(resp.items.length > 0) {
-                            console.log('dummies');
-                            console.log(resp);
                             sessionService.setAccount(resp.items[0]);
                             accountService.setAccounts(resp.items);
-                             //console.log('setting accounts');
+
                             // TODO: detect existing session cookie
                             // if has userid cookie, might be page refresh so check if authenticated
                             auth.authenticate(true);
                         } else {
-
                             // Setting up user account from DB
                             accountService.listWithoutUser()
                             .then(function (data) {
-                                console.log('list accounts');
-                                console.log('data');
-                                console.log(data);
                                 sessionService.setAccount(data.items[0]);
                                 accountService.setAccounts(data.items);
                                 auth.authenticate(true);
 
                             }, function (reason) {
-                                console.log(reason);
                             });
                         }
 
