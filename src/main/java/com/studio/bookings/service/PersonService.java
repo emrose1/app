@@ -47,7 +47,7 @@ public class PersonService extends BaseService {
 			// if userType == OWNER check to make sure sole owner on account
     		// TODO THROW UNAUTHORIZED EXCEPTION
 			//if(personDao.oneFilterAncestorQuery("userId", user.getUserId(), account) == null) {
-				p = new Person( account, user.getUserId(), username, email, "ATTENDEE");
+				p = new Person( account, "0", username, email, "ATTENDEE"); // replace "0" with user.getUserId() for live app
 				personDao.save(p);
 			//}
 		//}
@@ -108,14 +108,14 @@ public class PersonService extends BaseService {
 	
 	@ApiMethod(name="person.remove", path="account/{account_id}/person/{id}", httpMethod = HttpMethod.DELETE)
 	public void removePerson(
-			@Named("id") String personId,
-			@Named("account_id") String accountId,
+			@Named("id") String id,
+			@Named("account_id") String account_id,
 			User user) {
 		
 		//if(user != null) {	
 			//if (aclService.allowDelete(Long.valueOf(accountId), permission.toString(), user).get(0)) {
-				Account accountFetched = accountDao.retrieve(Long.valueOf(accountId));
-				calendarDao.deleteAncestors(Long.valueOf(personId), accountFetched);
+				Account accountFetched = accountDao.retrieve(Long.valueOf(account_id));
+				personDao.deleteAncestors(Long.valueOf(id), accountFetched);
 			//}
 		//}
 	}
