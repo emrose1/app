@@ -1,24 +1,10 @@
 var gapi = gapi || {};
 gapi.client = gapi.client || {};
 
-
-// Utility functions
-Storage.prototype.setObject = function(key, value) {
-    this.setItem(key, JSON.stringify(value));
-};
-
-Storage.prototype.getObject = function(key) {
-    var value = this.getItem(key);
-    return value && JSON.parse(value);
-};
-
 /**
 * The application file bootstraps the angular app by  initializing the main module and
 * creating namespaces and moduled for controllers, filters, services, and directives.
 */
-
-
-var app = angular.module('app', []); // for tests
 
 var Application = Application || {};
 
@@ -27,7 +13,6 @@ Application.Services = angular.module('application.services', []);
 Application.Controllers = angular.module('application.controllers', []);
 Application.Filters = angular.module('application.filters', []);
 Application.Directives = angular.module('application.directives', []);
-
 
 angular.module('application', [
     'ui.router',

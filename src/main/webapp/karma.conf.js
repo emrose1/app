@@ -18,12 +18,24 @@ module.exports = function(config) {
         'lib/bower_components/angular/angular.min.js',
         'lib/bower_components/angular-resource/angular-resource.min.js',
         'lib/bower_components/angular-mocks/angular-mocks.js',
-        'lib/bower_components/angular-ui-router',
+        'lib/bower_components/angular-ui-router/release/angular-ui-router.js',
+
+        'lib/lodash.js',
+        'lib/localization/localize.js',
         'application/application.js',
-        'accounts/account-resource-test.js',
-        'authentication/session-service-test.js',
-        'accounts/account-controller.test.js',
-        'accounts/account-controller-test.js'
+        'application/configuration-constants.js',
+
+
+        'authentication/session-service.js',
+        'authentication/auth-service.js',
+        'accounts/account-resource.js',
+        'accounts/accounts-service.js',
+        'accounts/account-controller.js',
+        'accounts/account-controller-test.js',
+
+        'alerts/alert-directive.js',
+        'alerts/alert-service.js'
+
 
     ],
 

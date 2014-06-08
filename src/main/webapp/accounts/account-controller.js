@@ -4,7 +4,7 @@ Application.Controllers.controller('MainCtrl', ['$scope', 'Account', 'sessionSer
         $scope.account = new Account();
         $scope.accounts = Account.query();
 
-        $scope.newAccount    = function() {
+        $scope.newAccount = function() {
             $scope.account = new Account();
             $scope.editing = false;
         };
@@ -15,7 +15,7 @@ Application.Controllers.controller('MainCtrl', ['$scope', 'Account', 'sessionSer
             $scope.editing = true;
         };
 
-        $scope.save = function(account) {
+        $scope.save = function() {
             if ($scope.account.id) {
                 Account.update({id: $scope.account.id}, $scope.account);
             } else {
@@ -35,7 +35,3 @@ Application.Controllers.controller('MainCtrl', ['$scope', 'Account', 'sessionSer
     }
 ]);
 
-//var app = angular.module('app', []);
-app.controller('AppCtrl', function(){
-    this.message = "Hello";
-});

@@ -7,7 +7,6 @@ Application.Services.service('auth', ['sessionService', '$q', 'AUTH_EVENTS', 'GA
     userAuthenticated = function() {
         var request = gapi.client.oauth2.userinfo.get().execute(function(resp) {
             if (!resp.code) {
-                console.log(resp);
                 sessionService.createUserDetails(resp);
                 alerts.clear();
                 //var token = gapi.auth.getToken();

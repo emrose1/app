@@ -1,7 +1,6 @@
 Application.Services
 .provider('Account', function() {
 
-
 	this.$get = ['$resource', function($resource) {
 		var Account = $resource('http://localhost:8080/_ah/api/booking/v1/account/:id', {}, {
 			update: {

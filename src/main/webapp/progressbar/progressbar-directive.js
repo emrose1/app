@@ -6,7 +6,6 @@ Application.Directives.directive('progressBar', ['$parse', function($parse) {
 
     link: function(scope, elem, attrs) {
       var progressBarAttr = attrs['progressinfo'];
-      console.log(progressBarAttr);
       //scope.loadingProgress = null;
 
       scope.$watch(progressBarAttr, function(newVal) {
