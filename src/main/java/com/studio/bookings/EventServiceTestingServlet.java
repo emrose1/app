@@ -2,28 +2,11 @@ package com.studio.bookings;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.joda.time.DateTime;
-
-import com.googlecode.objectify.Ref;
-import com.studio.bookings.dao.EventItemDao;
-import com.studio.bookings.entity.Account;
-import com.studio.bookings.entity.Calendar;
-import com.studio.bookings.entity.EventAttribute;
-import com.studio.bookings.entity.EventCategory;
-import com.studio.bookings.entity.EventItem;
-import com.studio.bookings.entity.Instructor;
-import com.studio.bookings.enums.EventRepeatType;
 
 /**
  * Servlet implementation class EventServiceTestingServlet

@@ -5,16 +5,15 @@ import java.util.ArrayList;
 import com.google.api.server.spi.config.Api;
 import com.studio.bookings.dao.BaseDao;
 import com.studio.bookings.dao.ChildBaseDao;
-import com.studio.bookings.dao.EventAttributeDao;
-import com.studio.bookings.dao.EventCategoryDao;
-import com.studio.bookings.dao.EventDao;
-import com.studio.bookings.dao.EventItemDao;
-import com.studio.bookings.dao.InstructorDao;
 import com.studio.bookings.entity.AccessControlList;
 import com.studio.bookings.entity.Account;
 import com.studio.bookings.entity.Application;
 import com.studio.bookings.entity.Calendar;
 import com.studio.bookings.entity.Event;
+import com.studio.bookings.entity.EventAttribute;
+import com.studio.bookings.entity.EventCategory;
+import com.studio.bookings.entity.EventItem;
+import com.studio.bookings.entity.Instructor;
 import com.studio.bookings.entity.Person;
 import com.studio.bookings.util.Constants;
 
@@ -32,16 +31,31 @@ import com.studio.bookings.util.Constants;
 public class BaseService {
 	
 	public static ArrayList<Event> events = new ArrayList<Event>();
+	
 	public static BaseDao<Application> applicationDao = new BaseDao<Application>(Application.class);
 	public static BaseDao<Account> accountDao = new BaseDao<Account>(Account.class);
 	public static BaseDao<AccessControlList> aclDao = new BaseDao<AccessControlList>(AccessControlList.class);
 	public static ChildBaseDao<Calendar, Account> calendarDao = new ChildBaseDao<Calendar, Account>(Calendar.class, Account.class);
-	public static EventDao eventDao = new EventDao();
-	public static EventItemDao eventItemDao = new EventItemDao();
-	public static EventAttributeDao eventAttributeDao = new EventAttributeDao();
-	public static EventCategoryDao eventCategoryDao = new EventCategoryDao();
-	public static InstructorDao instructorDao = new InstructorDao();
-	public static ChildBaseDao<Person, Account> personDao = new ChildBaseDao<Person, Account>(Person.class, Account.class);
-	public static ChildBaseDao<Person, Application> personAppDao = new ChildBaseDao<Person, Application>(Person.class, Application.class);
+	
+	public static ChildBaseDao<Event, Calendar> eventDao = 
+			new ChildBaseDao<Event, Calendar>(Event.class, Calendar.class);
+	
+	public static ChildBaseDao<EventItem, Calendar> eventItemDao = 
+			new ChildBaseDao<EventItem, Calendar>(EventItem.class, Calendar.class);
+			
+	public static ChildBaseDao<EventAttribute, Account> eventAttributeDao = 
+			new ChildBaseDao<EventAttribute, Account>(EventAttribute.class, Account.class);
+	
+	public static ChildBaseDao<EventCategory, Account> eventCategoryDao = 
+			new ChildBaseDao<EventCategory, Account>(EventCategory.class, Account.class);
+
+	public static ChildBaseDao<Instructor, Account> instructorDao = 
+			new ChildBaseDao<Instructor, Account>(Instructor.class, Account.class);
+	
+	public static ChildBaseDao<Person, Account> personDao = 
+			new ChildBaseDao<Person, Account>(Person.class, Account.class);
+	
+	public static ChildBaseDao<Person, Application> personAppDao = 
+			new ChildBaseDao<Person, Application>(Person.class, Application.class);
 	
 }

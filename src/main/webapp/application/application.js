@@ -83,6 +83,11 @@ angular.module('application', [
             controller: 'MainCtrl',
             templateUrl: 'accounts/account-partial.html'
         })
+        .state('calendar', {
+            url: '/calendar',
+            controller: 'calendarCtrl',
+            templateUrl: 'calendar/calendar-partial.html'
+        })
         .state('person', {
             url: '/person',
             controller: 'personCtrl',

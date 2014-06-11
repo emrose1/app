@@ -8,7 +8,8 @@ import com.google.api.server.spi.config.Named;
 import com.google.api.server.spi.config.ApiMethod.HttpMethod;
 import com.google.appengine.api.users.User;
 import com.studio.bookings.entity.Account;
-import com.studio.bookings.entity.Calendar;
+import com.studio.bookings.entity.EventAttribute;
+import com.studio.bookings.entity.EventAttribute;
 import com.studio.bookings.enums.Permission;
 import com.studio.bookings.util.Constants;
 
@@ -20,86 +21,87 @@ import com.studio.bookings.util.Constants;
 	    audiences = {Constants.ANDROID_AUDIENCE}
 	)
 
-public class CalendarService extends BaseService {
+public class EventAttributeService extends BaseService {
+	
 	public static AccessControlListService aclService = new AccessControlListService();
 	Permission aclPermission = Permission.CALENDAR;
 	
-	@ApiMethod(name = "calendar.insertCalendar", path="account/{account_id}/calendar",  httpMethod = HttpMethod.POST)
-	public Calendar insertCalendar( 
+	@ApiMethod(name = "account.insertEventAttribute", path="account/{account_id}/eventattribute",  httpMethod = HttpMethod.POST)
+	public EventAttribute insertEventAttribute( 
 		@Named("description") String description,  
 		@Named("account_id") Long accountId,
 		User user) {
 		
-		Calendar calendar = null;
+		EventAttribute eventAttribute = null;
 		//if(user != null) { 
     		// TODO THROW UNAUTHORIZED EXCEPTION
     		//if (aclService.allowInsert(accountId, aclPermission.toString(), user).get(0)) {
 				Account account =  accountDao.retrieve(accountId);
-				calendar = new Calendar(description, account);
-				calendarDao.save(calendar);
+				eventAttribute = new EventAttribute(description, account);
+				eventAttributeDao.save(eventAttribute);
     		//}
 		//}
-	    return calendar; 
+	    return eventAttribute; 
 	}
 	
-	@ApiMethod(name = "calendar.getCalendar", path="account/{account_id}/calendar/{id}",  httpMethod = HttpMethod.GET)
-	public Calendar getCalendar(
-		@Named("id") Long calendarId, 
+	@ApiMethod(name = "account.getEventAttribute", path="account/{account_id}/eventattribute/{id}",  httpMethod = HttpMethod.GET)
+	public EventAttribute getEventAttribute(
+		@Named("id") Long eventAttributeId, 
 		@Named("account_id") Long accountId,
 		User user) {
 
-		Calendar calendar = null;
+		EventAttribute eventAttribute = null;
 		//if(user != null) { 
     		// TODO THROW UNAUTHORIZED EXCEPTION
     		//if (aclService.allowView(accountId, aclPermission.toString(), user).get(0)) {
     			Account account = accountDao.retrieve(accountId);
-    			calendar = calendarDao.retrieveAncestor(calendarId, account);
+    			eventAttribute = eventAttributeDao.retrieveAncestor(eventAttributeId, account);
     		//}
 		//}
-		return calendar;
+		return eventAttribute;
 	}
 	
-	@ApiMethod(name = "calendar.listCalendars", path="account/{account_id}/calendar",  httpMethod = HttpMethod.GET)
-	public List<Calendar> listCalendars(
+	@ApiMethod(name = "account.listEventAttributes", path="account/{account_id}/eventattribute",  httpMethod = HttpMethod.GET)
+	public List<EventAttribute> listEventAttribute(
 			@Named("account_id") Long accountId,
 			User user) {
 		
-		List<Calendar> calendarList = null;
+		List<EventAttribute> eventAttributeList = null;
 		//if(user != null) { 
     		// TODO THROW UNAUTHORIZED EXCEPTION
     		//if (aclService.allowViewAll(accountId, aclPermission.toString(), user).get(0)) {
     			Account accountFetched = accountDao.retrieve(accountId);
-    			calendarList = calendarDao.listAncestors(accountFetched);
+    			eventAttributeList = eventAttributeDao.listAncestors(accountFetched);
     		//}
 		//}
-		return calendarList;
+		return eventAttributeList;
 	}
 	
-	@ApiMethod(name = "calendar.updateCalendar", path="account/{account_id}/calendar/{id}", httpMethod = HttpMethod.PUT)
-	public Calendar updateCalendar(@Named("id") Long calendarId,  @Named("account_id") Long accountId, 
-			@Named("description") String description, User user) {
-		Calendar calendar = null;
+	@ApiMethod(name = "eventAttribute.updateEventAttribute", path="account/{account_id}/eventAttribute/{id}", httpMethod = HttpMethod.PUT)
+	public EventAttribute updateEventAttribute(@Named("id") Long eventAttributeId,  @Named("account_id") Long accountId, 
+			@Named("description") String name, User user) {
+		EventAttribute eventAttribute = null;
 		//if(user != null) {	
 			//if (aclService.allowUpdate(accountId, aclPermission.toString(), user).get(0)) {
 				Account accountFetched = accountDao.retrieve(accountId);
-				calendar = calendarDao.retrieveAncestor(calendarId, accountFetched);
-				calendar.setDescription(description);
-				calendarDao.save(calendar);
+				eventAttribute = eventAttributeDao.retrieveAncestor(eventAttributeId, accountFetched);
+				eventAttribute.setName(name);
+				eventAttributeDao.save(eventAttribute);
 			//}
 		//}
-		return calendar;
+		return eventAttribute;
 	}
 	
-	@ApiMethod(name = "calendar.removeCalendar", path="account/{account_id}/calendar/{id}", httpMethod = HttpMethod.DELETE)
-	public void removeCalendar(
-			@Named("id") String calendarId,
+	@ApiMethod(name = "eventAttribute.removeEventAttributes", path="account/{account_id}/eventAttribute/{id}", httpMethod = HttpMethod.DELETE)
+	public void removeEventAttribute(
+			@Named("id") String eventAttributeId,
 			@Named("account_id") String accountId,
 			User user) {
 		
 		//if(user != null) {	
 			//if (aclService.allowDelete(Long.valueOf(accountId), aclPermission.toString(), user).get(0)) {
 				Account accountFetched = accountDao.retrieve(Long.valueOf(accountId));
-				calendarDao.deleteAncestors(Long.valueOf(calendarId), accountFetched);
+				eventAttributeDao.deleteAncestors(Long.valueOf(eventAttributeId), accountFetched);
 			//}
 		//}
 	}

@@ -20,16 +20,16 @@ public class EventAttribute {
 	
 	@Parent
     @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-    private Key<Calendar> calendarKey;
+    private Key<Account> accountKey;
 	
 	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-    public Key<Calendar> getCalendar() { 
-    	return this.calendarKey; 
+    public Key<Account> getAccount() { 
+    	return this.accountKey; 
     }
     
 	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-    public void setCalendarKey(Key<Calendar> value) { 
-    	this.calendarKey = value; 
+    public void setAccountKey(Key<Account> value) { 
+    	this.accountKey = value; 
     }
     
     @Index
@@ -38,8 +38,8 @@ public class EventAttribute {
 	
 	public EventAttribute(){}
 	
-	public EventAttribute(String name, Calendar calendar) {
-		this.calendarKey = calendar.getKey();
+	public EventAttribute(String name, Account account) {
+		this.accountKey = account.getKey();
 		this.name = name;
 	}
 	

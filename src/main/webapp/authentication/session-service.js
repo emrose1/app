@@ -20,6 +20,7 @@ Application.Services.service('sessionService', ['$q', 'alerts', '$rootScope', fu
 
     this.setAccount = function (account) {
         this.account = account;
+        console.log(account);
     };
     this.getAccount = function () {
         return this.account;

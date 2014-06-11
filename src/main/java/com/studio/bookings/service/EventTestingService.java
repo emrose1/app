@@ -1,4 +1,4 @@
-package com.studio.bookings.service;
+/*package com.studio.bookings.service;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -40,9 +40,9 @@ import com.studio.bookings.enums.EventRepeatType;
 import com.studio.bookings.util.Constants;
 import com.studio.bookings.util.LoadDummyData;
 
-/**
+*//**
  * Defines v1 of a booking API
- */
+ *//*
 @Api(
     name = "booking",
     version = "v1",
@@ -67,7 +67,7 @@ public class EventTestingService extends BaseService {
 	
 	
 	
-	/*
+	
 	
 	@ApiMethod(name = "calendar.addInstructor", path="calendar.addInstructor", httpMethod = "post")
 	public Instructor addInstructor( 
@@ -302,7 +302,7 @@ public class EventTestingService extends BaseService {
 		return Arrays.asList(EventRepeatType.values());
 	}
 	
-	*/
+	
 	
 	
 
@@ -311,7 +311,7 @@ public class EventTestingService extends BaseService {
 	// to test var message = {'email' : 'admin', 'password': 'password'}; console.log(message); 
 	// gapi.client.booking.calendar.authUserSession(message).execute(function(resp) { console.log(resp);});
 	
-	/*@ApiMethod(name = "calendar.authUserSession", path="calendar.authUserSession", httpMethod = "post")
+	@ApiMethod(name = "calendar.authUserSession", path="calendar.authUserSession", httpMethod = "post")
 	public UserSession authUserSession(@Named("username") String username, @Named("password") String password, HttpServletRequest request) {
 		
 		if (userDao.list().size() == 0) {
@@ -329,5 +329,6 @@ public class EventTestingService extends BaseService {
             return null;
         }
 	    return userSession;
-	}*/
+	}
 }
+*/

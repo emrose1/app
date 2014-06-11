@@ -12,7 +12,7 @@ import com.google.appengine.api.oauth.OAuthServiceFactory;
 import com.google.appengine.api.users.User;
 import com.studio.bookings.entity.AccessControlList;
 import com.studio.bookings.entity.Account;
-import com.studio.bookings.entity.Application;
+import com.studio.bookings.entity.Calendar;
 import com.studio.bookings.entity.Person;
 import com.studio.bookings.enums.Permission;
 import com.studio.bookings.util.Constants;
@@ -55,6 +55,13 @@ public class DummySetupService  extends BaseService {
 
 		Person p = new Person(account, userId, username, "email", "SUPERADMIN");
 		personDao.save(p);
+	}
+	
+	public void setUpCalendar(
+			@Named("calendar") String calendarname, 
+			Account account) {
+		Calendar c = new Calendar (calendarname, account);
+		calendarDao.save(c);
 	}
 	
 	public void setUpAcl() {
@@ -130,6 +137,7 @@ public class DummySetupService  extends BaseService {
 		List<Account> accountList2 = new ArrayList<Account>();
 		List<String> accounts = new ArrayList<String>();
 		List<String> persons = new ArrayList<String>();
+		List<String> calendars = new ArrayList<String>();
 		
 		accounts.add("Testing Account1");
 		accounts.add("Testing Accounts2");
@@ -138,6 +146,10 @@ public class DummySetupService  extends BaseService {
 		persons.add("Person 1");
 		persons.add("Person 2");
 		persons.add("Person 3");
+		
+		calendars.add("Calendar 1");
+		calendars.add("Calendar 2");
+		calendars.add("Calendar 3");
 		
 		int index = 0;
 		for (String accountName : accounts) {
@@ -148,6 +160,11 @@ public class DummySetupService  extends BaseService {
 				for (String personName : persons) {
 					setUpPerson(personName + " " +  account, "105854312734748005380", account);
 					setUpPerson(personName + " " +  account, "0", account);
+				}
+				
+				for (String calendarName : calendars) {
+					setUpCalendar(calendarName, account);
+					setUpCalendar(calendarName, account);
 				}
 			}
 		}

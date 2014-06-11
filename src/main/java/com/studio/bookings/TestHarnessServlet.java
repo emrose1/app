@@ -1,4 +1,4 @@
-package com.studio.bookings;
+/*package com.studio.bookings;
 
 import java.io.IOException;
 
@@ -51,7 +51,7 @@ public class TestHarnessServlet extends HttpServlet {
 	    resp.setContentType("text/plain");
 
 	  
-	  /*
+	  
 	  rw.println("EVENTS BY CALENDAR");
 	  
 	  List<Calendar> calendars = calendarDao.findAll();
@@ -80,7 +80,7 @@ public class TestHarnessServlet extends HttpServlet {
 		  }
 		  rw.println("");
 		  rw.println("==========");
-	  }*/
+	  }
 	  
 	  rw.println("");
 	  rw.println("==========");
@@ -89,7 +89,7 @@ public class TestHarnessServlet extends HttpServlet {
 	  
 	  //TODO FIX
 	  //List <UserType> userTypes = userTypeDao.list();
-	  /*for (UserType ut : userTypes) {
+	  for (UserType ut : userTypes) {
 		  //TODO FIX List<User> users = userDao.getUsersByUserType(ut);
 		  
 		  rw.println("user type " + ut + ": Users");
@@ -107,7 +107,7 @@ public class TestHarnessServlet extends HttpServlet {
 			  }
 		  }
 		  
-	  }*/
+	  }
 	  
 	  rw.println("");
 	  rw.println("==========");
@@ -116,7 +116,7 @@ public class TestHarnessServlet extends HttpServlet {
 	  
 	  AccessControlList acl = new AccessControlList();
 	  //TODO FIX
-	  /*for (UserType ut : userTypes) {
+	  for (UserType ut : userTypes) {
 		  rw.println("user type " + ut + ": ACL for EVENT");
 		  try {
 			acl = accessControlListDao.getByUserTypeAndPermission(ut, Permission.EVENT);
@@ -128,7 +128,7 @@ public class TestHarnessServlet extends HttpServlet {
 			String s = e.toString();
 			rw.println(s);
 		  }
-	  }*/
+	  }
 	  rw.println("");
 	  rw.println("==========");
 	  rw.println("");
@@ -141,3 +141,4 @@ public class TestHarnessServlet extends HttpServlet {
 	  
   }
 }
+*/
