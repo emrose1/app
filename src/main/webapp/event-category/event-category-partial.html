@@ -1,0 +1,25 @@
+<div>
+    <div class="container">
+        <h1 ng-show="eventCategory.length">Event Category</h1>
+        <table class="table table-striped" ng-show="eventCategorys.length">
+            <thead>
+                <th>Title</th>
+            </thead>
+            <tbody>
+                <tr ng-repeat="eventCategory in eventCategorys">
+                    <td ng-click="activeEventCategory(eventCategory)">{{eventCategory.id}}</td>
+                    <td ng-click="activeEventCategory(eventCategory)">{{eventCategory.name}}</td>
+                    <td><button class="btn btn-danger" ng-click="delete(eventCategory)">Delete</button></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3 ng-if="!editing">New Event Category</h3>
+        <h3 ng-if="editing">Edit Event Category</h3>
+        <form ng-submit="save(eventCategory)">
+            <input ng-model="eventCategory.name">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+        <button ng-if="editing" class="btn btn-success" ng-click="newEventCategory()">New Event Category</button>
+    </div>
+</div>

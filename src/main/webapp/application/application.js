@@ -88,6 +88,16 @@ angular.module('application', [
             controller: 'calendarCtrl',
             templateUrl: 'calendar/calendar-partial.html'
         })
+        .state('eventattribute', {
+            url: '/eventattribute',
+            controller: 'eventAttributeCtrl',
+            templateUrl: 'event-attribute/event-attribute-partial.html'
+        })
+        .state('eventcategory', {
+            url: '/eventcategory',
+            controller: 'eventCategoryCtrl',
+            templateUrl: 'event-category/event-category-partial.html'
+        })
         .state('person', {
             url: '/person',
             controller: 'personCtrl',

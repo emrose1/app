@@ -13,6 +13,8 @@ import com.google.appengine.api.users.User;
 import com.studio.bookings.entity.AccessControlList;
 import com.studio.bookings.entity.Account;
 import com.studio.bookings.entity.Calendar;
+import com.studio.bookings.entity.EventAttribute;
+import com.studio.bookings.entity.EventCategory;
 import com.studio.bookings.entity.Person;
 import com.studio.bookings.enums.Permission;
 import com.studio.bookings.util.Constants;
@@ -62,6 +64,20 @@ public class DummySetupService  extends BaseService {
 			Account account) {
 		Calendar c = new Calendar (calendarname, account);
 		calendarDao.save(c);
+	}
+	
+	public void setUpEventAttribute(
+			@Named("attribute") String attributename, 
+			Account account) {
+		EventAttribute c = new EventAttribute (attributename, account);
+		eventAttributeDao.save(c);
+	}
+	
+	public void setUpEventCategory(
+			@Named("category") String categoryname, 
+			Account account) {
+		EventCategory c = new EventCategory (categoryname, account);
+		eventCategoryDao.save(c);
 	}
 	
 	public void setUpAcl() {
@@ -138,6 +154,8 @@ public class DummySetupService  extends BaseService {
 		List<String> accounts = new ArrayList<String>();
 		List<String> persons = new ArrayList<String>();
 		List<String> calendars = new ArrayList<String>();
+		List<String> attributes = new ArrayList<String>();
+		List<String> categories = new ArrayList<String>();
 		
 		accounts.add("Testing Account1");
 		accounts.add("Testing Accounts2");
@@ -150,6 +168,16 @@ public class DummySetupService  extends BaseService {
 		calendars.add("Calendar 1");
 		calendars.add("Calendar 2");
 		calendars.add("Calendar 3");
+		
+		attributes.add("Attribute 1");
+		attributes.add("Attribute 2");
+		attributes.add("Attribute 3");
+		
+		categories.add("Category 1");
+		categories.add("Category 2");
+		categories.add("Category 3");
+
+		
 		
 		int index = 0;
 		for (String accountName : accounts) {
@@ -165,6 +193,16 @@ public class DummySetupService  extends BaseService {
 				for (String calendarName : calendars) {
 					setUpCalendar(calendarName, account);
 					setUpCalendar(calendarName, account);
+				}
+				
+				for (String attributeName : attributes) {
+					setUpEventAttribute(attributeName, account);
+					setUpEventAttribute(attributeName, account);
+				}
+				
+				for (String categoryName : attributes) {
+					setUpEventCategory(categoryName, account);
+					setUpEventCategory(categoryName, account);
 				}
 			}
 		}

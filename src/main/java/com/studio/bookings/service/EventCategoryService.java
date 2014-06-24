@@ -8,8 +8,7 @@ import com.google.api.server.spi.config.Named;
 import com.google.api.server.spi.config.ApiMethod.HttpMethod;
 import com.google.appengine.api.users.User;
 import com.studio.bookings.entity.Account;
-import com.studio.bookings.entity.EventAttribute;
-
+import com.studio.bookings.entity.EventCategory;
 import com.studio.bookings.enums.Permission;
 import com.studio.bookings.util.Constants;
 
@@ -21,87 +20,87 @@ import com.studio.bookings.util.Constants;
 	    audiences = {Constants.ANDROID_AUDIENCE}
 	)
 
-public class EventAttributeService extends BaseService {
+public class EventCategoryService extends BaseService {
 	
 	public static AccessControlListService aclService = new AccessControlListService();
 	Permission aclPermission = Permission.CALENDAR;
 	
-	@ApiMethod(name = "account.insertEventAttribute", path="account/{account_id}/eventattribute",  httpMethod = HttpMethod.POST)
-	public EventAttribute insertEventAttribute( 
+	@ApiMethod(name = "account.insertEventCategory", path="account/{account_id}/eventcategory",  httpMethod = HttpMethod.POST)
+	public EventCategory insertEventCategory( 
 		@Named("description") String description,  
 		@Named("account_id") Long accountId,
 		User user) {
 		
-		EventAttribute eventAttribute = null;
+		EventCategory eventCategory = null;
 		//if(user != null) { 
     		// TODO THROW UNAUTHORIZED EXCEPTION
     		//if (aclService.allowInsert(accountId, aclPermission.toString(), user).get(0)) {
 				Account account =  accountDao.retrieve(accountId);
-				eventAttribute = new EventAttribute(description, account);
-				eventAttributeDao.save(eventAttribute);
+				eventCategory = new EventCategory(description, account);
+				eventCategoryDao.save(eventCategory);
     		//}
 		//}
-	    return eventAttribute; 
+	    return eventCategory; 
 	}
 	
-	@ApiMethod(name = "account.getEventAttribute", path="account/{account_id}/eventattribute/{id}",  httpMethod = HttpMethod.GET)
-	public EventAttribute getEventAttribute(
-		@Named("id") Long eventAttributeId, 
+	@ApiMethod(name = "account.getEventCategory", path="account/{account_id}/eventcategory/{id}",  httpMethod = HttpMethod.GET)
+	public EventCategory getEventCategory(
+		@Named("id") Long eventCategoryId, 
 		@Named("account_id") Long accountId,
 		User user) {
 
-		EventAttribute eventAttribute = null;
+		EventCategory eventCategory = null;
 		//if(user != null) { 
     		// TODO THROW UNAUTHORIZED EXCEPTION
     		//if (aclService.allowView(accountId, aclPermission.toString(), user).get(0)) {
     			Account account = accountDao.retrieve(accountId);
-    			eventAttribute = eventAttributeDao.retrieveAncestor(eventAttributeId, account);
+    			eventCategory = eventCategoryDao.retrieveAncestor(eventCategoryId, account);
     		//}
 		//}
-		return eventAttribute;
+		return eventCategory;
 	}
 	
-	@ApiMethod(name = "account.listEventAttributes", path="account/{account_id}/eventattribute",  httpMethod = HttpMethod.GET)
-	public List<EventAttribute> listEventAttribute(
+	@ApiMethod(name = "account.listEventCategorys", path="account/{account_id}/eventcategory",  httpMethod = HttpMethod.GET)
+	public List<EventCategory> listEventCategory(
 			@Named("account_id") Long accountId,
 			User user) {
 		
-		List<EventAttribute> eventAttributeList = null;
+		List<EventCategory> eventCategoryList = null;
 		//if(user != null) { 
     		// TODO THROW UNAUTHORIZED EXCEPTION
     		//if (aclService.allowViewAll(accountId, aclPermission.toString(), user).get(0)) {
     			Account accountFetched = accountDao.retrieve(accountId);
-    			eventAttributeList = eventAttributeDao.listAncestors(accountFetched);
+    			eventCategoryList = eventCategoryDao.listAncestors(accountFetched);
     		//}
 		//}
-		return eventAttributeList;
+		return eventCategoryList;
 	}
 	
-	@ApiMethod(name = "eventAttribute.updateEventAttribute", path="account/{account_id}/eventattribute/{id}", httpMethod = HttpMethod.PUT)
-	public EventAttribute updateEventAttribute(@Named("id") Long eventAttributeId,  @Named("account_id") Long accountId, 
+	@ApiMethod(name = "eventCategory.updateEventCategory", path="account/{account_id}/eventcategory/{id}", httpMethod = HttpMethod.PUT)
+	public EventCategory updateEventCategory(@Named("id") Long eventCategoryId,  @Named("account_id") Long accountId, 
 			@Named("description") String name, User user) {
-		EventAttribute eventAttribute = null;
+		EventCategory eventCategory = null;
 		//if(user != null) {	
 			//if (aclService.allowUpdate(accountId, aclPermission.toString(), user).get(0)) {
 				Account accountFetched = accountDao.retrieve(accountId);
-				eventAttribute = eventAttributeDao.retrieveAncestor(eventAttributeId, accountFetched);
-				eventAttribute.setName(name);
-				eventAttributeDao.save(eventAttribute);
+				eventCategory = eventCategoryDao.retrieveAncestor(eventCategoryId, accountFetched);
+				eventCategory.setName(name);
+				eventCategoryDao.save(eventCategory);
 			//}
 		//}
-		return eventAttribute;
+		return eventCategory;
 	}
 	
-	@ApiMethod(name = "eventAttribute.removeEventAttribute", path="account/{account_id}/eventattribute/{id}", httpMethod = HttpMethod.DELETE)
-	public void removeEventAttribute(
-			@Named("id") String eventAttributeId,
+	@ApiMethod(name = "eventCategory.removeEventCategory", path="account/{account_id}/eventcategory/{id}", httpMethod = HttpMethod.DELETE)
+	public void removeEventCategory(
+			@Named("id") String eventCategoryId,
 			@Named("account_id") String accountId,
 			User user) {
 		
 		//if(user != null) {	
 			//if (aclService.allowDelete(Long.valueOf(accountId), aclPermission.toString(), user).get(0)) {
 				Account accountFetched = accountDao.retrieve(Long.valueOf(accountId));
-				eventAttributeDao.deleteAncestors(Long.valueOf(eventAttributeId), accountFetched);
+				eventCategoryDao.deleteAncestors(Long.valueOf(eventCategoryId), accountFetched);
 			//}
 		//}
 	}

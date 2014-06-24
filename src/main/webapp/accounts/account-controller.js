@@ -29,6 +29,7 @@ Application.Controllers.controller('MainCtrl', ['$scope', 'Account', 'sessionSer
 
         $scope.delete = function(account) {
             Account.delete(account);
+            console.log(account);
             _.remove($scope.accounts, account);
         };
 
