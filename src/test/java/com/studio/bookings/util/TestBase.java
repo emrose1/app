@@ -22,10 +22,16 @@ import com.studio.bookings.entity.AccessControlList;
 import com.studio.bookings.entity.Account;
 import com.studio.bookings.entity.Application;
 import com.studio.bookings.entity.Calendar;
+import com.studio.bookings.entity.Event;
+import com.studio.bookings.entity.EventAttribute;
+import com.studio.bookings.entity.EventCategory;
 import com.studio.bookings.entity.Person;
 import com.studio.bookings.service.AccessControlListService;
 import com.studio.bookings.service.AccountService;
 import com.studio.bookings.service.CalendarService;
+import com.studio.bookings.service.EventAttributeService;
+import com.studio.bookings.service.EventCategoryService;
+import com.studio.bookings.service.EventService;
 import com.studio.bookings.service.PersonService;
 
 /**
@@ -46,6 +52,15 @@ public class TestBase {
 	
 	public CalendarService calendarService = new CalendarService();
 	public ChildBaseDao<Calendar, Account> calendarDao = new ChildBaseDao<Calendar, Account>(Calendar.class, Account.class);
+	
+	public EventAttributeService eventAttributeService = new EventAttributeService();
+	public ChildBaseDao<EventAttribute, Account> eventAttributeDao = new ChildBaseDao<EventAttribute, Account>(EventAttribute.class, Account.class);
+	
+	public EventCategoryService eventCategoryService = new EventCategoryService();
+	public ChildBaseDao<EventCategory, Account> eventCategoryDao = new ChildBaseDao<EventCategory, Account>(EventCategory.class, Account.class);
+	
+	public EventService eventService = new EventService();
+	public ChildBaseDao<Event, Calendar> eventDao = new ChildBaseDao<Event, Calendar>(Event.class, Calendar.class);
 	
 	public PersonService personService = new PersonService();
 	public ChildBaseDao<Person, Account> personDao = new ChildBaseDao<Person, Account>(Person.class, Account.class);

@@ -1,35 +1,37 @@
 package com.studio.bookings.entity;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
 import com.google.api.server.spi.config.AnnotationBoolean;
 import com.google.api.server.spi.config.ApiResourceProperty;
 import com.googlecode.objectify.Key;
+import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.annotation.Parent;
 
+@EqualsAndHashCode
 @Entity
 public class EventAttribute {
 	
-	@Index
 	@Getter @Setter
 	@Id Long id;
 	
 	@Parent
     @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-    private Key<Account> accountKey;
+    private Ref<Account> accountRef;
 	
 	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-    public Key<Account> getAccount() { 
-    	return this.accountKey; 
+    public Account getAccount() { 
+    	return accountRef.get(); 
     }
     
 	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-    public void setAccountKey(Key<Account> value) { 
-    	this.accountKey = value; 
+    public void setAccount(Account account) { 
+    	accountRef = Ref.create(account); 
     }
     
     @Index
@@ -39,7 +41,7 @@ public class EventAttribute {
 	public EventAttribute(){}
 	
 	public EventAttribute(String name, Account account) {
-		this.accountKey = account.getKey();
+		this.setAccount(account);
 		this.name = name;
 	}
 	

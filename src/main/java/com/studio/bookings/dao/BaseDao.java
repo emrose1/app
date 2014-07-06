@@ -14,7 +14,6 @@ import com.studio.bookings.entity.Calendar;
 import com.studio.bookings.entity.Event;
 import com.studio.bookings.entity.EventAttribute;
 import com.studio.bookings.entity.EventCategory;
-import com.studio.bookings.entity.EventItem;
 import com.studio.bookings.entity.Person;
 
 //http://stackoverflow.com/questions/21036934/objectify-the-list-from-query-result-contains-null
@@ -27,7 +26,6 @@ public class BaseDao<T> {
 		ObjectifyService.register(Application.class);
 		ObjectifyService.register(Calendar.class);
 		ObjectifyService.register(Event.class);
-		ObjectifyService.register(EventItem.class);
 		ObjectifyService.register(EventAttribute.class);
 		ObjectifyService.register(EventCategory.class);
 		ObjectifyService.register(Person.class);
@@ -43,6 +41,10 @@ public class BaseDao<T> {
 
 	public Long save(T e){
 		return ofy().save().entity(e).now().getId();
+	}
+	
+	public Key saveWithKey(T e){
+		return ofy().save().entity(e).now();
 	}
 	
 	public List<Key<T>> save(List<T> e) {		

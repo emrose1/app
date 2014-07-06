@@ -25,15 +25,6 @@ import com.studio.bookings.util.TestBase;
 
 public class CalendarServiceTest extends TestBase {
 	
-	public static AccountService accountService = new AccountService();
-	public static BaseDao<Account> accountDao = new BaseDao<Account>(Account.class);
-	
-	CalendarService calendarService = new CalendarService();
-	ChildBaseDao<Calendar, Account> calendarDao = new ChildBaseDao<Calendar, Account>(Calendar.class, Account.class);
-	AccessControlListService aclService = new AccessControlListService();
-	BaseDao<AccessControlList> aclDao = new BaseDao<AccessControlList>(AccessControlList.class);
-	ChildBaseDao<Person, Account> personDao = new ChildBaseDao<Person, Account>(Person.class, Account.class);
-	
 	static Permission permission = Permission.CALENDAR;
 	
 	public User setUpUser() {

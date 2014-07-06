@@ -12,8 +12,6 @@ import com.studio.bookings.entity.Calendar;
 import com.studio.bookings.entity.Event;
 import com.studio.bookings.entity.EventAttribute;
 import com.studio.bookings.entity.EventCategory;
-import com.studio.bookings.entity.EventItem;
-import com.studio.bookings.entity.Instructor;
 import com.studio.bookings.entity.Person;
 import com.studio.bookings.util.Constants;
 
@@ -39,9 +37,6 @@ public class BaseService {
 	
 	public static ChildBaseDao<Event, Calendar> eventDao = 
 			new ChildBaseDao<Event, Calendar>(Event.class, Calendar.class);
-	
-	public static ChildBaseDao<EventItem, Calendar> eventItemDao = 
-			new ChildBaseDao<EventItem, Calendar>(EventItem.class, Calendar.class);
 			
 	public static ChildBaseDao<EventAttribute, Account> eventAttributeDao = 
 			new ChildBaseDao<EventAttribute, Account>(EventAttribute.class, Account.class);
@@ -49,9 +44,6 @@ public class BaseService {
 	public static ChildBaseDao<EventCategory, Account> eventCategoryDao = 
 			new ChildBaseDao<EventCategory, Account>(EventCategory.class, Account.class);
 
-	public static ChildBaseDao<Instructor, Account> instructorDao = 
-			new ChildBaseDao<Instructor, Account>(Instructor.class, Account.class);
-	
 	public static ChildBaseDao<Person, Account> personDao = 
 			new ChildBaseDao<Person, Account>(Person.class, Account.class);
 	
