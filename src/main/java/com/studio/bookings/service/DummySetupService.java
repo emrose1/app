@@ -1,7 +1,12 @@
 package com.studio.bookings.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeConstants;
 
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
@@ -13,9 +18,11 @@ import com.google.appengine.api.users.User;
 import com.studio.bookings.entity.AccessControlList;
 import com.studio.bookings.entity.Account;
 import com.studio.bookings.entity.Calendar;
+import com.studio.bookings.entity.Event;
 import com.studio.bookings.entity.EventAttribute;
 import com.studio.bookings.entity.EventCategory;
 import com.studio.bookings.entity.Person;
+import com.studio.bookings.enums.EventRepeatType;
 import com.studio.bookings.enums.Permission;
 import com.studio.bookings.util.Constants;
 
@@ -43,9 +50,9 @@ public class DummySetupService  extends BaseService {
 		return account;
 	}
 	
-	public void setUpPerson(
-			@Named("username") String username, 
-			@Named("userId") String userId, 
+	private Person setUpPerson(
+			String username, 
+			String userId, 
 			Account account){
 	
 		List<String> userTypeList = new ArrayList<String>();
@@ -57,30 +64,63 @@ public class DummySetupService  extends BaseService {
 
 		Person p = new Person(account, userId, username, "email", "SUPERADMIN");
 		personDao.save(p);
+		return p;
 	}
 	
-	public void setUpCalendar(
-			@Named("calendar") String calendarname, 
+	private DateTime calcNextMonday(DateTime dateTime) {
+        if (dateTime.getDayOfWeek() >= DateTimeConstants.MONDAY) {
+            dateTime = dateTime.plusWeeks(1);
+        }
+        return dateTime.withDayOfWeek(DateTimeConstants.MONDAY);
+    }
+	
+	private void setUpEvent(
+			Calendar cal,
+			Person inst,
+			EventCategory eventCategory,
+			EventAttribute eventAttribute,
+			@Named("hours") Integer hours
+			) {
+		Date dateStart = calcNextMonday(new DateTime()).withTime(0, 0, 0, 0).plusHours(hours).toDate();
+		Date dateEnd = new DateTime(dateStart).plusHours(2).toDate();
+		
+		Date finalRepeatWeeklyDate = new DateTime(dateEnd).plusWeeks(5).plusDays(1).toDate();
+		List<Integer> daysOfWeek = Arrays.asList(1);
+		
+		Date finalDate = new DateTime(dateStart).plusMonths(6).plusDays(1).toDate();
+
+		Event ev2 = new Event(cal, true, EventRepeatType.DAILY, new Integer(1), finalDate,  null, 
+		daysOfWeek, null,  "summary", dateStart, dateEnd, new Integer(10), inst, 
+		eventCategory, eventAttribute);
+		
+		eventDao.save(ev2);
+	}
+	
+	private Calendar setUpCalendar(
+			String calendarname, 
 			Account account) {
 		Calendar c = new Calendar (calendarname, account);
 		calendarDao.save(c);
+		return c;
 	}
 	
-	public void setUpEventAttribute(
-			@Named("attribute") String attributename, 
+	private EventAttribute setUpEventAttribute(
+			String attributename, 
 			Account account) {
 		EventAttribute c = new EventAttribute (attributename, account);
 		eventAttributeDao.save(c);
+		return c;
 	}
 	
-	public void setUpEventCategory(
-			@Named("category") String categoryname, 
+	private EventCategory setUpEventCategory(
+			String categoryname, 
 			Account account) {
 		EventCategory c = new EventCategory (categoryname, account);
 		eventCategoryDao.save(c);
+		return c;
 	}
 	
-	public void setUpAcl() {
+	private void setUpAcl() {
 		if(aclDao.list().size() == 0) { 
 			List<String> permissionList = new ArrayList<String>();
 			permissionList.add("ACCOUNT"); 
@@ -107,7 +147,7 @@ public class DummySetupService  extends BaseService {
 		}
 	}
 	
-	public User setUpUser() {
+	private User setUpUser() {
 		OAuthService oauth = OAuthServiceFactory.getOAuthService();
 		User user = null;
 		try {
@@ -119,7 +159,7 @@ public class DummySetupService  extends BaseService {
 		return user;
 	}
 	
-	public void setUp(Account userAccount, User user) {
+	private void setUp(Account userAccount, User user) {
 		AccessControlList acl = new AccessControlList(permission.toString(), "true", "true", "true", "true", "true", "SUPERADMIN");
 		aclDao.save(acl);
 		Person p = new Person(userAccount, user.getUserId(), "test1", "email", "SUPERADMIN");
@@ -131,24 +171,6 @@ public class DummySetupService  extends BaseService {
 	public List<Account> dummyUsers() {
 		
 		setUpAcl();
-	
-		// from test
-		/*Account userAccount = new Account();
-		Long userAccountId = accountDao.save(userAccount);
-		User user = this.setUpUser();
-		this.setUp(userAccount, user);
-		
-		Account account1 = new Account("Account 1");
-		Account account2 = new Account("Account 2");
-				
-		List<Account> accountList = new ArrayList<Account>();
-		accountList.add(userAccount);
-		accountList.add(account1);
-		accountList.add(account2);
-		
-		accountDao.save(accountList);
-		//
-*/		
 		
 		List<Account> accountList2 = new ArrayList<Account>();
 		List<String> accounts = new ArrayList<String>();
@@ -185,24 +207,47 @@ public class DummySetupService  extends BaseService {
 				Account account = new Account(accountName);
 				accountDao.save(account);
 				accountList2.add(account);
+				
+				Calendar[] cals = new Calendar[3];
+				EventAttribute[] eattrs = new EventAttribute[3];
+				EventCategory[] eccats = new EventCategory[3];
+				
+				Calendar c = new Calendar();
+				EventAttribute ea = new EventAttribute();
+				EventCategory ec = new EventCategory();
+				Person p = new Person();
+				
+				int index1 = 0;
 				for (String personName : persons) {
 					setUpPerson(personName + " " +  account, "105854312734748005380", account);
-					setUpPerson(personName + " " +  account, "0", account);
+					p = setUpPerson(personName + " " +  account, "0", account);
 				}
 				
+				index1 = 0;
 				for (String calendarName : calendars) {
-					setUpCalendar(calendarName, account);
-					setUpCalendar(calendarName, account);
+					 c = setUpCalendar(calendarName, account);
+					 cals[index1] = c;
+					 index1++;
 				}
 				
+				index1 = 0;
 				for (String attributeName : attributes) {
-					setUpEventAttribute(attributeName, account);
-					setUpEventAttribute(attributeName, account);
+					ea = (setUpEventAttribute(attributeName, account));
+					eattrs[index1] = ea;
+					index1++;
 				}
 				
-				for (String categoryName : attributes) {
-					setUpEventCategory(categoryName, account);
-					setUpEventCategory(categoryName, account);
+				index1 = 0;
+				for (String categoryName : categories) {
+					ec = (setUpEventCategory(categoryName, account));
+					eccats[index1] = ec;
+					index1++;
+				}
+				
+				index1 = 0;
+				for(Calendar cal : cals) {
+					setUpEvent(cal, p, eccats[index1], eattrs[index1], index1);
+					index1++;
 				}
 			}
 		}

@@ -14,13 +14,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeConstants;
 import org.joda.time.Days;
-import org.joda.time.LocalDate;
 import org.joda.time.Months;
 import org.joda.time.Weeks;
 import org.joda.time.Years;
 
+import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiMethod.HttpMethod;
 import com.google.api.server.spi.config.Named;
@@ -32,31 +31,19 @@ import com.studio.bookings.entity.EventAttribute;
 import com.studio.bookings.entity.EventCategory;
 import com.studio.bookings.entity.Person;
 import com.studio.bookings.enums.EventRepeatType;
+import com.studio.bookings.util.Constants;
 
+@Api(
+	    name = "booking",
+	    version = "v1",
+	    scopes = {Constants.EMAIL_SCOPE},
+	    clientIds = {Constants.WEB_CLIENT_ID},
+	    audiences = {Constants.ANDROID_AUDIENCE}
+	)
 
 public class EventService extends BaseService {
 	
 	public static CalendarService calendarService = new CalendarService();
-	
-/*	@ApiMethod(name = "calendar.addInstructor", path="calendar.addInstructor", httpMethod = "post")
-	public Instructor addInstructor( 
-			@Named("name") String name,  
-			@Named("lastname") String lastname,
-			@Named("description") String description,
-			@Named("Calendar") Long calendarId,
-			@Named("Account") Long accountId)  throws Exception {
-		
-		Account account = accountDao.retrieve(accountId);
-		
-		Instructor instructor = new Instructor(name, lastname, description);
-		instructorDao.save(instructor);
-	    return instructor;
-	}
-	
-	@ApiMethod(name = "calendar.listInstructors", path="calendar.listInstructors", httpMethod = "get")
-	public List<Instructor> listInstructors() {
-		return instructorDao.findAll();
-	}*/
 
 	@ApiMethod(name = "calendar.insertEvent", path="calendar/{calendar_id}/event",  httpMethod = HttpMethod.POST)
 	public Event insertEvent(
@@ -124,10 +111,11 @@ public class EventService extends BaseService {
 	}
 	
  
-	@ApiMethod(name = "calendar.listEvents", path="calendar/{calendar_id}/event",  httpMethod = HttpMethod.POST)
-	Map<Date, Event> listEvents(
+	@ApiMethod(name = "calendar.listEvents", path="calendar/{calendar_id}/event",  httpMethod = HttpMethod.GET)
+	public Map<Date, Event> listEvents(
 			@Named("account_id") Long accountId,
-			@Named("calendar_id") Long calendarId) throws Exception {
+			@Named("calendar_id") Long calendarId,
+			@Named("date_range_start") String dateStart) throws ParseException {
 		
 		// Get Account
 		Account account = accountDao.retrieve(accountId);
@@ -135,21 +123,24 @@ public class EventService extends BaseService {
 		// Get Calendar
 		Calendar calendar = calendarDao.retrieveAncestor(calendarId, account);
 		
-		Date dateStart = new DateTime().minusMonths(2).toDate();
-		Date dateEnd = new DateTime().plusMonths(2).toDate();
 		
+		//Format Dates
+		DateFormat formatter = new SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss zzz");		
+		Date eventStart = formatter.parse(dateStart);
+		Date dateEnd = new DateTime(eventStart).plusMonths(6).toDate();
 		
 		Map<Date, Event> allEvents = new HashMap<Date, Event>();
 		
-		List<Event> events = eventDao.dateRangeAncestorQuery("startDateTime >=", dateStart, "startDateTime <", dateEnd, calendar);
+		List<Event> events = eventDao.dateRangeAncestorQuery("startDateTime >=", eventStart, "startDateTime <", dateEnd, calendar);
 
         Date currentDate = null;
         
         for (Event event : events) {
 	        if (event.getRepeatEvent()) {
-	            currentDate = findNextOccurrence(event, dateStart);
-	
+	            currentDate = findNextOccurrence(event, eventStart);
+	 
 	            while (currentDate!= null && currentDate.before(dateEnd)) {
+	            	
 	            	allEvents.put(currentDate, event);
 	                Date nextMinute = new DateTime(currentDate).plusMinutes(1).toDate();
 	                currentDate = findNextOccurrence(event, nextMinute);

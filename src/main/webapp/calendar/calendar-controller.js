@@ -1,8 +1,16 @@
-Application.Controllers.controller('calendarCtrl', ['$scope', 'Calendar', 'sessionService',
-        function($scope, Calendar, session) {
+Application.Controllers.controller('calendarCtrl', ['$rootScope', '$scope', 'Calendar', 'sessionService',
+        function($rootScope, $scope, Calendar, session) {
 
         $scope.calendar = new Calendar();
-        $scope.calendars = Calendar.query({account_id: session.getAccount().id});
+
+        $scope.calendars = Calendar.query({account_id: session.getAccount()});
+
+        var refreshCalendars = function() {
+            Calendar.get({account_id: session.getAccount().id}, function(data) {
+                $scope.calendars = data;
+                console.log(data);
+            });
+        };
 
         $scope.newCalendar = function() {
             $scope.calendar = new Calendar();
@@ -12,6 +20,7 @@ Application.Controllers.controller('calendarCtrl', ['$scope', 'Calendar', 'sessi
         $scope.activeCalendar = function(calendar) {
             $scope.calendar = calendar;
             $scope.editing = true;
+            session.setCalendar(calendar);
         };
 
         $scope.save = function(calendar) {
@@ -35,6 +44,11 @@ Application.Controllers.controller('calendarCtrl', ['$scope', 'Calendar', 'sessi
             Calendar.delete({account_id: session.getAccount().id, id: calendar.id}, calendar);
             _.remove($scope.calendars, calendar);
         };
+
+        $scope.$on('account-changed', function(event, args) {
+            console.log('account changed');
+            refreshCalendars();
+        });
 
     }
 ]);

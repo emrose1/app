@@ -1,6 +1,8 @@
 package com.studio.bookings.service;
 
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -8,11 +10,9 @@ import java.util.Map;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
-import org.joda.time.LocalDate;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.google.api.server.spi.config.Named;
 import com.google.appengine.api.oauth.OAuthRequestException;
 import com.google.appengine.api.oauth.OAuthService;
 import com.google.appengine.api.oauth.OAuthServiceFactory;
@@ -274,7 +274,11 @@ public class EventServiceTest extends TestBase {
 		eventDao.save(ev1);
 		eventDao.save(ev2);
 		
-		Map<Date, Event> events = eventService.listEvents(account.getId(), calendar1.getId());
+		Date today = new DateTime().minusMonths(1).toDate();
+		DateFormat formatter = new SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss zzz");
+	    String fromDate = formatter.format(today);
+		
+		Map<Date, Event> events = eventService.listEvents(account.getId(), calendar1.getId(), fromDate);
 		Assert.assertNotNull(events);
 		assert events.size() == 2;	
 	}
@@ -312,10 +316,13 @@ public class EventServiceTest extends TestBase {
 		
 		eventDao.save(ev1);
 		
-		Map<Date, Event> events = eventService.listEvents(account.getId(), calendar1.getId());
-		Assert.assertNotNull(events);
-		assert events.size() == 7;
+		Date today = new DateTime().minusMonths(1).toDate();
+		DateFormat formatter = new SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss zzz");
+	    String fromDate = formatter.format(today);
 		
+		Map<Date, Event> events = eventService.listEvents(account.getId(), calendar1.getId(), fromDate);
+		Assert.assertNotNull(events);
+	    assert events.size() == 7;
 	}
 	
 	@Test
@@ -339,10 +346,10 @@ public class EventServiceTest extends TestBase {
 		
 		EventAttribute eventAttribute1 = new EventAttribute("Event Attribute1", account);
 		eventAttributeDao.save(eventAttribute1);
-		
-		Date dateStart = new DateTime().plusDays(1).toDate();
-		Date dateEnd = new DateTime(dateStart).plusHours(1).toDate();
-		Date finalDate = new DateTime().plusWeeks(4).plusDays(1).plusHours(6).toDate();
+
+		Date dateStart = calcNextMonday(new DateTime()).withTime(0, 0, 0, 0).plusHours(1).toDate();
+		Date dateEnd = new DateTime(dateStart).plusHours(2).toDate();
+		Date finalDate = new DateTime(dateEnd).plusWeeks(5).plusDays(1).toDate();
 		List<Integer> daysOfWeek = Arrays.asList(1);
 		
 		Event ev1 = new Event(calendar1, true, EventRepeatType.WEEKLY, new Integer(1), finalDate,  null, 
@@ -351,10 +358,13 @@ public class EventServiceTest extends TestBase {
 		
 		eventDao.save(ev1);
 		
-		Map<Date, Event> events = eventService.listEvents(account.getId(), calendar1.getId());
-		Assert.assertNotNull(events);
-		assert events.size() == 5;
+		Date today = new DateTime().minusMonths(1).toDate();
+		DateFormat formatter = new SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss zzz");
+	    String fromDate = formatter.format(today);
 		
+		Map<Date, Event> events = eventService.listEvents(account.getId(), calendar1.getId(), fromDate);
+		Assert.assertNotNull(events);
+	    assert events.size() == 6;
 	}
 		
 	@Test
@@ -379,9 +389,9 @@ public class EventServiceTest extends TestBase {
 		EventAttribute eventAttribute1 = new EventAttribute("Event Attribute1", account);
 		eventAttributeDao.save(eventAttribute1);
 		
-		Date dateStart = new DateTime().plusDays(1).toDate();
-		Date dateEnd = new DateTime(dateStart).plusHours(1).toDate();
-		Date finalDate = new DateTime().plusWeeks(5).plusDays(1).plusHours(6).toDate();
+		Date dateStart = calcNextMonday(new DateTime()).withTime(0, 0, 0, 0).toDate();
+		Date dateEnd = new DateTime(dateStart).plusHours(2).toDate();
+		Date finalDate = new DateTime(dateEnd).plusWeeks(5).plusDays(1).toDate();
 		List<Integer> daysOfWeek = Arrays.asList(1);
 		
 		// Can't exclude start date only subsequent dates
@@ -396,11 +406,15 @@ public class EventServiceTest extends TestBase {
 		
 		eventDao.save(ev1);
 		
-		Map<Date, Event> events = eventService.listEvents(account.getId(), calendar1.getId());
+		Date today = new DateTime().minusMonths(1).toDate();
+		DateFormat formatter = new SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss zzz");
+	    String fromDate = formatter.format(today);
+		
+		Map<Date, Event> events = eventService.listEvents(account.getId(), calendar1.getId(), fromDate);
 		Assert.assertNotNull(events);
-		assert events.size() == 4;
-
+	    assert events.size() == 4;
 	}
+	
 	@Test
 	public void listRepeatWeeklyEventsOnMondaysAndTuesday() throws Exception {
 		
@@ -428,11 +442,7 @@ public class EventServiceTest extends TestBase {
 		Date finalDate = new DateTime(dateEnd).plusWeeks(5).plusDays(1).toDate();
 		
 		List<Integer> daysOfWeek = Arrays.asList(1, 2);
-		
-		// Can't exclude start date only subsequent dates
-		Date date1 = (new DateTime(dateStart)).plusDays(3).plusWeeks(1).withTime(0, 0, 0, 0).toDate();
-		Date date2 = (new DateTime(dateStart)).plusDays(4).plusWeeks(2).withTime(0, 0, 0, 0).toDate();
-		List<Date> excludeDays = Arrays.asList(date1, date2);
+		List<Date> excludeDays = null;
 		
 		Event ev1 = new Event(calendar1, true, EventRepeatType.WEEKLY, new Integer(1), finalDate,  null, 
 			daysOfWeek, excludeDays,  "summary", dateStart, dateEnd, new Integer(10), instructor1, 
@@ -440,10 +450,13 @@ public class EventServiceTest extends TestBase {
 		
 		eventDao.save(ev1);
 		
-		Map<Date, Event> events = eventService.listEvents(account.getId(), calendar1.getId());
+		Date today = new DateTime().minusMonths(1).toDate();
+		DateFormat formatter = new SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss zzz");
+	    String fromDate = formatter.format(today);
+		
+		Map<Date, Event> events = eventService.listEvents(account.getId(), calendar1.getId(), fromDate);
 		Assert.assertNotNull(events);
-		assert events.size() == 12;
-
+	    assert events.size() == 12;
 	}
 	
 	@Test
@@ -468,10 +481,10 @@ public class EventServiceTest extends TestBase {
 		EventAttribute eventAttribute1 = new EventAttribute("Event Attribute1", account);
 		eventAttributeDao.save(eventAttribute1);
 		
-		Date dateStart = calcNextMonday(new DateTime()).withTime(0, 0, 0, 0).plusHours(1).toDate();
-		Date dateEnd = new DateTime(dateStart).plusHours(2).toDate();
-		Date finalDate = new DateTime(dateEnd).plusMonths(5).toDate();
-		List<Integer> daysOfWeek = Arrays.asList(1);
+		Date dateStart = calcNextMonday(new DateTime()).withTime(0, 0, 0, 0).toDate();
+		Date dateEnd = new DateTime(dateStart).plusHours(1).toDate();
+		Date finalDate = new DateTime(dateStart).plusMonths(4).plusDays(1).toDate();
+		List<Integer> daysOfWeek = Arrays.asList(1,2,3,4,5,6,7);
 		
 		Event ev1 = new Event(calendar1, true, EventRepeatType.MONTHLY, new Integer(1), finalDate,  null, 
 			daysOfWeek, null,  "summary", dateStart, dateEnd, new Integer(10), instructor1, 
@@ -479,10 +492,13 @@ public class EventServiceTest extends TestBase {
 		
 		eventDao.save(ev1);
 		
-		Map<Date, Event> events = eventService.listEvents(account.getId(), calendar1.getId());
-		Assert.assertNotNull(events);
-		assert events.size() == 6;
+		Date today = new DateTime().minusMonths(1).toDate();
+		DateFormat formatter = new SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss zzz");
+	    String fromDate = formatter.format(today);
 		
+		Map<Date, Event> events = eventService.listEvents(account.getId(), calendar1.getId(), fromDate);
+		Assert.assertNotNull(events);
+    	assert events.size() == 5;
 	}
 
     private DateTime calcNextMonday(DateTime dateTime) {

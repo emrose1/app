@@ -1,5 +1,7 @@
-Application.Controllers.controller('MainCtrl', ['$scope', 'Account', 'sessionService',
-        function($scope, Account, session) {
+Application.Controllers.controller('MainCtrl', ['$rootScope', '$scope', 'Account', 'sessionService',
+        function($rootScope, $scope, Account, session) {
+
+        console.log('account logged');
 
         $scope.account = new Account();
         $scope.accounts = Account.query();
@@ -11,8 +13,9 @@ Application.Controllers.controller('MainCtrl', ['$scope', 'Account', 'sessionSer
 
         $scope.activeAccount = function(account) {
             $scope.account = account;
-            session.setAccount(account);
             $scope.editing = true;
+            console.log(account);
+            session.setAccount(account.id);
         };
 
         $scope.save = function() {
@@ -31,6 +34,10 @@ Application.Controllers.controller('MainCtrl', ['$scope', 'Account', 'sessionSer
             Account.delete(account);
             console.log(account);
             _.remove($scope.accounts, account);
+        };
+
+        $scope.changeAccount = function() {
+            session.setAccount($scope.selectedAccount);
         };
 
     }

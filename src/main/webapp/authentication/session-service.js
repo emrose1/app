@@ -1,11 +1,12 @@
-Application.Services.service('sessionService', ['$q', 'alerts', '$rootScope', function ($q, alerts, $rootScope) {
+Application.Services.service('sessionService', ['$q', 'alerts', '$rootScope',
+    function ($q, alerts, $rootScope) {
 
 	this.authorizeUser = function (data) {
 		var deferred = $q.defer();
 		var message = {
 			"name" : data.name,
 			"email" : data.email,
-			"account" : this.getAccount().id
+			"account" : this.getAccount()
 		};
 
         var request = gapi.client.booking.person.authorizePerson(message).execute(function(resp) {
@@ -25,7 +26,13 @@ Application.Services.service('sessionService', ['$q', 'alerts', '$rootScope', fu
     this.getAccount = function () {
         return this.account;
     };
-
+    this.setCalendar = function (calendar) {
+        this.calendar = calendar;
+        console.log(calendar);
+    };
+    this.getCalendar = function () {
+        return this.calendar;
+    };
     this.createUserDetails = function (data) {
 		this.authorizeUser(data)
 		.then(function (data) {

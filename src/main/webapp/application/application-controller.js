@@ -33,7 +33,7 @@ Application.Controllers.controller( 'application',[
 
 
     $scope.authenticate = function() {
-        auth.authenticate(false);
+        auth.authenticate(true);
         //$rootScope.$broadcast(AUTH_EVENTS.loginFailed);
     };
 

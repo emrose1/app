@@ -27,7 +27,7 @@ angular.module('application', [
 
 .config(function($stateProvider, $urlRouterProvider, USER_ROLES) {
 
-    $urlRouterProvider.otherwise( '/accounts' );
+    $urlRouterProvider.otherwise( '/account' );
 
     $stateProvider
         .state('loading', {
@@ -88,6 +88,11 @@ angular.module('application', [
             controller: 'calendarCtrl',
             templateUrl: 'calendar/calendar-partial.html'
         })
+        .state('event', {
+            url: '/event',
+            controller: 'eventCtrl',
+            templateUrl: 'event/event-partial.html'
+        })
         .state('eventattribute', {
             url: '/eventattribute',
             controller: 'eventAttributeCtrl',
@@ -144,7 +149,7 @@ angular.module('application', [
 
                         // Setting up newly loaded DB
                         if(resp.items.length > 0) {
-                            sessionService.setAccount(resp.items[0]);
+                            sessionService.setAccount(resp.items[0].id);
                             accountService.setAccounts(resp.items);
 
                             // TODO: detect existing session cookie
@@ -154,7 +159,7 @@ angular.module('application', [
                             // Setting up user account from DB
                             accountService.listWithoutUser()
                             .then(function (data) {
-                                sessionService.setAccount(data.items[0]);
+                                sessionService.setAccount(data.items[0].id);
                                 accountService.setAccounts(data.items);
                                 auth.authenticate(true);
 
