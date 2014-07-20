@@ -9,13 +9,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.Months;
+import org.joda.time.Seconds;
 import org.joda.time.Weeks;
 import org.joda.time.Years;
 
@@ -29,6 +28,7 @@ import com.studio.bookings.entity.Calendar;
 import com.studio.bookings.entity.Event;
 import com.studio.bookings.entity.EventAttribute;
 import com.studio.bookings.entity.EventCategory;
+import com.studio.bookings.entity.EventItem;
 import com.studio.bookings.entity.Person;
 import com.studio.bookings.enums.EventRepeatType;
 import com.studio.bookings.util.Constants;
@@ -112,7 +112,7 @@ public class EventService extends BaseService {
 	
  
 	@ApiMethod(name = "calendar.listEvents", path="calendar/{calendar_id}/event",  httpMethod = HttpMethod.GET)
-	public Map<Date, Event> listEvents(
+	public List<EventItem> listEvents(
 			@Named("account_id") Long accountId,
 			@Named("calendar_id") Long calendarId,
 			@Named("date_range_start") String dateStart) throws ParseException {
@@ -129,7 +129,7 @@ public class EventService extends BaseService {
 		Date eventStart = formatter.parse(dateStart);
 		Date dateEnd = new DateTime(eventStart).plusMonths(6).toDate();
 		
-		Map<Date, Event> allEvents = new HashMap<Date, Event>();
+		List<EventItem> allEvents = new ArrayList<EventItem>();
 		
 		List<Event> events = eventDao.dateRangeAncestorQuery("startDateTime >=", eventStart, "startDateTime <", dateEnd, calendar);
 
@@ -138,17 +138,21 @@ public class EventService extends BaseService {
         for (Event event : events) {
 	        if (event.getRepeatEvent()) {
 	            currentDate = findNextOccurrence(event, eventStart);
-	 
+	            int duration = Seconds.secondsBetween(new DateTime(event.getStartDateTime()), 
+	            		new DateTime(event.getEndDateTime())).getSeconds();
+	            
 	            while (currentDate!= null && currentDate.before(dateEnd)) {
-	            	
-	            	allEvents.put(currentDate, event);
+	            	Date endDate = new DateTime(currentDate).plusSeconds(duration).toDate();
+	            	EventItem recurrEvent = new EventItem(event.getId(), currentDate, endDate, event);
+
+	            	allEvents.add(recurrEvent);
 	                Date nextMinute = new DateTime(currentDate).plusMinutes(1).toDate();
 	                currentDate = findNextOccurrence(event, nextMinute);
 	            }
 	        }
 	        // One time (non-recurring) event
 	        else {
-	        	allEvents.put(event.getStartDateTime(), event);
+	        	allEvents.add(event);
 	        }
         }
 		

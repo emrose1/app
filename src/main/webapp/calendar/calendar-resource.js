@@ -19,7 +19,6 @@ Application.Services
 				}
 			}
 		);
-		console.log(Calendar);
 		return Calendar;
 	}];
 });

@@ -165,6 +165,25 @@ public class Event {
 		this.eventAttributeRef = Ref.create(eventAttribute);
 	};
 	
+	public Event(Event event) {
+		
+		this.setCalendar(event.getCalendar());
+		this.repeatEvent = event.getRepeatEvent();
+		this.repeatType = event.getRepeatType();
+		this.repeatInterval = event.getRepeatInterval();
+		this.repeatFinalDate = event.getRepeatFinalDate();
+		this.repeatCount = event.getRepeatCount();
+		this.repeatDaysOfWeek = event.getRepeatDaysOfWeek();
+		this.excludeDays =  event.getExcludeDays();
+		this.summary = event.getSummary();
+		this.startDateTime = event.getStartDateTime();
+		this.endDateTime = event.getEndDateTime();
+		this.maxAttendees = event.getMaxAttendees();
+		this.instructorRef = Ref.create(event.getInstructor());
+		this.eventCategoryRef = Ref.create(event.getEventCategory());
+		this.eventAttributeRef = Ref.create(event.getEventAttribute());
+	};
+	
 	public  int getDurationMinutes() {
 		return Minutes.minutesBetween(new DateTime(startDateTime), new DateTime(endDateTime)).getMinutes();
 	}

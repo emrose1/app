@@ -1,20 +1,19 @@
-Application.Controllers.controller('eventCtrl', ['$scope', 'Event', 'sessionService',
-        function($scope, Event, session) {
+Application.Controllers.controller('eventCtrl', ['$rootScope', '$scope', 'Event', 'sessionService',
+        function($rootScope, $scope, Event, session) {
 
         console.log(session.getAccount());
-        console.log(new Date);
 
-        $scope.event = new Event();
-        $scope.events = Event.query({
-            account_id: session.getAccount().id,
-            calendar_id: session.getCalendar().id,
-            date_range_start: "Sat Jul 19 2014 08:48:16 GMT"
-        });
-        console.log($scope.events);
+        var listEvents = function() {
+            console.log(session.getAccount());
+            console.log(session.getCalendar());
 
-        $scope.newEvent = function() {
-            $scope.event = new Event();
-            $scope.editing = false;
+            $scope.events = Event.query({
+                account_id: session.getAccount(),
+                calendar_id: session.getCalendar(),
+                date_range_start: "Sat Jul 19 2014 08:48:16 GMT"
+            }, function(data){
+                console.log(data);
+            });
         };
 
         $scope.newEvent = function() {
@@ -51,6 +50,11 @@ Application.Controllers.controller('eventCtrl', ['$scope', 'Event', 'sessionServ
         $scope.changeAccount = function() {
             console.log('account changed');
         };
+
+        $rootScope.$on('calendarLoaded', function(event, args) {
+            console.log('Event event triggered');
+            listEvents();
+        });
 
     }
 ]);

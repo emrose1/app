@@ -5,12 +5,10 @@ import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -33,6 +31,7 @@ import com.studio.bookings.entity.Calendar;
 import com.studio.bookings.entity.Event;
 import com.studio.bookings.entity.EventAttribute;
 import com.studio.bookings.entity.EventCategory;
+import com.studio.bookings.entity.EventItem;
 import com.studio.bookings.entity.Person;
 import com.studio.bookings.enums.EventRepeatType;
 import com.studio.bookings.enums.Permission;
@@ -149,7 +148,7 @@ public class EventServiceTestingServlet extends HttpServlet {
 		DateFormat formatter = new SimpleDateFormat("EEE MMM dd yyyy kk:mm:ss zzz");
 	    String fromDate = formatter.format(today);
 		
-		Map<Date, Event> events2 = new HashMap<Date, Event>();
+		List<EventItem> events2 = new ArrayList<EventItem>();
 		try {
 			events2 = eventService.listEvents(account.getId(), calendar1.getId(), fromDate);
 		} catch (ParseException e) {
@@ -157,17 +156,9 @@ public class EventServiceTestingServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 
-		Iterator it2 = events2.entrySet().iterator();
-	    while (it2.hasNext()) {
-	    	Map.Entry pairs2 = (Map.Entry)it2.next();
-	    	rw.println(pairs2.getValue());
-	    	rw.println(pairs2.getKey());
+	    for (EventItem event : events2 ) {
+	    	rw.println(event);
 	    }
-		
-		
-		
-		
-			
 		
 	}
 }

@@ -18,7 +18,6 @@
         <link rel="stylesheet" href="login/login.css"/>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
         <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-
         <style type="text/css">
             .progress-backend-ready {
                 width:50%;
@@ -60,12 +59,19 @@
     <!-- In production use:
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular.min.js"></script>
     -->
-    <script src="lib/bower_components/angular/angular.js"></script>
-    <script src="lib/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
-    <script src="lib/bower_components/angular-resource/angular-resource.js"></script>
-    <script src="lib/lodash.js"></script>
+
+
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+    <script src="bower_components/angular-resource/angular-resource.js"></script>
+    <script src="bower_components/lodash/dist/lodash.js"></script>
     <script src="lib/localization/localize.js"></script>
     <script src="lib/i18n/resources-locale_en-US.js"></script>
+
+    <script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.9.0.js"></script>
+    <script src="bower_components/fullcalendar/fullcalendar.js"></script>
+    <script src="bower_components/fullcalendar/gcal.js"></script>
+    <script src="bower_components/angular-ui-calendar/src/calendar.js"></script>
 
     <script src="application/application.js"></script>
 
@@ -75,10 +81,8 @@
     <script src="authentication/auth-service.js"></script>
 
     <script src="accounts/accounts-service.js"></script>
-    <script src="accounts/accounts-controller.js"></script>
-
-    <script src="accounts/account-resource.js"></script>
     <script src="accounts/account-controller.js"></script>
+    <script src="accounts/account-resource.js"></script>
 
     <script src="calendar/calendar-resource.js"></script>
     <script src="calendar/calendar-controller.js"></script>
@@ -106,17 +110,22 @@
     <script src="menu/menu-service.js"></script>
     <script src="application/application-controller.js"></script>
     <script src="login/login-controller.js"></script>
-    <script src="details/details-controller.js"></script>
     <script src="menu/menu-controller.js"></script>
     <script src="menu/menu-item-directive.js"></script>
-    <script src="date-time/to-date-string-filter.js"></script>
-
     <script>
         var init = function() {
             window.initialise();
         };
     </script>
     <script src="https://apis.google.com/js/client.js?onload=init"></script>
+
+
+<!--     <script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.9.0.js"></script>
+    <script src="bower_components/fullcalendar/fullcalendar.js"></script>
+    <script src="bower_components/fullcalendar/gcal.js"></script>
+    <script src="bower_components/angular-ui-calendar/src/calendar.js"></script> -->
+
+
 
     </body>
 </html>

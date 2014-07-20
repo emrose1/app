@@ -37,7 +37,9 @@ Application.Controllers.controller('MainCtrl', ['$rootScope', '$scope', 'Account
         };
 
         $scope.changeAccount = function() {
-            session.setAccount($scope.selectedAccount);
+            session.setAccount($scope.selectedAccount.id);
+            console.log($scope.selectedAccount.id);
+            $scope.$emit('accountLoaded', {});
         };
 
     }

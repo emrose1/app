@@ -6,7 +6,6 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
@@ -24,6 +23,7 @@ import com.studio.bookings.entity.Calendar;
 import com.studio.bookings.entity.Event;
 import com.studio.bookings.entity.EventAttribute;
 import com.studio.bookings.entity.EventCategory;
+import com.studio.bookings.entity.EventItem;
 import com.studio.bookings.entity.Person;
 import com.studio.bookings.enums.EventRepeatType;
 import com.studio.bookings.enums.Permission;
@@ -278,7 +278,7 @@ public class EventServiceTest extends TestBase {
 		DateFormat formatter = new SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss zzz");
 	    String fromDate = formatter.format(today);
 		
-		Map<Date, Event> events = eventService.listEvents(account.getId(), calendar1.getId(), fromDate);
+	    List<EventItem> events = eventService.listEvents(account.getId(), calendar1.getId(), fromDate);
 		Assert.assertNotNull(events);
 		assert events.size() == 2;	
 	}
@@ -320,7 +320,7 @@ public class EventServiceTest extends TestBase {
 		DateFormat formatter = new SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss zzz");
 	    String fromDate = formatter.format(today);
 		
-		Map<Date, Event> events = eventService.listEvents(account.getId(), calendar1.getId(), fromDate);
+	    List<EventItem> events = eventService.listEvents(account.getId(), calendar1.getId(), fromDate);
 		Assert.assertNotNull(events);
 	    assert events.size() == 7;
 	}
@@ -362,7 +362,7 @@ public class EventServiceTest extends TestBase {
 		DateFormat formatter = new SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss zzz");
 	    String fromDate = formatter.format(today);
 		
-		Map<Date, Event> events = eventService.listEvents(account.getId(), calendar1.getId(), fromDate);
+	    List<EventItem> events = eventService.listEvents(account.getId(), calendar1.getId(), fromDate);
 		Assert.assertNotNull(events);
 	    assert events.size() == 6;
 	}
@@ -410,7 +410,7 @@ public class EventServiceTest extends TestBase {
 		DateFormat formatter = new SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss zzz");
 	    String fromDate = formatter.format(today);
 		
-		Map<Date, Event> events = eventService.listEvents(account.getId(), calendar1.getId(), fromDate);
+	    List<EventItem> events = eventService.listEvents(account.getId(), calendar1.getId(), fromDate);
 		Assert.assertNotNull(events);
 	    assert events.size() == 4;
 	}
@@ -454,7 +454,7 @@ public class EventServiceTest extends TestBase {
 		DateFormat formatter = new SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss zzz");
 	    String fromDate = formatter.format(today);
 		
-		Map<Date, Event> events = eventService.listEvents(account.getId(), calendar1.getId(), fromDate);
+	    List<EventItem> events = eventService.listEvents(account.getId(), calendar1.getId(), fromDate);
 		Assert.assertNotNull(events);
 	    assert events.size() == 12;
 	}
@@ -496,7 +496,7 @@ public class EventServiceTest extends TestBase {
 		DateFormat formatter = new SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss zzz");
 	    String fromDate = formatter.format(today);
 		
-		Map<Date, Event> events = eventService.listEvents(account.getId(), calendar1.getId(), fromDate);
+		List<EventItem> events = eventService.listEvents(account.getId(), calendar1.getId(), fromDate);
 		Assert.assertNotNull(events);
     	assert events.size() == 5;
 	}

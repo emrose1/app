@@ -1,0 +1,40 @@
+{
+  "name": "fit-planner",
+  "version": "0.0.1",
+  "homepage": "https://github.com/emrose1/app",
+  "authors": [
+    "emrose1 <emjrose@gmail.com>"
+  ],
+  "description": "Exercise studio timetable booking system",
+  "main": "index.html",
+  "keywords": [
+    "bookings",
+    "calendar"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-ui-calendar": "~0.8.1"
+  },
+  "devDependencies": {
+    "angular": "~1.2.20",
+    "fullcalendar": "~1.x",
+    "jquery-ui": "~1.10.3",
+    "jquery": "~2.x",
+    "bootstrap": "~3.2.0",
+    "angular-mocks": "~1.2.20",
+    "i18n": "*",
+    "angular-resource": "~1.2.20",
+    "angular-ui-router": "~0.2.10",
+    "lodash": "~2.4.1",
+    "angular-ui-bootstrap": "~0.11.0",
+    "angular-bootstrap": "~0.11.0"
+  }
+}

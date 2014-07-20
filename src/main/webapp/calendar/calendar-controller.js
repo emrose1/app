@@ -3,7 +3,10 @@ Application.Controllers.controller('calendarCtrl', ['$rootScope', '$scope', 'Cal
 
         $scope.calendar = new Calendar();
 
-        $scope.calendars = Calendar.query({account_id: session.getAccount()});
+        $scope.listCalendars = function() {
+            $scope.calendars = Calendar.query({account_id: session.getAccount()});
+        };
+
 
         var refreshCalendars = function() {
             Calendar.get({account_id: session.getAccount().id}, function(data) {
@@ -45,9 +48,13 @@ Application.Controllers.controller('calendarCtrl', ['$rootScope', '$scope', 'Cal
             _.remove($scope.calendars, calendar);
         };
 
-        $scope.$on('account-changed', function(event, args) {
-            console.log('account changed');
-            refreshCalendars();
+        $scope.changeCalendar = function() {
+            session.setCalendar($scope.selectedCalendar.id);
+            $scope.$emit('calendarLoaded', {});
+        };
+
+        $rootScope.$on('accountLoaded', function(event, args) {
+            $scope.listCalendars();
         });
 
     }
