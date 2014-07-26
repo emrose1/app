@@ -56,7 +56,7 @@ public class EventService extends BaseService {
 			@Named("eventRepeatCount") Integer eventRepeatCount,
 			@Named("repeatDaysOfWeek") Integer[] repeatDaysOfWeek,
 			@Named("excludeDays") String[] excludeDays,
-			@Named("summary") String summary,
+			@Named("title") String title,
 			@Named("startDateTime") String startDateTime,
 			@Named("endDateTime") String endDateTime,
 			@Named("maxAttendees") Integer maxAttendees,
@@ -103,7 +103,7 @@ public class EventService extends BaseService {
 		}
 
 		Event event = new Event(calendar, repeatBoolean, repeatType, repeatInterval, eventFinalRepeatDate, repeatCount, 
-				daysOfWeek, repeatExcludeDays, summary, eventStart, eventEnd, maxAttendees, instructor, 
+				daysOfWeek, repeatExcludeDays, title, eventStart, eventEnd, maxAttendees, instructor, 
 				eventCategoryFetched, eventAttributeFetched);
 		
 		eventDao.save(event);    
@@ -152,7 +152,8 @@ public class EventService extends BaseService {
 	        }
 	        // One time (non-recurring) event
 	        else {
-	        	allEvents.add(event);
+	        	EventItem singleEvent = new EventItem(event.getId(), event.getStartDateTime(), event.getEndDateTime(), event);
+	        	allEvents.add(singleEvent);
 	        }
         }
 		

@@ -54,6 +54,7 @@ Application.Controllers.controller('eventCtrl', ['$rootScope', '$scope', 'Event'
         $rootScope.$on('calendarLoaded', function(event, args) {
             console.log('Event event triggered');
             listEvents();
+            $scope.$emit('eventsLoaded', {});
         });
 
     }

@@ -1,5 +1,7 @@
 package com.studio.bookings.entity;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import lombok.EqualsAndHashCode;
@@ -14,6 +16,9 @@ public class EventItem {
    	private Long id;
 	
 	@Getter @Setter
+   	private String startCode;
+	
+	@Getter @Setter
    	private Date start;
 	
    	@Getter @Setter
@@ -23,6 +28,9 @@ public class EventItem {
    	private Event event;
    	
    	public EventItem(Long id, Date start, Date end, Event event) {
+   		
+   		DateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+	    this.startCode = formatter.format(start);
    		this.id = id;
    		this.start = start;
    		this.end = end;

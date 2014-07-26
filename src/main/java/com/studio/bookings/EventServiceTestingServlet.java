@@ -145,7 +145,7 @@ public class EventServiceTestingServlet extends HttpServlet {
 		eventDao.save(ev2);
 		
 		Date today = new DateTime().minusMonths(1).toDate();
-		DateFormat formatter = new SimpleDateFormat("EEE MMM dd yyyy kk:mm:ss zzz");
+		DateFormat formatter = new SimpleDateFormat("EEE MMM dd yyyy hh:mm:ss zzz");
 	    String fromDate = formatter.format(today);
 		
 		List<EventItem> events2 = new ArrayList<EventItem>();

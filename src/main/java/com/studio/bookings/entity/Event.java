@@ -117,7 +117,7 @@ public class Event {
     }
     
     @Getter @Setter (AccessLevel.PUBLIC)
-	protected String summary;
+	protected String title;
     
     @Index
    	@Getter @Setter
@@ -140,7 +140,7 @@ public class Event {
 			Integer eventRepeatCount, 
 			List<Integer> repeatDaysOfWeek, 
 			List<Date> excludeDays, 
-			String summary, 
+			String title, 
 			Date startDateTime, 
 			Date endDateTime, 
 			Integer maxAttendees, 
@@ -156,7 +156,7 @@ public class Event {
 		this.repeatCount = eventRepeatCount;
 		this.repeatDaysOfWeek = repeatDaysOfWeek;
 		this.excludeDays =  excludeDays;
-		this.summary = summary;
+		this.title = title;
 		this.startDateTime = startDateTime;
 		this.endDateTime = endDateTime;
 		this.maxAttendees = maxAttendees;
@@ -175,7 +175,7 @@ public class Event {
 		this.repeatCount = event.getRepeatCount();
 		this.repeatDaysOfWeek = event.getRepeatDaysOfWeek();
 		this.excludeDays =  event.getExcludeDays();
-		this.summary = event.getSummary();
+		this.title = event.getTitle();
 		this.startDateTime = event.getStartDateTime();
 		this.endDateTime = event.getEndDateTime();
 		this.maxAttendees = event.getMaxAttendees();

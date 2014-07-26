@@ -122,7 +122,7 @@ public class EventServiceTest extends TestBase {
 		Assert.assertNotNull(event1);
 
 		assert event1.getId().equals(eventFetched1.getId());
-		assert event1.getSummary().equals(eventFetched1.getSummary());
+		assert event1.getTitle().equals(eventFetched1.getTitle());
 		assert event1.getStartDateTime().equals(eventFetched1.getStartDateTime());
 		assert event1.getEndDateTime().equals(eventFetched1.getEndDateTime());
 		assert event1.getMaxAttendees().equals(eventFetched1.getMaxAttendees());
@@ -131,7 +131,7 @@ public class EventServiceTest extends TestBase {
 		assert event1.getEventAttribute().equals(eventFetched1.getEventAttribute());
 		
 		assert event2.getId().equals(eventFetched2.getId());
-		assert event2.getSummary().equals(eventFetched2.getSummary());
+		assert event2.getTitle().equals(eventFetched2.getTitle());
 		assert event2.getStartDateTime().equals(eventFetched2.getStartDateTime());
 		assert event2.getEndDateTime().equals(eventFetched2.getEndDateTime());
 		assert event2.getMaxAttendees().equals(eventFetched2.getMaxAttendees());
@@ -145,7 +145,7 @@ public class EventServiceTest extends TestBase {
 		Assert.assertEquals(eventFetched1.getRepeatCount(),  new Integer(0));
 		Assert.assertNull(eventFetched1.getRepeatFinalDate());
 		Assert.assertNotEquals(eventFetched1.getId(), eventFetched2.getId());
-		Assert.assertNotEquals(eventFetched1.getSummary(), eventFetched2.getSummary());
+		Assert.assertNotEquals(eventFetched1.getTitle(), eventFetched2.getTitle());
 		Assert.assertNotEquals(eventFetched1.getStartDateTime(), eventFetched2.getStartDateTime());
 		Assert.assertNotEquals(eventFetched1.getMaxAttendees(), eventFetched2.getMaxAttendees());
 		Assert.assertNotEquals(eventFetched1.getInstructor(), eventFetched2.getInstructor());
@@ -211,7 +211,7 @@ public class EventServiceTest extends TestBase {
 		assert event1.getRepeatType().equals(eventFetched1.getRepeatType());
 		assert event1.getRepeatDaysOfWeek().equals(eventFetched1.getRepeatDaysOfWeek());
 		assert event1.getExcludeDays().equals(eventFetched1.getExcludeDays());
-		assert event1.getSummary().equals(eventFetched1.getSummary());
+		assert event1.getTitle().equals(eventFetched1.getTitle());
 		assert event1.getStartDateTime().equals(eventFetched1.getStartDateTime());
 		assert event1.getEndDateTime().equals(eventFetched1.getEndDateTime());
 		assert event1.getRepeatFinalDate().equals(eventFetched1.getRepeatFinalDate());

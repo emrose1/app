@@ -1,0 +1,68 @@
+<div class="container" ng-controller="calendarCtrl">
+
+    <div ng-controller="MainCtrl">
+        <h1>Accounts</h1>
+        <select ng-model="selectedAccount" ng-change="changeAccount()" ng-options="account.name for account in accounts">
+        </select>
+    </div>
+
+    <h1>Calendars</h1>
+    <select ng-model="selectedCalendar" ng-change="changeCalendar()"
+        ng-options="calendar.description for calendar in calendars">
+    </select>
+
+    <div class="container" ng-controller="scheduleCtrl">
+        <div class="row">
+            <div class="col-md-8">
+                <h4 class="heading">Studio Schedule</h4>
+            </div>
+
+            <div class="col-md-4">
+                <span ng-click="timetableNavigation(-1)" class="fc-button fc-button-prev fc-state-default fc-corner-left" unselectable="on" >
+                    <span class="fc-text-arrow"> < previous</span>
+                </span>
+
+                <span ng-click="timetableNavigation(1)" class="fc-button fc-button-next fc-state-default fc-corner-right" unselectable="on">
+                    <span class="fc-text-arrow">next > </span>
+                </span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Start time</th>
+                            <th>Session</th>
+                            <th>Instructor</th>
+                            <th>Number of spaces</th>
+                            <th>Duration</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tbody ng-repeat="day in calendarDates | orderBy:day">
+
+                        <tr>
+                            <td colspan="8">
+                                <h4 class="heading">{{day.fullDate | date: 'EEEE, d MMMM,y'}}</h4>
+                            </td>
+                        </tr>
+                         <tr ng-repeat="event in events | filter : {startCode : day.shortDate}">
+                            <td>{{event.start | date: 'h:mma'}}</td>
+                            <td>{{event.event.title}}</td>
+                            <td>{{event.event.instructor.username}}</td>
+                            <td>{{event.event.maxAttendees}}</td>
+                            <td>{{event.event.durationMinutes}}</td>
+                            <td>{{event.event.eventAttribute.name}}</td>
+                            <td>{{event.event.eventCategory.name}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

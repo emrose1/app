@@ -93,6 +93,11 @@ angular.module('application', [
             controller: 'eventCtrl',
             templateUrl: 'event/event-partial.html'
         })
+        .state('schedule', {
+            url: '/schedule',
+            controller: 'eventCtrl',
+            templateUrl: 'event/schedule/schedule-partial.html'
+        })
         .state('eventattribute', {
             url: '/eventattribute',
             controller: 'eventAttributeCtrl',
@@ -112,7 +117,7 @@ angular.module('application', [
 })
 
 .run(function ($state, $rootScope, AUTH_EVENTS, auth, sessionService, accountService, $window, $location, alerts) {
-    $rootScope.$on('$stateChangeStart', function (event, next) {
+    /*$rootScope.$on('$stateChangeStart', function (event, next) {
         if(next.data && next.data.authorizedRoles) {
             var authorizedRoles = next.data.authorizedRoles;
             if (!auth.isAuthorized(authorizedRoles)) {
@@ -125,7 +130,7 @@ angular.module('application', [
                 }
             }
         }
-    });
+    });*/
 
     $rootScope.$on('$stateChangeSuccess', function (event, next) {
     });
@@ -136,7 +141,7 @@ angular.module('application', [
     $rootScope.$window = $window;
 
 
-    $window.initialise = function() {
+    /*$window.initialise = function() {
         var apisToLoad = 2;
 
         var callback = function() {
@@ -173,7 +178,7 @@ angular.module('application', [
         };
         gapi.client.load('booking', 'v1', callback, 'http://localhost:8080/_ah/api');
         gapi.client.load('oauth2', 'v2', callback);
-    };
+    };*/
 })
 ;
 

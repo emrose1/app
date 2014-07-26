@@ -124,7 +124,7 @@ controllers.controller('EventController', ['$scope', '$route', '$routeParams', '
 			$scope.selectedWeekNumber = $scope.selectedWeekNumber + val;
 			getDatesOfCurrentWeek();
 			$scope.listEvents();
-		}
+		};
 
 		$scope.addEvent = function() {
 			console.log('add event');

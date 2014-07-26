@@ -1,4 +1,4 @@
-^<!doctype html>
+<!doctype html>
 <html lang="en" ng-app="application">
     <head>
         <meta charset="utf-8">
@@ -10,13 +10,13 @@
         <link href="http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic" rel="stylesheet" type="text/css">
         <!-- needs images, font... therefore can not be part of ui.css -->
         <link rel="stylesheet" href="lib/font-awesome/css/font-awesome.min.css">
-
         <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="application/css/application.css"/>
         <link rel="stylesheet" href="application/css/main.css"/>
         <link rel="stylesheet" href="application/css/ui.css"/>
+
         <link rel="stylesheet" href="login/login.css"/>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+        <script src="bower_components/jquery/dist/jquery.js"></script>
         <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
         <style type="text/css">
             .progress-backend-ready {
@@ -38,7 +38,7 @@
 
             <div class="view-container" id="content">
 
-                <div class="progress progress-striped progress-backend-ready" ng-if="!backendReady">
+                <div class="progress progress-striped progress-backend-ready" ng-if="backendReady">
                     <div class="progress-bar progress-bar-info" role="progressbar"
                         aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
                         <span class="sr-only"></span>
@@ -50,7 +50,7 @@
                 <a ng-if="signedin" class="btn" ng-click="authenticate()">Sign out</a>
                 <a ng-if="!signedin" class="btn" ng-click="authenticate()">Sign in</a>
 
-                <section ui-view  ng-if="backendReady" class="animate-fade-up"></section>
+                <section ui-view  ng-if="!backendReady" class="animate-fade-up"></section>
 
 
             </div>
@@ -66,12 +66,6 @@
     <script src="bower_components/angular-resource/angular-resource.js"></script>
     <script src="bower_components/lodash/dist/lodash.js"></script>
     <script src="lib/localization/localize.js"></script>
-    <script src="lib/i18n/resources-locale_en-US.js"></script>
-
-    <script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.9.0.js"></script>
-    <script src="bower_components/fullcalendar/fullcalendar.js"></script>
-    <script src="bower_components/fullcalendar/gcal.js"></script>
-    <script src="bower_components/angular-ui-calendar/src/calendar.js"></script>
 
     <script src="application/application.js"></script>
 
@@ -95,6 +89,7 @@
 
     <script src="event/event-resource.js"></script>
     <script src="event/event-controller.js"></script>
+    <script src="event/schedule/schedule-controller.js"></script>
 
     <script src="persons/person-resource.js"></script>
     <script src="persons/person-controller.js"></script>
@@ -112,20 +107,13 @@
     <script src="login/login-controller.js"></script>
     <script src="menu/menu-controller.js"></script>
     <script src="menu/menu-item-directive.js"></script>
-    <script>
+  <!--   <script>
         var init = function() {
             window.initialise();
         };
     </script>
     <script src="https://apis.google.com/js/client.js?onload=init"></script>
-
-
-<!--     <script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.9.0.js"></script>
-    <script src="bower_components/fullcalendar/fullcalendar.js"></script>
-    <script src="bower_components/fullcalendar/gcal.js"></script>
-    <script src="bower_components/angular-ui-calendar/src/calendar.js"></script> -->
-
-
+ -->
 
     </body>
 </html>

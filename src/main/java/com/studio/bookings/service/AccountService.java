@@ -10,10 +10,7 @@ import com.google.api.server.spi.config.Named;
 import com.google.api.server.spi.response.UnauthorizedException;
 import com.google.appengine.api.users.User;
 import com.studio.bookings.entity.Account;
-import com.studio.bookings.entity.Calendar;
-import com.studio.bookings.entity.Person;
 import com.studio.bookings.enums.Permission;
-import com.studio.bookings.enums.UserType;
 import com.studio.bookings.util.Constants;
 
 @Api(
@@ -63,6 +60,10 @@ public class AccountService extends BaseService {
 	public List<Account> listAccounts(User user) {
 		// TODO create allowDeleteAll for SuperAdmin 
 		List<Account> aclList = null;
+		if(accountDao.list().size() == 0) {
+			DummySetupService ds = new DummySetupService();
+			List<Account> dus = ds.dummyUsers();
+		}
 		//if (user != null) {
 	 		//if (aclService.allowViewAll(new Long(accountId), permission.toString(), user).get(0)) {
 	 			aclList = accountDao.list();
