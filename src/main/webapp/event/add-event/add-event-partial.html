@@ -1,0 +1,110 @@
+<div class="container" ng-controller="calendarCtrl">
+
+    <div ng-controller="MainCtrl">
+        <select ng-model="selectedAccount" ng-change="changeAccount()" ng-options="account.name for account in accounts">
+        </select>
+    </div>
+
+    <select ng-model="selectedCalendar" ng-change="changeCalendar()"
+    ng-options="calendar.description for calendar in calendars">
+</select>
+
+<div ng-controller="addEventCtrl">
+
+
+    <div class="example">
+        <form class="form-horizontal" role="form">
+            <div class="form-group">
+                <div class="col-sm-10">
+                    <button type="button" class="btn btn-default">
+                        <span class="glyphicon glyphicon-chevron-left"></span>
+                        Back
+                    </button>
+                    <button type="button" class="btn btn-success">
+                        <span class="glyphicon glyphicon-ok"></span>
+                        Save
+                    </button>
+                    <button type="button" class="btn btn-warning">
+                        <span class="glyphicon glyphicon-minus"></span>
+                        Discard changes
+                    </button>
+                    <button type="button" class="btn btn-danger">
+                        <span class="glyphicon glyphicon-remove"></span>
+                        Delete
+                    </button>
+                    <button type="button" class="btn btn-primary">
+                        <span class="glyphicon glyphicon-repeat"></span>
+                        Duplicate session
+                    </button>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-10">
+                    <input type="email" class="form-control" id="inputEmail3" placeholder="Untitled Session">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputPassword3" class="col-sm-2 control-label">Password</label>
+                <div class="col-sm-10">
+                    <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox"> Remember me
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-default">Sign in</button>
+                </div>
+            </div>
+        </form>
+
+        <form role="form">
+            <label class="checkbox-inline">
+                <input type="checkbox" id="inlineCheckbox1" value="option1"> 1
+            </label>
+            <label class="checkbox-inline">
+                <input type="checkbox" id="inlineCheckbox2" value="option2"> 2
+            </label>
+            <label class="checkbox-inline">
+                <input type="checkbox" id="inlineCheckbox3" value="option3"> 3
+            </label>
+        </form>
+
+
+
+        <form class="form-inline" role="form">
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="Untitiled Session">
+            </div>
+
+            <div class="form-group">
+                <label class="sr-only" for="exampleInputEmail2">Email address</label>
+                <input type="email" class="form-control" id="exampleInputEmail2" placeholder="Enter email">
+            </div>
+
+
+            <div class="form-group">
+                <label class="sr-only" for="exampleInputPassword2">Password</label>
+                <input type="password" class="form-control" id="exampleInputPassword2" placeholder="Password">
+            </div>
+
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox"> Remember me
+                </label>
+            </div>
+            <button type="submit" class="btn btn-default">Sign in</button>
+        </form>
+
+    </div>
+
+</div>
+
+</div>

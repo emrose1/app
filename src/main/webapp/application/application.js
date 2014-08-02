@@ -93,6 +93,11 @@ angular.module('application', [
             controller: 'eventCtrl',
             templateUrl: 'event/event-partial.html'
         })
+        .state('addevent', {
+            url: '/addevent',
+            controller: 'addEventCtrl',
+            templateUrl: 'event/add-event/add-event-partial.html'
+        })
         .state('schedule', {
             url: '/schedule',
             controller: 'eventCtrl',

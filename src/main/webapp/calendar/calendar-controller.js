@@ -7,7 +7,6 @@ Application.Controllers.controller('calendarCtrl', ['$rootScope', '$scope', 'Cal
             $scope.calendars = Calendar.query({account_id: session.getAccount()});
         };
 
-
         var refreshCalendars = function() {
             Calendar.get({account_id: session.getAccount().id}, function(data) {
                 $scope.calendars = data;

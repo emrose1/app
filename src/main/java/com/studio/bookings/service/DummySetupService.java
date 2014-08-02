@@ -84,16 +84,32 @@ public class DummySetupService  extends BaseService {
 		Date dateStart = calcNextMonday(new DateTime()).withTime(0, 0, 0, 0).plusHours(hours).toDate();
 		Date dateEnd = new DateTime(dateStart).plusHours(2).toDate();
 		
+		Date dateStart2 = calcNextMonday(new DateTime()).withTime(0, 0, 0, 0).plusHours(hours + 2).toDate();
+		Date dateEnd2 = new DateTime(dateStart2).plusHours(2).toDate();
+		
+		Date dateStart3 = calcNextMonday(new DateTime()).withTime(0, 0, 0, 0).plusHours(hours + 5).toDate();
+		Date dateEnd3 = new DateTime(dateStart3).plusHours(2).toDate();
+		
 		Date finalRepeatWeeklyDate = new DateTime(dateEnd).plusWeeks(5).plusDays(1).toDate();
 		List<Integer> daysOfWeek = Arrays.asList(1);
 		
 		Date finalDate = new DateTime(dateStart).plusMonths(6).plusDays(1).toDate();
 
-		Event ev2 = new Event(cal, true, EventRepeatType.DAILY, new Integer(1), finalDate,  null, 
-		daysOfWeek, null,  "summary", dateStart, dateEnd, new Integer(10), inst, 
+		Event ev1 = new Event(cal, true, EventRepeatType.DAILY, new Integer(1), finalDate,  null, 
+		daysOfWeek, null,  "Matwork", dateStart, dateEnd, new Integer(10), inst, 
 		eventCategory, eventAttribute);
 		
+		Event ev2 = new Event(cal, true, EventRepeatType.DAILY, new Integer(2), finalDate,  null, 
+				daysOfWeek, null,  "Pilates Matwork", dateStart2, dateEnd2, new Integer(10), inst, 
+				eventCategory, eventAttribute);
+		
+		Event ev3 = new Event(cal, true, EventRepeatType.WEEKLY, new Integer(1), finalDate,  null, 
+				daysOfWeek, null,  "Pilates Reformer", dateStart, dateEnd, new Integer(10), inst, 
+				eventCategory, eventAttribute);
+		
+		eventDao.save(ev1);
 		eventDao.save(ev2);
+		eventDao.save(ev3);
 	}
 	
 	private Calendar setUpCalendar(

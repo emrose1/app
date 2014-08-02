@@ -1,12 +1,10 @@
 <div class="container" ng-controller="calendarCtrl">
 
     <div ng-controller="MainCtrl">
-        <h1>Accounts</h1>
         <select ng-model="selectedAccount" ng-change="changeAccount()" ng-options="account.name for account in accounts">
         </select>
     </div>
 
-    <h1>Calendars</h1>
     <select ng-model="selectedCalendar" ng-change="changeCalendar()"
         ng-options="calendar.description for calendar in calendars">
     </select>
@@ -18,12 +16,13 @@
             </div>
 
             <div class="col-md-4">
-                <span ng-click="timetableNavigation(-1)" class="fc-button fc-button-prev fc-state-default fc-corner-left" unselectable="on" >
-                    <span class="fc-text-arrow"> < previous</span>
+                <span ng-click="timetableNavigation(-1)" class="btn btn-success btn-large">
+                    <span class="glyphicon glyphicon-chevron-left"></span> Previous Week
                 </span>
 
-                <span ng-click="timetableNavigation(1)" class="fc-button fc-button-next fc-state-default fc-corner-right" unselectable="on">
-                    <span class="fc-text-arrow">next > </span>
+
+                <span ng-click="timetableNavigation(1)" class="btn btn-success btn-large">
+                    Next Week <span class="glyphicon glyphicon-chevron-right"></span>
                 </span>
             </div>
         </div>
@@ -31,7 +30,7 @@
         <div class="row">
             <div class="col-md-12">
 
-                <table class="table table-bordered">
+                <table class="table table-striped">
                     <thead>
                         <tr>
                             <th>Start time</th>
