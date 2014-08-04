@@ -16,6 +16,7 @@ Application.Directives = angular.module('application.directives', []);
 
 angular.module('application', [
     'ui.router',
+    'ui.bootstrap',
     'ngResource',
     'localization',
     'application.filters',
