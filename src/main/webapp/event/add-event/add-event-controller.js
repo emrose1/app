@@ -1,14 +1,17 @@
 Application.Controllers.controller('addEventCtrl', ['$rootScope', '$scope',
 	function($rootScope,$scope) {
 
+	// ------------- DATE PICKER ------------------------- //
 
 	$scope.today = function() {
-		$scope.dt = new Date();
+		$scope.startDate = new Date();
 	};
 	$scope.today();
 
 	$scope.clear = function () {
-		$scope.dt = null;
+		$scope.startDate = null;
+		$scope.startTime = null;
+		$scope.endTime = null;
 	};
 
 	// Disable weekend selection
@@ -21,11 +24,10 @@ Application.Controllers.controller('addEventCtrl', ['$rootScope', '$scope',
 	};
 	$scope.toggleMin();
 
-	$scope.open = function($event) {
+	$scope.openStartDate = function($event) {
 		$event.preventDefault();
 		$event.stopPropagation();
-
-		$scope.opened = true;
+		$scope.openedStartDate = true;
 	};
 
 	$scope.dateOptions = {
@@ -36,6 +38,49 @@ Application.Controllers.controller('addEventCtrl', ['$rootScope', '$scope',
 	$scope.initDate = new Date('2016-15-20');
 	$scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
 	$scope.format = $scope.formats[0];
+
+
+	// ------------- TIME PICKER ------------------------- //
+
+	$scope.startTime = new Date();
+	$scope.endTime = new Date();
+
+	$scope.hstep = 1;
+	$scope.mstep = 15;
+
+	$scope.options = {
+	hstep: [1, 2, 3],
+	mstep: [1, 5, 10, 15, 25, 30]
+	};
+
+	$scope.ismeridian = true;
+	$scope.toggleMode = function() {
+		$scope.ismeridian = ! $scope.ismeridian;
+	};
+
+	$scope.update = function() {
+		var d = new Date();
+		d.setHours( 14 );
+		d.setMinutes( 0 );
+		$scope.mytime = d;
+	};
+
+	$scope.changed = function () {
+		console.log('StartTime changed to: ' + $scope.startTime);
+		console.log('EndTime changed to: ' + $scope.endTime);
+	};
+
+
+
+	// ------------- ALL DAY SWITCH ------------------------- //
+
+	$scope.myOptions = ["Off", "On"];
+    $scope.allDay = "Off";
+
+    $scope.$watch('allDay', function(v){
+        console.log('changed', v);
+    });
+
 
 }])
 ;

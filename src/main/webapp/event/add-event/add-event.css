@@ -1,5 +1,4 @@
 .example {
-	background-color: #fff;
 	border-color: #ddd;
 	border-width: 1px;
 	border-radius: 4px 4px 0 0;
@@ -7,5 +6,11 @@
 	box-shadow: none;
 	position: relative;
 	padding: 45px 15px 15px;
-	margin: 0 -15px 15px;
+	margin: 0 0 15px 0;
+	border-style: solid;
 }
+
+.date-time-row .input-group { padding: 35px 10px 0px 0px; float: left;}
+.date-time-row .time-label { padding: 35px 10px 0px 10px; float: left; height: 34px; line-height: 34px}
+.date-time-row .time { padding: 0px 10px; float: left}
+.date-time-row .time input { width: inherit;}
