@@ -28,61 +28,39 @@
         </div>
 
         <div class="form-group">
-            <label class="control-label"><i class="fa fa-calendar"></i> Datetime picker</label><br>
-            <div class="form-group">
-                <input type="text" size="10" class="form-control" ng-model="sharedDate" data-autoclose="1" placeholder="Date" bs-datepicker>
-            </div>
-            <div class="form-group">
-                <input type="text" size="8" class="form-control" ng-model="sharedDate" data-autoclose="1" placeholder="Time" bs-timepicker>
-            </div>
-        </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-        <div class="form-group">
             <label class="col-sm-2 control-label">Date</label>
-            <div class="col-sm-10">
+            <div class="col-sm-3">
                 <div class="input-group">
-                    <input type="text" ng-click="openStartDate($event)" class="form-control" datepicker-popup="{{format}}" ng-model="startDate" is-open="openedStartDate" min-date="minDate" max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
-                    <div class="input-group-addon" ng-click="openStartDate($event)"><i class="glyphicon glyphicon-calendar"></i></div>
+                    <input type="text" size="10" class="form-control" ng-model="sharedDate" data-autoclose="1" placeholder="Date" bs-datepicker>
+                    <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+                </div>
+            </div>
+
+            <div class="col-sm-3" ng-show="true">
+                <div class="input-group">
+                    <input type="text" size="8" class="form-control" ng-model="sharedDate" data-autoclose="1" placeholder="Time" bs-timepicker>
+                    <div class="input-group-addon"><i class="fa fa-clock-o"></i></div>
+                </div>
+            </div>
+
+            <label class="col-sm-1 control-label" ng-show="true">To</label>
+            <div class="col-sm-3" ng-show="true">
+                <div class="input-group">
+                    <input type="text" size="8" class="form-control" ng-model="sharedDate" data-autoclose="1" placeholder="Time" bs-timepicker>
+                    <div class="input-group-addon"><i class="fa fa-clock-o"></i></div>
                 </div>
             </div>
         </div>
 
-        <div class="form-group" ng-show="allDay == 'Off'">
-            <label class="col-sm-2 control-label">Start Time</label>
-            <div class="time">
-                <timepicker ng-model="startTime" ng-change="changed()" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></timepicker>
-            </div>
-
-
-                    <div class="time-label" ng-show="allDay == 'Off'">
-                <label>to</label>
-            </div>
-        </div>
-
-        <div class="form-group" ng-show="allDay == 'Off'">
-            <label class="col-sm-2 control-label">End Time</label>
-            <div class="time">
-                <timepicker ng-model="endTime" ng-change="changed()" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></timepicker>
-            </div>
-        </div>
 
         <div class="form-group">
             <label class="col-sm-2 control-label">All day</label>
 
-            <div class="input-group col-sm-10">
-                <buttons-radio class="btn-group" data-toggle="buttons-radio" model='allDay' class="form-control" options='myOptions'></buttons-radio>
+            <div class="col-sm-10">
+                <div class="btn-group" ng-model="allDay" bs-radio-group>
+                    <label class="btn btn-default"><input type="radio" class="btn btn-default" value="0"> On</label>
+                    <label class="btn btn-default"><input type="radio" class="btn btn-default" value="2"> Off</label>
+                </div>
             </div>
         </div>
 
@@ -91,7 +69,10 @@
                 <label>Repeat</label>
             </div>
             <div class="col-sm-10">
-                <buttons-radio class="btn-group" data-toggle="buttons-radio" model='allDay' options='myOptions'></buttons-radio>
+                <div class="btn-group" ng-model="allDay" bs-radio-group>
+                    <label class="btn btn-default"><input type="radio" class="btn btn-default" value="0"> On</label>
+                    <label class="btn btn-default"><input type="radio" class="btn btn-default" value="2"> Off</label>
+                </div>
             </div>
         </div>
 
