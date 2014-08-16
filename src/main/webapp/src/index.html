@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html ng-app="application" ng-controller="AppCtrl">
+  <head>
+    <base href='' />
+    <title ng-bind="pageTitle"></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <!-- compiled CSS -->
+
+    <!-- compiled JavaScript -->
+    <script type="text/javascript" src="bower_components/angular/angular.js"></script>
+    <script type="text/javascript" src="bower_components/angular-resource/angular-resource.js"></script>
+    <script type="text/javascript" src="bower_components/angular-bootstrap/ui-bootstrap.js"></script>
+    <script type="text/javascript" src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <script type="text/javascript" src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+    <script type="text/javascript" src="bower_components/lodash/dist/lodash.js"></script>
+    <script type="text/javascript" src="app/account/account-controller.js"></script>
+    <script type="text/javascript" src="app/account/account-resource.js"></script>
+    <script type="text/javascript" src="app/alerts/alert-directive.js"></script>
+    <script type="text/javascript" src="app/alerts/alert-service.js"></script>
+    <script type="text/javascript" src="app/application/application-controller.js"></script>
+    <script type="text/javascript" src="app/application/application.js"></script>
+    <script type="text/javascript" src="app/application/configuration-constants.js"></script>
+    <script type="text/javascript" src="app/authentication/auth-service.js"></script>
+    <script type="text/javascript" src="app/authentication/session-service.js"></script>
+    <script type="text/javascript" src="app/calendar/calendar-controller.js"></script>
+    <script type="text/javascript" src="app/calendar/calendar-resource.js"></script>
+    <script type="text/javascript" src="app/event-attribute/event-attribute-controller.js"></script>
+    <script type="text/javascript" src="app/event-attribute/event-attribute-resource.js"></script>
+    <script type="text/javascript" src="app/event-category/event-category-controller.js"></script>
+    <script type="text/javascript" src="app/event-category/event-category-resource.js"></script>
+    <script type="text/javascript" src="app/event/add-event/add-event-controller.js"></script>
+    <script type="text/javascript" src="app/event/event-controller.js"></script>
+    <script type="text/javascript" src="app/event/event-resource.js"></script>
+    <script type="text/javascript" src="app/event/schedule/schedule-controller.js"></script>
+    <script type="text/javascript" src="app/login/login-controller.js"></script>
+    <script type="text/javascript" src="app/menu/menu-controller.js"></script>
+    <script type="text/javascript" src="app/menu/menu-item-directive.js"></script>
+    <script type="text/javascript" src="app/menu/menu-service.js"></script>
+    <script type="text/javascript" src="app/progressbar/progressbar-directive.js"></script>
+    <script type="text/javascript" src="app/progressbar/progressbar-service.js"></script>
+  </head>
+  <body>
+    <div ng-controller="AppCtrl">
+      <div class="view-container" id="content">
+
+        <!-- <div class="progress progress-striped progress-backend-ready" ng-if="backendReady">
+            <div class="progress-bar progress-bar-info" role="progressbar"
+                aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                <span class="sr-only"></span>
+            </div>
+        </div> -->
+<!--         <div progress-bar progressinfo="progressbarService.loadingProgress"></div>
+ -->        <div alert-modal alertinfo="alerts.alertMessage"></div>
+
+        <a ng-if="signedin" class="btn" ng-click="authenticate()">Sign out</a>
+        <a ng-if="!signedin" class="btn" ng-click="authenticate()">Sign in</a>
+
+<!--         <section ui-view  ng-if="!backendReady" class="animate-fade-up"></section>
+ -->
+        <section ui-view></section>
+      </div>
+
+    </div>
+  </body>
+</html>
