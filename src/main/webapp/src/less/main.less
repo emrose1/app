@@ -1,0 +1,21 @@
+/**
+ * This is the main application stylesheet. It should include or import all
+ * stylesheets used throughout the application as this is the only stylesheet in
+ * the Grunt configuration that is automatically processed.
+ */
+
+
+/**
+ * This is our main variables file. We must include it last so we can overwrite any variable
+ * definitions in our imported stylesheets.
+ */
+@import 'variables.less';
+
+
+body {
+  // general stuff
+}
+
+@import 'test-module.less';
+@import '../app/schedule/event/add-event/add-event.less';
+

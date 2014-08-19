@@ -1,4 +1,4 @@
-'use strict';
+/*'use strict';
 
 describe('Menu item directive', function() {
   var element, $q, $rootScope, $compile, $httpBackend
@@ -8,7 +8,7 @@ describe('Menu item directive', function() {
         //We laod all the module dependancies up front.
     	module('application.filters', 'application.services', 'application.controllers', 'application.directives' , 'application.constants');
 
-        //Injecting all of our services in the "beforeEach" section allows us to avoid cluttering out tests. 	
+        //Injecting all of our services in the "beforeEach" section allows us to avoid cluttering out tests.
     	inject(function($injector){
           	$q = $injector.get('$q')
           	$rootScope = $injector.get('$rootScope');
@@ -21,7 +21,7 @@ describe('Menu item directive', function() {
     //the unit test httpBackend mock implimented the ".andPassThrough" method as the e2e version does.
     $httpBackend.whenGET('menu/menu-item-template.html').respond('<a href="#/{{id}}">{{name}}</a>');
 
-    //Applying the rootScope digests and refreshes the ui so our directive renders. 
+    //Applying the rootScope digests and refreshes the ui so our directive renders.
     $rootScope.$apply(function(){
         //We compile a directive into an angular element so we canmanipulate it programatically.
         element = $compile('<menu-item name="\'testName\'" id="\'testId\'"/>')($rootScope);
@@ -39,6 +39,6 @@ describe('Menu item directive', function() {
         expect(element.html()).toBe("testName");
         expect(element.attr('href')).toBe("#/testId");
 
-    });  
+    });
 });
-       
+       */

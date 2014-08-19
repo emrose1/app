@@ -48,10 +48,6 @@ angular.module('application.controllers.event', [])
             _.remove($scope.events, event);
         };
 
-        $scope.changeAccount = function() {
-            console.log('account changed');
-        };
-
         $rootScope.$on('calendarLoaded', function(event, args) {
             console.log('Event event triggered');
             listEvents();

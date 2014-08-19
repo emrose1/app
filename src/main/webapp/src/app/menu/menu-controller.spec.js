@@ -1,4 +1,4 @@
-'use strict';
+/*'use strict';
 
 describe('Menu controller', function() {
   var mockMenu, controller, items, scope, $q, $rootScope, $compile, $httpBackend
@@ -9,14 +9,14 @@ describe('Menu controller', function() {
         items = [{
                 "id" : "item_1",
                 "name" : "item 1",
-                "description" : "item 1 details",   
-                "timestamp" : "1349539521000"   
+                "description" : "item 1 details",
+                "timestamp" : "1349539521000"
             },
             {
                 "id" : "item_2",
                 "name" : "item 2",
                 "description" : "item 2 details",
-                "timestamp" : "1349651343000"   
+                "timestamp" : "1349651343000"
             }
         ]
 
@@ -26,14 +26,14 @@ describe('Menu controller', function() {
 
         //Chain a jasmine "andCallFake" method onto the spy so we can return a mock promise object.
         mockMenu.get.andCallFake(function(){
-    
+
             var deferred;
             deferred = $q.defer();
             deferred.resolve(items);
             return deferred.promise;
-            
+
         });
-        
+
         //We laod all the module dependancies up front.
     	module('application.filters', 'application.services', 'application.controllers', 'application.directives' , 'application.constants');
 
@@ -42,7 +42,7 @@ describe('Menu controller', function() {
             $provide.value('menu', mockMenu);
         });
 
-        //Injecting all of our services in the "beforeEach" section allows us to avoid cluttering out tests. 	
+        //Injecting all of our services in the "beforeEach" section allows us to avoid cluttering out tests.
     	inject(function($injector, $controller){
           	$q = $injector.get('$q')
           	$rootScope = $injector.get('$rootScope');
@@ -64,6 +64,6 @@ describe('Menu controller', function() {
             expect(data).toBe(items);
         });
 
-    });  
+    });
 });
-       
+       */

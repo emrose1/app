@@ -25,7 +25,6 @@ module.exports = {
       '!src/vendor-combined.js'
     ],
 
-
     html: [ 'index.html' ],
     less: 'src/less/main.less',
     css: 'src/less/main.css'

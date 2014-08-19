@@ -22,14 +22,12 @@ angular.module('application.services.session', [])
 
     this.setAccount = function (account) {
         this.account = account;
-        console.log(account);
     };
     this.getAccount = function () {
         return this.account;
     };
     this.setCalendar = function (calendar) {
         this.calendar = calendar;
-        console.log(calendar);
     };
     this.getCalendar = function () {
         return this.calendar;

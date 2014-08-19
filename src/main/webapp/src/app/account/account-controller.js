@@ -1,11 +1,30 @@
-angular.module('application.controllers.account', [])
+angular.module('application.account', [])
+
+.config([
+  '$stateProvider',
+  function config( $stateProvider ) {
+    $stateProvider
+        .state('account', {
+            url: '/account',
+            controller: 'AccountCtrl',
+            templateUrl: 'app/account/account.tpl.html'
+        });
+    }
+])
+
 .controller('AccountCtrl', ['$rootScope', '$scope', 'Account', 'sessionService',
         function($rootScope, $scope, Account, session) {
 
-        console.log('account logged');
-
         $scope.account = new Account();
-        $scope.accounts = Account.query();
+
+        var getAccounts = function () {
+            Account.query({}, function(data) {
+                $scope.accounts = data;
+                $scope.setAccount(data[0].id);
+            });
+        };
+
+        getAccounts();
 
         $scope.newAccount = function() {
             $scope.account = new Account();
@@ -15,31 +34,31 @@ angular.module('application.controllers.account', [])
         $scope.activeAccount = function(account) {
             $scope.account = account;
             $scope.editing = true;
-            console.log(account);
-            session.setAccount(account.id);
+            $scope.setAccount(account.id);
         };
 
-        $scope.save = function() {
-            if ($scope.account.id) {
-                Account.update({id: $scope.account.id}, $scope.account);
+        $scope.save = function(account) {
+            if (account.id) {
+                account.$update().then(function(){
+                    getAccounts();
+                });
             } else {
                 $scope.account.$save().then(function(response) {
-                    $scope.accounts.push(response);
+                    getAccounts();
                 });
             }
-            $scope.editing = false;
-            $scope.account = new Account();
+            $scope.newAccount();
         };
 
         $scope.delete = function(account) {
-            Account.delete(account);
-            console.log(account);
-            _.remove($scope.accounts, account);
+            account.$delete(function(){
+                getAccounts();
+            });
         };
 
-        $scope.changeAccount = function() {
-            session.setAccount($scope.selectedAccount.id);
-            console.log($scope.selectedAccount.id);
+        $scope.setAccount = function(account) {
+            session.setAccount(account);
+            $scope.selectedAccount = account;
             $scope.$emit('accountLoaded', {});
         };
 

@@ -1,88 +1,46 @@
-// Karma configuration
-// Generated on Wed Jun 04 2014 20:24:17 GMT+0100 (BST)
-
-module.exports = function(config) {
-  config.set({
-
-    // base path that will be used to resolve all patterns (eg. files, exclude)
-    basePath: '',
-
-
-    // frameworks to use
-    // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['jasmine'],
-
-
-    // list of files / patterns to load in the browser
+module.exports = function ( karma ) {
+  karma.set({
+    /**
+     * This is the list of file patterns to load into the browser during testing.
+     */
     files: [
-        'bower_components/angular/angular.min.js',
-        'bower_components/angular-resource/angular-resource.min.js',
-        'bower_components/angular-mocks/angular-mocks.js',
-        'bower_components/angular-ui-router/release/angular-ui-router.js',
-        'bower_components/lodash/dist/lodash.js',
 
+        // Include dependencies (from bower)
+        // include devDependencies (from bower)
 
-        'application/application.js',
-        'application/configuration-constants.js',
-
-
-        'authentication/session-service.js',
-        'authentication/auth-service.js',
-        'accounts/account-resource.js',
-        'accounts/accounts-service.js',
-        'accounts/account-controller.js',
-        'accounts/account-controller-test.js',
-
-        'alerts/alert-directive.js',
-        'alerts/alert-service.js'
-
-
+      'src/bower_components/angular/angular.js',
+      'src/bower_components/angular-mocks/angular-mocks.js',
+      'src/bower_components/angular-bootstrap/ui-bootstrap.js',
+      'src/bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
+      'src/bower_components/angular-ui-router/release/angular-ui-router.js',
+      'src/bower_components/angular-resource/angular-resource.js',
+      'src/bower_components/lodash/dist/lodash.js',
+      'src/app/**/*.js'
     ],
+    frameworks: [ 'jasmine' ],
+    plugins: [ 'karma-jasmine', 'karma-phantomjs-launcher' ],
 
+    /**
+     * How to report, by default.
+     */
+    reporters: 'dots',
 
-    // list of files to exclude
-    exclude: [
+    /**
+     * On which port should the browser connect, on which port is the test runner
+     * operating, and what is the URL path for the browser to use.
+     */
+    port: 9018,
+    runnerPort: 9100,
+    urlRoot: '/',
 
-    ],
-
-
-    // preprocess matching files before serving them to the browser
-    // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
-    preprocessors: {
-
-    },
-
-
-    // test results reporter to use
-    // possible values: 'dots', 'progress'
-    // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['progress'],
-
-
-    // web server port
-    port: 9876,
-
-
-    // enable / disable colors in the output (reporters and logs)
-    colors: true,
-
-
-    // level of logging
-    // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
-    logLevel: config.LOG_INFO,
-
-
-    // enable / disable watching file and executing tests whenever any file changes
+    /**
+     * Disable file watching by default.
+     */
     autoWatch: true,
 
-
-    // start these browsers
-    // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['Chrome'],
-
-
-    // Continuous Integration mode
-    // if true, Karma captures browsers, runs the tests and exits
-    singleRun: false
+    browsers: [
+      'PhantomJS'
+    ]
   });
 };
+

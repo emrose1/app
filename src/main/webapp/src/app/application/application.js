@@ -1,3 +1,4 @@
+
 /*var gapi = gapi || {};
 gapi.client = gapi.client || {};*/
 
@@ -6,7 +7,7 @@ var Application = Application || {};
 Application.Constants = angular.module('application.constants', ['application.constants.configuration']);
 Application.Services = angular.module('application.services', [
     'application.services.alerts',
-    'application.services.account',
+
     'application.services.calendar',
     'application.services.event',
     'application.services.eventAttribute',
@@ -17,7 +18,7 @@ Application.Services = angular.module('application.services', [
 ]);
 Application.Controllers = angular.module('application.controllers', [
     'application.controllers.application',
-    'application.controllers.account',
+    'application.account',
     'application.controllers.calendar',
     'application.controllers.schedule',
     'application.controllers.event',
@@ -65,11 +66,7 @@ angular.module('application', [
             controller: 'login',
             templateUrl: 'app/login/login-partial.html'
         })*/
-        .state('account', {
-            url: '/account',
-            controller: 'AccountCtrl',
-            templateUrl: 'app/account/account.tpl.html'
-        })
+
         .state('calendar', {
             url: '/calendar',
             controller: 'calendarCtrl',
@@ -78,17 +75,17 @@ angular.module('application', [
         .state('event', {
             url: '/event',
             controller: 'eventCtrl',
-            templateUrl: 'app/event/event.tpl.html'
+            templateUrl: 'app/schedule/event/event.tpl.html'
         })
         .state('addevent', {
             url: '/addevent',
             controller: 'addEventCtrl',
-            templateUrl: 'app/event/add-event/add-event.tpl.html'
+            templateUrl: 'app/schedule/event/add-event/add-event.tpl.html'
         })
         .state('schedule', {
             url: '/schedule',
             controller: 'eventCtrl',
-            templateUrl: 'app/event/schedule/schedule.tpl.html'
+            templateUrl: 'app/schedule/schedule.tpl.html'
         })
         .state('eventattribute', {
             url: '/eventattribute',

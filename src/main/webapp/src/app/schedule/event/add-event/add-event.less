@@ -5,12 +5,33 @@
 	-webkit-box-shadow: none;
 	box-shadow: none;
 	position: relative;
-	padding: 45px 15px 15px;
+	padding: 15px;
 	margin: 0 0 15px 0;
 	border-style: solid;
+	float: left;
 }
 
-.date-time-row .input-group { padding: 35px 10px 0px 0px; float: left;}
+/*.date-time-row .input-group { padding: 35px 10px 0px 0px; float: left;}
 .date-time-row .time-label { padding: 35px 10px 0px 10px; float: left; height: 34px; line-height: 34px}
 .date-time-row .time { padding: 0px 10px; float: left}
-.date-time-row .time input { width: inherit;}
+.date-time-row .time input { width: inherit;}*/
+
+.form-inline {
+	.input-group {
+		&.timepicker {
+			.form-control {
+				width: 50px;
+			}
+		}
+	}
+}
+
+.datepicker {
+	table {
+		td, th {
+			.btn {
+				border: 0;
+			}
+		}
+	}
+}

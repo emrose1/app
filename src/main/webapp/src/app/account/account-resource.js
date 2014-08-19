@@ -1,10 +1,8 @@
-angular.module('application.services.account', [
-
-])
+angular.module('application.account')
 .provider('Account', function() {
 
 	this.$get = ['$resource', function($resource) {
-		var Account = $resource('http://localhost:8080/_ah/api/booking/v1/account/:id', {}, {
+		var Account = $resource('http://localhost:8080/_ah/api/booking/v1/account/:id', { id: '@id' }, {
 			update: {
 				method: 'PUT'
 			},

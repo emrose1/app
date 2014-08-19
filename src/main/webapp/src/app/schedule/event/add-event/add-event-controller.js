@@ -1,3 +1,21 @@
+/*@Named("account_id") Long accountId,
+@Named("calendar_id") Long calendarId,
+@Named("repeatEvent") String repeatEvent,
+@Named("eventRepeatType") String eventRepeatType,
+@Named("eventRepeatInterval") Integer repeatInterval,
+@Named("finalRepeatDate") String finalRepeatDate,
+@Named("eventRepeatCount") Integer eventRepeatCount,
+@Named("repeatDaysOfWeek") Integer[] repeatDaysOfWeek,
+@Named("excludeDays") String[] excludeDays,
+@Named("title") String title,
+@Named("startDateTime") String startDateTime,
+@Named("endDateTime") String endDateTime,
+@Named("maxAttendees") Integer maxAttendees,
+@Named("instructor_id") Long instructorId,
+@Named("eventCategory") Long eventCategory,
+@Named("eventAttribute") Long eventAttribute*/
+
+
 angular.module('application.controllers.addEvent', [])
 .controller('addEventCtrl', ['$rootScope', '$scope',
 	function($rootScope,$scope) {
@@ -25,10 +43,10 @@ angular.module('application.controllers.addEvent', [])
 	};
 	$scope.toggleMin();
 
-	$scope.openStartDate = function($event) {
+	$scope.openDatePicker = function($event) {
 		$event.preventDefault();
 		$event.stopPropagation();
-		$scope.openedStartDate = true;
+		$scope.openedDatePicker = true;
 	};
 
 	$scope.dateOptions = {

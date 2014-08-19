@@ -3,7 +3,7 @@
 
         <div class="container" ng-controller="AccountCtrl">
             <h1>Accounts</h1>
-            <select ng-model="selectedAccount" ng-change="changeAccount()" ng-options="account.name for account in accounts">
+            <select ng-model="selectedAccount" ng-change="setAccount()" ng-options="account.name for account in accounts">
             </select>
         </div>
 
