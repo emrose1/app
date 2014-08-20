@@ -1,0 +1,6 @@
+<div class="form-group">
+	<select ng-model="selectedAccount" class="form-control"
+	    ng-options="account.id as account.name for account in accounts"
+	    ng-change="setAccount(selectedAccount)">
+	</select>
+</div>

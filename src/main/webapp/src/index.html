@@ -15,8 +15,15 @@
     <script type="text/javascript" src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
     <script type="text/javascript" src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
     <script type="text/javascript" src="bower_components/lodash/dist/lodash.js"></script>
-    <script type="text/javascript" src="app/account/account-controller.js"></script>
     <script type="text/javascript" src="app/account/account-resource.js"></script>
+    <script type="text/javascript" src="app/account/account.js"></script>
+    <script type="text/javascript" src="app/account/calendar/calendar-resource.js"></script>
+    <script type="text/javascript" src="app/account/calendar/calendar.js"></script>
+    <script type="text/javascript" src="app/account/calendar/schedule/event/add-event/add-event-controller.js"></script>
+    <script type="text/javascript" src="app/account/calendar/schedule/event/edit-event/edit-event-controller.js"></script>
+    <script type="text/javascript" src="app/account/calendar/schedule/event/event-resource.js"></script>
+    <script type="text/javascript" src="app/account/calendar/schedule/event/event.js"></script>
+    <script type="text/javascript" src="app/account/calendar/schedule/schedule-controller.js"></script>
     <script type="text/javascript" src="app/alerts/alert-directive.js"></script>
     <script type="text/javascript" src="app/alerts/alert-service.js"></script>
     <script type="text/javascript" src="app/application/application-controller.js"></script>
@@ -24,8 +31,6 @@
     <script type="text/javascript" src="app/application/configuration-constants.js"></script>
     <script type="text/javascript" src="app/authentication/auth-service.js"></script>
     <script type="text/javascript" src="app/authentication/session-service.js"></script>
-    <script type="text/javascript" src="app/calendar/calendar-controller.js"></script>
-    <script type="text/javascript" src="app/calendar/calendar-resource.js"></script>
     <script type="text/javascript" src="app/event-attribute/event-attribute-controller.js"></script>
     <script type="text/javascript" src="app/event-attribute/event-attribute-resource.js"></script>
     <script type="text/javascript" src="app/event-category/event-category-controller.js"></script>
@@ -36,11 +41,6 @@
     <script type="text/javascript" src="app/menu/menu-service.js"></script>
     <script type="text/javascript" src="app/progressbar/progressbar-directive.js"></script>
     <script type="text/javascript" src="app/progressbar/progressbar-service.js"></script>
-    <script type="text/javascript" src="app/schedule/event/add-event/add-event-controller.js"></script>
-    <script type="text/javascript" src="app/schedule/event/edit-event/edit-event-controller.js"></script>
-    <script type="text/javascript" src="app/schedule/event/event-controller.js"></script>
-    <script type="text/javascript" src="app/schedule/event/event-resource.js"></script>
-    <script type="text/javascript" src="app/schedule/schedule-controller.js"></script>
   </head>
   <body>
     <div ng-controller="AppCtrl">
@@ -61,6 +61,11 @@
 <!--         <section ui-view  ng-if="!backendReady" class="animate-fade-up"></section>
  -->
         <section ui-view></section>
+        <div class="container">
+          <div ui-view="accounts"></div>
+          <div ui-view="calendars"></div>
+          <div ui-view="content"></div>
+        </div>
       </div>
 
     </div>

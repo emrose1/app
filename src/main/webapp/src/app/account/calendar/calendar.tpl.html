@@ -1,0 +1,22 @@
+<h1 ng-show="calendars.length">Calendars</h1>
+<table class="table table-striped" ng-show="calendars.length">
+    <thead>
+        <th>Title</th>
+    </thead>
+    <tbody>
+        <tr ng-repeat="calendar in calendars">
+            <td ng-click="activeCalendar(calendar)">{{calendar.id}}</td>
+            <td ng-click="activeCalendar(calendar)">{{calendar.description}}</td>
+            <td><button class="btn btn-danger" ng-click="delete(calendar)">Delete</button></td>
+        </tr>
+    </tbody>
+</table>
+
+<h3 ng-if="!editing">New Calendar</h3>
+<h3 ng-if="editing">Edit Calendar</h3>
+<form ng-submit="save(calendar)">
+    <input ng-model="calendar.description">
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+<button ng-if="editing" class="btn btn-success" ng-click="newCalendar()">New Calendar</button>
+

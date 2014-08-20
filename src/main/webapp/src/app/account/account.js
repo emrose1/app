@@ -1,4 +1,6 @@
-angular.module('application.account', [])
+angular.module('application.account', [
+    'application.account.service'
+])
 
 .config([
   '$stateProvider',

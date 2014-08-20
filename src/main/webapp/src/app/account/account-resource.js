@@ -1,4 +1,4 @@
-angular.module('application.account')
+angular.module('application.account.service', [])
 .provider('Account', function() {
 
 	this.$get = ['$resource', function($resource) {

@@ -30,6 +30,11 @@
 <!--         <section ui-view  ng-if="!backendReady" class="animate-fade-up"></section>
  -->
         <section ui-view></section>
+        <div class="container">
+          <div ui-view="accounts"></div>
+          <div ui-view="calendars"></div>
+          <div ui-view="content"></div>
+        </div>
       </div>
 
     </div>

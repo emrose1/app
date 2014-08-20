@@ -1,4 +1,28 @@
-angular.module('application.controllers.calendar', [])
+angular.module('application.account.calendar', [
+    'application.account.calendar.service'
+])
+
+.config([
+  '$stateProvider',
+  function config( $stateProvider ) {
+    $stateProvider
+        .state('calendar', {
+            url: '/calendar',
+
+            views: {
+                'accounts': {
+                    templateUrl: 'app/account/account-dropdown.tpl.html',
+                    controller: 'AccountCtrl'
+                },
+                'calendars': {
+                    templateUrl: 'app/account/calendar/calendar.tpl.html',
+                    controller: 'calendarCtrl'
+                }
+            }
+        });
+    }
+])
+
 .controller('calendarCtrl', ['$rootScope', '$scope', 'Calendar', 'sessionService',
         function($rootScope, $scope, Calendar, session) {
 

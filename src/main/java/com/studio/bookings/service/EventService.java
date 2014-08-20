@@ -52,13 +52,13 @@ public class EventService extends BaseService {
 			@Named("repeatEvent") String repeatEvent,
 			@Named("eventRepeatType") String eventRepeatType,
 			@Named("eventRepeatInterval") Integer repeatInterval,
-			@Named("finalRepeatDate") String finalRepeatDate,
+			@Named("finalRepeatDate") Long finalRepeatDate,
 			@Named("eventRepeatCount") Integer eventRepeatCount,
 			@Named("repeatDaysOfWeek") Integer[] repeatDaysOfWeek,
 			@Named("excludeDays") String[] excludeDays,
 			@Named("title") String title,
-			@Named("startDateTime") String startDateTime,
-			@Named("endDateTime") String endDateTime,
+			@Named("startDateTime") Long startDateTime,
+			@Named("endDateTime") Long endDateTime,
 			@Named("maxAttendees") Integer maxAttendees,
 			@Named("instructor_id") Long instructorId, 
 			@Named("eventCategory") Long eventCategory,
@@ -67,6 +67,7 @@ public class EventService extends BaseService {
 				
 		// Get Account
 		Account account = accountDao.retrieve(accountId);
+		
 		
 		// retrieving Calendar	
 		Calendar calendar = calendarDao.retrieveAncestor(calendarId, account);
@@ -77,9 +78,11 @@ public class EventService extends BaseService {
 		
 		//Format Dates
 		DateFormat formatter = new SimpleDateFormat("HH:mm dd MM yyyy");
+		Date eventStart = new Date();
+		eventStart.setTime(startDateTime);
 		
-		Date eventStart = new DateTime(formatter.parse(startDateTime)).toDate();
-		Date eventEnd = new DateTime(formatter.parse(endDateTime)).toDate();
+		Date eventEnd = new Date();
+		eventEnd.setTime(endDateTime);
 		
 		// Set Instructor
 		Person instructor = personDao.retrieveAncestor(instructorId, account);
@@ -90,13 +93,13 @@ public class EventService extends BaseService {
 		List<Integer> daysOfWeek = new ArrayList<Integer>();
 		List<Date> repeatExcludeDays = new ArrayList<Date>();
 		Integer repeatCount = 0;
-		Date eventFinalRepeatDate = null;
+		Date eventFinalRepeatDate = new Date();
 		
 		if (repeatBoolean) {
 			repeatType = EventRepeatType.valueOf(eventRepeatType);
 			daysOfWeek = Arrays.asList(repeatDaysOfWeek);
 			repeatCount = eventRepeatCount;
-			eventFinalRepeatDate = new DateTime(formatter.parse(finalRepeatDate)).toDate();
+			eventFinalRepeatDate.setTime(finalRepeatDate);
 			for (int i = 0; i < excludeDays.length; i++) {
 				repeatExcludeDays.add(new DateTime(formatter.parse(excludeDays[i])).toDate());
 			}
@@ -115,7 +118,7 @@ public class EventService extends BaseService {
 	public List<EventItem> listEvents(
 			@Named("account_id") Long accountId,
 			@Named("calendar_id") Long calendarId,
-			@Named("date_range_start") String dateStart) throws ParseException {
+			@Named("date_range_start") Long dateStart) throws ParseException {
 		
 		// Get Account
 		Account account = accountDao.retrieve(accountId);
@@ -123,10 +126,9 @@ public class EventService extends BaseService {
 		// Get Calendar
 		Calendar calendar = calendarDao.retrieveAncestor(calendarId, account);
 		
-		
 		//Format Dates
-		DateFormat formatter = new SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss zzz");		
-		Date eventStart = formatter.parse(dateStart);
+		Date eventStart = new Date();
+		eventStart.setTime(dateStart);
 		Date dateEnd = new DateTime(eventStart).plusMonths(6).toDate();
 		
 		List<EventItem> allEvents = new ArrayList<EventItem>();

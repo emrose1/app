@@ -1,0 +1,6 @@
+<div class="form-group">
+	<select ng-model="selectedCalendar" class="form-control"
+		ng-options="calendar.id as calendar.description for calendar in calendars"
+		ng-change="setCalendar(selectedCalendar)">
+	</select>
+</div>

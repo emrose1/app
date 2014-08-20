@@ -144,13 +144,12 @@ public class EventServiceTestingServlet extends HttpServlet {
 		
 		eventDao.save(ev2);
 		
-		Date today = new DateTime().minusMonths(1).toDate();
+		Long today = new DateTime().minusMonths(1).toDate().getTime();
 		DateFormat formatter = new SimpleDateFormat("EEE MMM dd yyyy hh:mm:ss zzz");
-	    String fromDate = formatter.format(today);
 		
 		List<EventItem> events2 = new ArrayList<EventItem>();
 		try {
-			events2 = eventService.listEvents(account.getId(), calendar1.getId(), fromDate);
+			events2 = eventService.listEvents(account.getId(), calendar1.getId(), today);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

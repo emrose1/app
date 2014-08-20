@@ -1,4 +1,4 @@
-angular.module('application.services.calendar', [])
+angular.module('application.account.calendar.service', [])
 .provider('Calendar', function() {
 	this.$get = ['$resource', 'sessionService',
 	function($resource, session) {

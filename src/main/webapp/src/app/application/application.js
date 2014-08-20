@@ -7,21 +7,18 @@ var Application = Application || {};
 Application.Constants = angular.module('application.constants', ['application.constants.configuration']);
 Application.Services = angular.module('application.services', [
     'application.services.alerts',
-
-    'application.services.calendar',
-    'application.services.event',
     'application.services.eventAttribute',
     'application.services.eventCategory',
     'application.services.auth',
     'application.services.session',
     'application.services.progressBar'
 ]);
-Application.Controllers = angular.module('application.controllers', [
+Application.Domains = angular.module('application.domains', [
     'application.controllers.application',
     'application.account',
-    'application.controllers.calendar',
+    'application.account.calendar',
+    'application.account.calendar.event',
     'application.controllers.schedule',
-    'application.controllers.event',
     'application.controllers.addEvent',
     'application.controllers.eventAttribute',
     'application.controllers.eventCategory'
@@ -39,58 +36,29 @@ angular.module('application', [
     'application.services',
     'application.directives',
     'application.constants',
-    'application.controllers'
+    'application.domains'
 ])
 
 .config(function($stateProvider, $urlRouterProvider, USER_ROLES) {
 
-    $urlRouterProvider.otherwise( '/schedule' );
+    $urlRouterProvider.otherwise( '/calendar' );
 
     $stateProvider
-        /*.state('loading', {
-            url: '/about',
-            controller:'about',
-            templateUrl: 'about/about-partial.html'
-        })
-        .state('details', {
-            url: '/details',
-            controller: 'details',
-            templateUrl: 'details/details-partial.html',
-            data: {
-                authorizedRoles: [USER_ROLES.admin],
-                pageTitle: 'Details'
-            }
-        })*/
-        /*.state( 'login', {
-            url: '/login',
-            controller: 'login',
-            templateUrl: 'app/login/login-partial.html'
-        })*/
 
-        .state('calendar', {
-            url: '/calendar',
-            controller: 'calendarCtrl',
-            templateUrl: 'app/calendar/calendar.tpl.html'
-        })
-        .state('event', {
-            url: '/event',
-            controller: 'eventCtrl',
-            templateUrl: 'app/schedule/event/event.tpl.html'
-        })
         .state('addevent', {
             url: '/addevent',
             controller: 'addEventCtrl',
-            templateUrl: 'app/schedule/event/add-event/add-event.tpl.html'
+            templateUrl: 'app/account/calendar/schedule/event/add-event/add-event.tpl.html'
         })
         .state('schedule', {
             url: '/schedule',
             controller: 'eventCtrl',
-            templateUrl: 'app/schedule/schedule.tpl.html'
+            templateUrl: 'app/account/calendar/schedule/schedule.tpl.html'
         })
         .state('eventattribute', {
             url: '/eventattribute',
             controller: 'eventAttributeCtrl',
-            templateUrl: 'app/event-attribute/event-attribute.tpl.html'
+            templateUrl: 'event-attribute/event-attribute.tpl.html'
         })
         .state('eventcategory', {
             url: '/eventcategory',
