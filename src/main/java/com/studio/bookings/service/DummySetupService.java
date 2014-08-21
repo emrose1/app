@@ -81,13 +81,13 @@ public class DummySetupService  extends BaseService {
 			EventAttribute eventAttribute,
 			@Named("hours") Integer hours
 			) {
-		Date dateStart = calcNextMonday(new DateTime()).withTime(0, 0, 0, 0).plusHours(hours).toDate();
+		Date dateStart = calcNextMonday(new DateTime()).withTime(0, 0, 0, 0).plusHours(hours).minusWeeks(1).toDate();
 		Date dateEnd = new DateTime(dateStart).plusHours(2).toDate();
 		
-		Date dateStart2 = calcNextMonday(new DateTime()).withTime(0, 0, 0, 0).plusHours(hours + 2).toDate();
+		Date dateStart2 = calcNextMonday(new DateTime()).withTime(0, 0, 0, 0).plusHours(hours + 2).minusWeeks(1).toDate();
 		Date dateEnd2 = new DateTime(dateStart2).plusHours(2).toDate();
 		
-		Date dateStart3 = calcNextMonday(new DateTime()).withTime(0, 0, 0, 0).plusHours(hours + 5).toDate();
+		Date dateStart3 = calcNextMonday(new DateTime()).withTime(0, 0, 0, 0).plusHours(hours + 5).minusWeeks(1).toDate();
 		Date dateEnd3 = new DateTime(dateStart3).plusHours(2).toDate();
 		
 		Date finalRepeatWeeklyDate = new DateTime(dateEnd).plusWeeks(5).plusDays(1).toDate();

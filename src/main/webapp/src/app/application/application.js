@@ -7,8 +7,6 @@ var Application = Application || {};
 Application.Constants = angular.module('application.constants', ['application.constants.configuration']);
 Application.Services = angular.module('application.services', [
     'application.services.alerts',
-    'application.services.eventAttribute',
-    'application.services.eventCategory',
     'application.services.auth',
     'application.services.session',
     'application.services.progressBar'
@@ -17,11 +15,11 @@ Application.Domains = angular.module('application.domains', [
     'application.controllers.application',
     'application.account',
     'application.account.calendar',
+    'application.account.calendar.eventAttribute',
+    'application.account.calendar.eventCategory',
     'application.account.calendar.event',
-    'application.controllers.schedule',
-    'application.controllers.addEvent',
-    'application.controllers.eventAttribute',
-    'application.controllers.eventCategory'
+    'application.account.calendar.event.schedule',
+    'application.account.calendar.event.createEvent'
 ]);
 Application.Filters = angular.module('application.filters', []);
 Application.Directives = angular.module('application.directives', [
@@ -38,35 +36,6 @@ angular.module('application', [
     'application.constants',
     'application.domains'
 ])
-
-.config(function($stateProvider, $urlRouterProvider, USER_ROLES) {
-
-    $urlRouterProvider.otherwise( '/calendar' );
-
-    $stateProvider
-
-        .state('addevent', {
-            url: '/addevent',
-            controller: 'addEventCtrl',
-            templateUrl: 'app/account/calendar/schedule/event/add-event/add-event.tpl.html'
-        })
-        .state('schedule', {
-            url: '/schedule',
-            controller: 'eventCtrl',
-            templateUrl: 'app/account/calendar/schedule/schedule.tpl.html'
-        })
-        .state('eventattribute', {
-            url: '/eventattribute',
-            controller: 'eventAttributeCtrl',
-            templateUrl: 'event-attribute/event-attribute.tpl.html'
-        })
-        .state('eventcategory', {
-            url: '/eventcategory',
-            controller: 'eventCategoryCtrl',
-            templateUrl: 'app/event-category/event-category.tpl.html'
-        })
-        ;
-})
 
 .run(function ($state, $rootScope, AUTH_EVENTS, auth, sessionService, $window, $location, alerts) {
     /*$rootScope.$on('$stateChangeStart', function (event, next) {

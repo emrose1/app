@@ -28,7 +28,7 @@ public class EventAttributeService extends BaseService {
 	
 	@ApiMethod(name = "account.insertEventAttribute", path="account/{account_id}/eventattribute",  httpMethod = HttpMethod.POST)
 	public EventAttribute insertEventAttribute( 
-		@Named("description") String description,  
+		@Named("name") String name,  
 		@Named("account_id") Long accountId,
 		User user) {
 		
@@ -37,7 +37,7 @@ public class EventAttributeService extends BaseService {
     		// TODO THROW UNAUTHORIZED EXCEPTION
     		//if (aclService.allowInsert(accountId, aclPermission.toString(), user).get(0)) {
 				Account account =  accountDao.retrieve(accountId);
-				eventAttribute = new EventAttribute(description, account);
+				eventAttribute = new EventAttribute(name, account);
 				eventAttributeDao.save(eventAttribute);
     		//}
 		//}
@@ -79,7 +79,7 @@ public class EventAttributeService extends BaseService {
 	
 	@ApiMethod(name = "eventAttribute.updateEventAttribute", path="account/{account_id}/eventattribute/{id}", httpMethod = HttpMethod.PUT)
 	public EventAttribute updateEventAttribute(@Named("id") Long eventAttributeId,  @Named("account_id") Long accountId, 
-			@Named("description") String name, User user) {
+			@Named("name") String name, User user) {
 		EventAttribute eventAttribute = null;
 		//if(user != null) {	
 			//if (aclService.allowUpdate(accountId, aclPermission.toString(), user).get(0)) {

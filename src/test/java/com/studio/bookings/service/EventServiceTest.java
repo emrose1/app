@@ -55,7 +55,7 @@ public class EventServiceTest extends TestBase {
 	
 
 	@Test
-	public void insertEvent() throws ParseException, NotFoundException {
+	public void insertAdHocEvent() throws ParseException, NotFoundException {
 		
 		User user = this.setUpUser();
 		
@@ -113,9 +113,12 @@ public class EventServiceTest extends TestBase {
 		Long fromDate2 = new DateTime().plusYears(1).toDate().getTime();
 		Long toDate2 = new DateTime().plusYears(1).plusHours(1).toDate().getTime();
 		
-		event1 = eventService.insertEvent(account.getId(), calendar1.getId(), "false", "", new Integer(0), null, new Integer(0), 
-				daysOfWeekArray, excludeDaysArray,"Event Summary 1", fromDate, toDate, new Integer(10), instructor1.getId(), 
-				 eventCategory1.getId(), eventAttribute1.getId());
+		event1 = eventService.insertEvent(
+				account.getId(), calendar1.getId(), "false", "", 
+				new Integer(0), null, new Integer(0), daysOfWeekArray, 
+				excludeDaysArray, "Event Summary 1", fromDate, toDate, 
+				new Integer(10), instructor1.getId(), eventCategory1.getId(), eventAttribute1.getId()
+		);
 		
 		event2 = eventService.insertEvent(account.getId(), calendar2.getId(), "false", "", new Integer(0), null, new Integer(0), 
 				daysOfWeekArray, excludeDaysArray, "Event Summary 2", fromDate2, toDate2,  new Integer(1), instructor2.getId(), 
@@ -149,8 +152,7 @@ public class EventServiceTest extends TestBase {
 		Assert.assertEquals(eventFetched1.getRepeatDaysOfWeek().size(), 0);
 		Assert.assertEquals(eventFetched1.getExcludeDays().size(), 0);
 		Assert.assertEquals(eventFetched1.getRepeatCount(),  new Integer(0));
-		
-		//Assert.assertNull(eventFetched1.getRepeatFinalDate());
+		Assert.assertNull(eventFetched1.getRepeatFinalDate());
 		
 		Assert.assertNotEquals(eventFetched1.getId(), eventFetched2.getId());
 		Assert.assertNotEquals(eventFetched1.getTitle(), eventFetched2.getTitle());

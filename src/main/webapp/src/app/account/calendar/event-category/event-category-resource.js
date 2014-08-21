@@ -1,8 +1,8 @@
-angular.module('application.services.eventAttribute', [])
-.provider('EventAttribute', function() {
+angular.module('application.account.calendar.services.eventCategory', [])
+.provider('EventCategory', function() {
 	this.$get = ['$resource', function($resource) {
 
-		var EventAttribute = $resource('http://localhost:8080/_ah/api/booking/v1/account/:account_id/eventattribute/:id', {
+		var EventCategory = $resource('http://localhost:8080/_ah/api/booking/v1/account/:account_id/eventcategory/:id', {
 				account_id: '@account_id',
 				id: '@id'
 			},
@@ -19,7 +19,7 @@ angular.module('application.services.eventAttribute', [])
 				}
 			}
 		);
-		console.log(EventAttribute);
-		return EventAttribute;
+
+		return EventCategory;
 	}];
 });

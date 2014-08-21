@@ -27,7 +27,7 @@ public class EventCategoryService extends BaseService {
 	
 	@ApiMethod(name = "account.insertEventCategory", path="account/{account_id}/eventcategory",  httpMethod = HttpMethod.POST)
 	public EventCategory insertEventCategory( 
-		@Named("description") String description,  
+		@Named("name") String name,  
 		@Named("account_id") Long accountId,
 		User user) {
 		
@@ -36,7 +36,7 @@ public class EventCategoryService extends BaseService {
     		// TODO THROW UNAUTHORIZED EXCEPTION
     		//if (aclService.allowInsert(accountId, aclPermission.toString(), user).get(0)) {
 				Account account =  accountDao.retrieve(accountId);
-				eventCategory = new EventCategory(description, account);
+				eventCategory = new EventCategory(name, account);
 				eventCategoryDao.save(eventCategory);
     		//}
 		//}
@@ -78,7 +78,7 @@ public class EventCategoryService extends BaseService {
 	
 	@ApiMethod(name = "eventCategory.updateEventCategory", path="account/{account_id}/eventcategory/{id}", httpMethod = HttpMethod.PUT)
 	public EventCategory updateEventCategory(@Named("id") Long eventCategoryId,  @Named("account_id") Long accountId, 
-			@Named("description") String name, User user) {
+			@Named("name") String name, User user) {
 		EventCategory eventCategory = null;
 		//if(user != null) {	
 			//if (aclService.allowUpdate(accountId, aclPermission.toString(), user).get(0)) {

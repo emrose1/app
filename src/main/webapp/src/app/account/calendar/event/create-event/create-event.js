@@ -16,7 +16,33 @@
 @Named("eventAttribute") Long eventAttribute*/
 
 
-angular.module('application.controllers.addEvent', [])
+angular.module('application.account.calendar.event.createEvent', [])
+
+.config([
+  '$stateProvider',
+  function config( $stateProvider ) {
+    $stateProvider
+        .state('addevent', {
+            url: '/addevent',
+
+            views: {
+                'accounts': {
+                    templateUrl: 'app/account/account-dropdown.tpl.html',
+                    controller: 'AccountCtrl'
+                },
+                'calendars': {
+                    templateUrl: 'app/account/calendar/calendar-dropdown.tpl.html',
+                    controller: 'calendarCtrl'
+                },
+                'content': {
+					templateUrl: 'app/account/calendar/event/create-event/create-event.tpl.html',
+					controller: 'addEventCtrl'
+                }
+            }
+        });
+    }
+])
+
 .controller('addEventCtrl', ['$rootScope', '$scope',
 	function($rootScope,$scope) {
 

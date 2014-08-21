@@ -93,21 +93,24 @@ public class EventService extends BaseService {
 		List<Integer> daysOfWeek = new ArrayList<Integer>();
 		List<Date> repeatExcludeDays = new ArrayList<Date>();
 		Integer repeatCount = 0;
-		Date eventFinalRepeatDate = new Date();
+		Date eventFinalRepeatDate = null;
 		
 		if (repeatBoolean) {
 			repeatType = EventRepeatType.valueOf(eventRepeatType);
 			daysOfWeek = Arrays.asList(repeatDaysOfWeek);
 			repeatCount = eventRepeatCount;
+			eventFinalRepeatDate = new Date();
 			eventFinalRepeatDate.setTime(finalRepeatDate);
 			for (int i = 0; i < excludeDays.length; i++) {
 				repeatExcludeDays.add(new DateTime(formatter.parse(excludeDays[i])).toDate());
 			}
 		}
 
-		Event event = new Event(calendar, repeatBoolean, repeatType, repeatInterval, eventFinalRepeatDate, repeatCount, 
-				daysOfWeek, repeatExcludeDays, title, eventStart, eventEnd, maxAttendees, instructor, 
-				eventCategoryFetched, eventAttributeFetched);
+		Event event = new Event(
+				calendar, repeatBoolean, repeatType, repeatInterval, 
+				eventFinalRepeatDate, repeatCount, daysOfWeek, repeatExcludeDays, 
+				title, eventStart, eventEnd, maxAttendees, 
+				instructor, eventCategoryFetched, eventAttributeFetched);
 		
 		eventDao.save(event);    
 		return event;
