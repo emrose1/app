@@ -96,15 +96,15 @@ public class DummySetupService  extends BaseService {
 		Date finalDate = new DateTime(dateStart).plusMonths(6).plusDays(1).toDate();
 
 		Event ev1 = new Event(cal, true, EventRepeatType.DAILY, new Integer(1), finalDate,  null, 
-		daysOfWeek, null,  "Matwork", dateStart, dateEnd, new Integer(10), inst, 
+		daysOfWeek, null,  "Matwork", dateStart, dateEnd, new Boolean("false"), new Integer(10), inst, 
 		eventCategory, eventAttribute);
 		
 		Event ev2 = new Event(cal, true, EventRepeatType.DAILY, new Integer(2), finalDate,  null, 
-				daysOfWeek, null,  "Pilates Matwork", dateStart2, dateEnd2, new Integer(10), inst, 
+				daysOfWeek, null,  "Pilates Matwork", dateStart2, dateEnd2, new Boolean("false"), new Integer(10), inst, 
 				eventCategory, eventAttribute);
 		
 		Event ev3 = new Event(cal, true, EventRepeatType.WEEKLY, new Integer(1), finalDate,  null, 
-				daysOfWeek, null,  "Pilates Reformer", dateStart, dateEnd, new Integer(10), inst, 
+				daysOfWeek, null,  "Pilates Reformer", dateStart, dateEnd, new Boolean("false"), new Integer(10), inst, 
 				eventCategory, eventAttribute);
 		
 		eventDao.save(ev1);

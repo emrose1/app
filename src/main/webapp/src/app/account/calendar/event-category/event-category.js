@@ -28,13 +28,13 @@ angular.module('application.account.calendar.eventCategory', [
                 $scope.eventCategorys = data;
               });
         };
-
+/*
         if(session.getAccount()) {
             getEventCategorys();
         } else {
             console.log('get Account to list Event Cats');
         }
-
+*/
         $scope.newEventCategory = function() {
                 $scope.eventCategory = new EventCategory();
                 $scope.editing = false;

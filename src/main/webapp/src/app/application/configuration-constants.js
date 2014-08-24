@@ -26,4 +26,13 @@ angular.module('application.constants.configuration', [])
     WEB_CLIENT_ID : "389068630524-9rht9ebi7s7jpqos14a4im98iml6aet9.apps.googleusercontent.com",
     SCOPES : 'https://www.googleapis.com/auth/userinfo.email',
     RESPONSE_TYPE : 'token id_token'
-});
+})
+
+.constant('EVENT_REPEAT_TYPES', {
+    DAILY: 'Daily',
+    WEEKLY: 'Weekly',
+    MONTHLY: 'Monthly',
+    YEARLY: 'Yearly'
+})
+
+;

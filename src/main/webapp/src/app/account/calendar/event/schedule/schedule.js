@@ -32,16 +32,16 @@ angular.module( 'application.account.calendar.event.schedule', [
       Event.query({
           account_id: session.getAccount(),
           calendar_id: session.getCalendar(),
-          date_range_start: new Date().getTime()
+          date_range_start: new Date("Sun Aug 10 2014 08:57:06 GMT+0100 (BST)").getTime()
 
       }, function(data){
           $scope.events = data;
       });
     };
 
-    if(session.getAccount() && session.getCalendar()) {
+/*    if(session.getAccount() && session.getCalendar()) {
         getEvents();
-    }
+    }*/
 
     $scope.selectedWeekNumber = 0;
 

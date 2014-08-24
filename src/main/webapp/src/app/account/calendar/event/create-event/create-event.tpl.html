@@ -1,161 +1,149 @@
-<div class="container">
-  <div class="page-header">
-      <h1>Add Session</h1>
-  </div>
+<form role="form" class="form" ng-submit="save(event)">
+<div class="well bs-component" style="float:left">
+	<div class="form-group form-group-lg col-sm-12">
+		<input type="text" class="form-control input-lg" ng-model="event.title" placeholder="Untitled Session">
+	</div>
+	<div class="form-group">{{event.startDateTime}}</div>
+	<div class="form-group">{{event.startDateTime | date:'medium'}}</div>
+	<div class="form-group">{{event.endDateTime | date:'medium'}}</div>
+	<div class="form-group form-inline col-sm-12" role="form">
 
-<div class="example">
-  <div ng-controller="calendarCtrl">
-    <div class="form-group clearfix">
-      <div class="col-md-4">
-          <a class="btn btn-primary" ng-href="#/schedule">
-              <span class="glyphicon glyphicon-chevron-left"></span>
-              Back
-          </a>
-      </div>
+		<div class="form-group event-date-picker">
+			<div class="input-group datepicker">
+				<input type="text" class="form-control" placeholder="Date"
+					datepicker-popup="{{format}}" ng-model="startDateTime" is-open="openedDatePicker"
+					min-date="minDate" datepicker-options="dateOptions"
+					date-disabled="disabled(date, mode)"
+					ng-required="true" ng-change="setEndDate()" close-text="Close" ng-click="openDatePicker($event)" />
+				<span class="input-group-btn">
+					<button type="button" class="btn btn-default" ng-click="openDatePicker($event)">
+						<i class="glyphicon glyphicon-calendar"></i>
+					</button>
+				</span>
+			</div>
+		</div>
 
-        <div class="col-sm-4" ng-controller="AccountCtrl">
-            <select ng-model="selectedAccount" class="form-control" ng-change="setAccount()"
-              ng-options="account.name for account in accounts">
+		<div class="form-group">
+			<div class="input-group timepicker">
+				<timepicker ng-model="startDateTime" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian">
+				</timepicker>
+			</div>
+		</div>
 
-            </select>
-        </div>
+		<div class="form-group">
+			<label>to{{allDay}}</label>
+			<div class="input-group timepicker">
+				<timepicker ng-model="endDateTime" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian">
+				</timepicker>
+			</div>
+		</div>
 
-        <div class="col-sm-4">
-          <select ng-model="selectedCalendar" class="form-control" ng-change="changeCalendar()"
-              ng-options="calendar.description for calendar in calendars">
-              <option>Select Calendar</option>
-          </select>
-        </div>
-    </div>
-  </div>
+	</div>
 
+	<div class="form-group form-inline col-sm-12" role="form">
+		<div class="form-group">
+			<label class="checkbox-inline">
+				<input ng-model="allDay" ng-value="true" type="checkbox"> All Day
+			</label>
+			<label class="checkbox-inline">
+				<input type="checkbox" id="" value="true"> Repeat <span class="btn-link" ng-click="openRepeatEventModal()">edit</span>
+			</label>
+		</div>
 
-  <form role="form" ng-controller="addEventCtrl">
+	</div>
 
-    <div class="form-group form-group-lg col-sm-12">
-      <input type="text" class="form-control input-lg" id="inputEmail3" placeholder="Untitled Session">
-    </div>
+	<div class="form-horizontal col-sm-12" role="form">
+		<div class="form-group">
+			<label for="inputEmail3" class="col-sm-2 control-label">Max attendees</label>
+			<div class="col-sm-10">
+				<input type="number" ng-model="event.maxAttendees" class="form-control" id="inputEmail3" placeholder="Number of attendees">
+			</div>
+		</div>
 
-    <div class="form-group form-inline col-sm-12" role="form">
+		<div class="form-group">
+			<label for="" class="col-sm-2 control-label">Schedule</label>
+			<div class="col-sm-10">
+				<div class="input-group" ng-controller="calendarCtrl">
+					<select ng-model="event.calendar_id" class="form-control"
+						ng-options="calendar.id as calendar.description for calendar in calendars">
+						<option value="">-- Choose Schedule --</option>
+					</select>
+					<div class="input-group-btn drop-down-button">
+						<button type="submit" class="btn btn-primary">
+							<span class="glyphicon glyphicon-plus"></span>
+							Add Schedule
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
 
-      <div class="form-group">
-        <div class="input-group datepicker">
-            <input type="text" class="form-control" placeholder="Date" datepicker-popup="{{format}}" ng-model="dt" is-open="openedDatePicker" min-date="minDate"
-              max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)"
-              ng-required="true" close-text="Close" ng-click="openDatePicker($event)" />
-            <span class="input-group-btn">
-              <button type="button" class="btn btn-default" ng-click="openDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
-            </span>
-        </div>
-      </div>
+		<div class="form-group">
+			<label for="inputPassword3" class="col-sm-2 control-label">Instructor</label>
+			<div class="col-sm-10">
+				<div class="input-group" ng-controller="personCtrl">
+					<select ng-model="event.instructor_id" class="form-control"
+						ng-options="person.id as person.username for person in persons">
+						<option value="">-- Choose Instructor --</option>
+					</select>
+					<div class="input-group-btn drop-down-button">
+						<button type="submit" class="btn btn-primary">
+							<span class="glyphicon glyphicon-plus"></span>
+							Add Instructor
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
 
-      <div class="form-group" ng-show="true">
-        <div class="input-group timepicker">
-          <timepicker ng-model="mytime" ng-change="changed()" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian">
-          </timepicker>
-        </div>
-      </div>
+		<div class="form-group">
+			<label for="" class="col-sm-2 control-label">Session Type</label>
+			<div class="col-sm-10">
+				<div class="input-group" ng-controller="eventAttributeCtrl">
+					<select ng-model="event.eventAttribute" class="form-control"
+						ng-options="attribute.id as attribute.name for attribute in eventAttributes">
+						<option value="">-- Choose Session Type --</option>
+					</select>
+					<div class="input-group-btn drop-down-button">
+						<button type="submit" class="btn btn-primary">
+							<span class="glyphicon glyphicon-plus"></span>
+							Add Session Type
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
 
-      <div class="form-group" ng-show="true">
-        <label>to</label>
-        <div class="input-group timepicker">
-          <timepicker ng-model="mytime" ng-change="changed()" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian">
-          </timepicker>
-        </div>
-      </div>
+		<div class="form-group">
+			<label for="inputPassword3" class="col-sm-2 control-label">Price Category</label>
+			<div class="col-sm-10">
+				<div class="input-group" ng-controller="eventCategoryCtrl">
+					<select ng-model="event.eventCategory" class="form-control"
+						ng-options="category.id as category.name for category in eventCategorys">
+						<option value="">-- Choose Price Category --</option>
+					</select>
+					<div class="input-group-btn drop-down-button">
+						<button type="submit" class="btn btn-primary">
+							<span class="glyphicon glyphicon-plus"></span>
+							Add Price Group
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
 
-    </div>
+		<div class="form-group">
+			<div class="col-sm-offset-2 col-sm-10">
+					<button type="button" class="btn btn-default">Back</button>
+					<button type="submit" class="btn btn-danger">Save</button>
+					<button type="button" class="btn btn-default">
+							<span class="glyphicon glyphicon-trash"></span>
+					</button>
+			</div>
+		</div>
 
-    <div class="form-group form-inline col-sm-12" role="form">
-      <div class="form-group">
-        <label class="checkbox-inline">
-          <input type="checkbox" ng-model id="inlineCheckbox1" value="true"> All Day
-        </label>
-        <label class="checkbox-inline">
-          <input type="checkbox" id="inlineCheckbox2" value="true"> Repeat
-        </label>
-      </div>
-
-    </div>
-
-    <div class="form-horizontal col-sm-12" role="form">
-      <div class="form-group">
-        <label for="inputEmail3" class="col-sm-2 control-label">Max attendees</label>
-        <div class="col-sm-10">
-          <input type="email" class="form-control" id="inputEmail3" placeholder="Number of attendees">
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="inputPassword3" class="col-sm-2 control-label">Schedule</label>
-        <div class="col-sm-10">
-          <div class="input-group">
-            <select class="form-control">
-              <option>Schedule 1</option>
-            </select>
-            <div class="input-group-btn">
-              <button type="submit" class="btn btn-default">Add Schedule</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="inputPassword3" class="col-sm-2 control-label">Instructor</label>
-        <div class="col-sm-10">
-          <div class="input-group">
-            <select class="form-control">
-              <option>Instructor</option>
-            </select>
-            <div class="input-group-btn">
-              <button type="submit" class="btn btn-default">Add Instructor</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="inputPassword3" class="col-sm-2 control-label">Session Type</label>
-        <div class="col-sm-10">
-          <div class="input-group">
-            <select class="form-control">
-              <option>Reformer</option>
-            </select>
-            <div class="input-group-btn">
-              <button type="submit" class="btn btn-default">Add Session Type</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="inputPassword3" class="col-sm-2 control-label">Price Group</label>
-        <div class="col-sm-10">
-          <div class="input-group">
-            <select class="form-control">
-              <option>Group Session</option>
-              <option>Private Session</option>
-            </select>
-            <div class="input-group-btn">
-              <button type="submit" class="btn btn-default">Add Price Group</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-10">
-            <button type="button" class="btn btn-default">Back</button>
-            <button type="button" class="btn btn-danger">Save</button>
-            <button type="button" class="btn btn-default">
-                <span class="glyphicon glyphicon-trash"></span>
-            </button>
-        </div>
-      </div>
-
-    </div>
-
-  </form>
+	</div>
 </div>
-</div>
+</form>
+
 

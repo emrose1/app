@@ -59,6 +59,7 @@ public class EventService extends BaseService {
 			@Named("title") String title,
 			@Named("startDateTime") Long startDateTime,
 			@Named("endDateTime") Long endDateTime,
+			@Named("allDay") String allDay,
 			@Named("maxAttendees") Integer maxAttendees,
 			@Named("instructor_id") Long instructorId, 
 			@Named("eventCategory") Long eventCategory,
@@ -83,6 +84,8 @@ public class EventService extends BaseService {
 		
 		Date eventEnd = new Date();
 		eventEnd.setTime(endDateTime);
+		
+		Boolean allDayBoolean = new Boolean(allDay);
 		
 		// Set Instructor
 		Person instructor = personDao.retrieveAncestor(instructorId, account);
@@ -109,7 +112,7 @@ public class EventService extends BaseService {
 		Event event = new Event(
 				calendar, repeatBoolean, repeatType, repeatInterval, 
 				eventFinalRepeatDate, repeatCount, daysOfWeek, repeatExcludeDays, 
-				title, eventStart, eventEnd, maxAttendees, 
+				title, eventStart, eventEnd, allDayBoolean, maxAttendees, 
 				instructor, eventCategoryFetched, eventAttributeFetched);
 		
 		eventDao.save(event);    
@@ -132,6 +135,7 @@ public class EventService extends BaseService {
 		//Format Dates
 		Date eventStart = new Date();
 		eventStart.setTime(dateStart);
+		//eventStart = new DateTime(eventStart).minusMonths(6).toDate();
 		Date dateEnd = new DateTime(eventStart).plusMonths(6).toDate();
 		
 		List<EventItem> allEvents = new ArrayList<EventItem>();

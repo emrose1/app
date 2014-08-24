@@ -35,11 +35,11 @@ angular.module('application.account.calendar', [
               });
         };
 
-        if(session.getAccount()) {
+/*        if(session.getAccount()) {
             getCalendars();
         } else {
             console.log('get Account to list Calendars');
-        }
+        }*/
 
         $scope.newCalendar = function() {
             $scope.calendar = new Calendar();

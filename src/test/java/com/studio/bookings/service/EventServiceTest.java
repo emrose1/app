@@ -1,8 +1,6 @@
 package com.studio.bookings.service;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -12,7 +10,6 @@ import org.joda.time.DateTimeConstants;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.google.api.server.spi.config.Named;
 import com.google.appengine.api.oauth.OAuthRequestException;
 import com.google.appengine.api.oauth.OAuthService;
 import com.google.appengine.api.oauth.OAuthServiceFactory;
@@ -103,8 +100,8 @@ public class EventServiceTest extends TestBase {
 			};
 		
 		Event ev = new Event(calendar1, true, EventRepeatType.WEEKLY, new Integer(1), new Date(),  new Integer(52), 
-			daysOfWeek, excludeDays,  "summary", new Date(), new Date(), new Integer(10), instructor1, 
-			eventCategory1, eventAttribute1);
+			daysOfWeek, excludeDays,  "summary", new Date(), new Date(),  new Boolean(false), new Integer(10), 
+			instructor1, eventCategory1, eventAttribute1);
 		
 		eventDao.save(ev);
 		Long fromDate = new DateTime().toDate().getTime();
@@ -116,13 +113,13 @@ public class EventServiceTest extends TestBase {
 		event1 = eventService.insertEvent(
 				account.getId(), calendar1.getId(), "false", "", 
 				new Integer(0), null, new Integer(0), daysOfWeekArray, 
-				excludeDaysArray, "Event Summary 1", fromDate, toDate, 
+				excludeDaysArray, "Event Summary 1", fromDate, toDate, "false",
 				new Integer(10), instructor1.getId(), eventCategory1.getId(), eventAttribute1.getId()
 		);
 		
 		event2 = eventService.insertEvent(account.getId(), calendar2.getId(), "false", "", new Integer(0), null, new Integer(0), 
-				daysOfWeekArray, excludeDaysArray, "Event Summary 2", fromDate2, toDate2,  new Integer(1), instructor2.getId(), 
-				 eventCategory2.getId(), eventAttribute2.getId());
+				daysOfWeekArray, excludeDaysArray, "Event Summary 2", fromDate2, toDate2, "false", new Integer(1), 
+				instructor2.getId(), eventCategory2.getId(), eventAttribute2.getId());
 		
 		Event eventFetched1 = eventDao.retrieveAncestor(event1.getId(), calendar1);
 		Event eventFetched2 = eventDao.retrieveAncestor(event2.getId(), calendar2);
@@ -193,7 +190,7 @@ public class EventServiceTest extends TestBase {
 		
 		
 		Event ev = new Event(calendar1, true, EventRepeatType.WEEKLY, new Integer(1), new Date(),  new Integer(52), 
-			daysOfWeek, excludeDays,  "summary", new Date(), new Date(), new Integer(10), instructor1, 
+			daysOfWeek, excludeDays,  "summary", new Date(), new Date(),  new Boolean(false), new Integer(10), instructor1, 
 			eventCategory1, eventAttribute1);
 		
 		eventDao.save(ev);
@@ -212,8 +209,7 @@ public class EventServiceTest extends TestBase {
 		Long finalDate = new DateTime().plusYears(1).plusHours(2).toDate().getTime();
 					
 		event1 = eventService.insertEvent(account.getId(), calendar1.getId(), "true", "WEEKLY", new Integer(0), finalDate, 
-				new Integer(10), daysOfWeeks, excludeDates, "Event Summary 1", 
-				fromDate, toDate, 
+				new Integer(10), daysOfWeeks, excludeDates, "Event Summary 1", fromDate, toDate, "false",
 				new Integer(10), instructor1.getId(), eventCategory1.getId(), eventAttribute1.getId());
 		
 		Event eventFetched1 = eventDao.retrieveAncestor(event1.getId(), calendar1);
@@ -278,11 +274,11 @@ public class EventServiceTest extends TestBase {
 		List<Date> excludeDays = Arrays.asList(new Date(), new Date());
 		
 		Event ev1 = new Event(calendar1, false, EventRepeatType.WEEKLY, new Integer(1), new Date(),  new Integer(52), 
-			daysOfWeek, excludeDays,  "summary", dateStart1, dateEnd1, new Integer(10), instructor1, 
+			daysOfWeek, excludeDays,  "summary", dateStart1, dateEnd1, new Boolean(false), new Integer(10), instructor1, 
 			eventCategory1, eventAttribute1);
 		
 		Event ev2 = new Event(calendar1, false, EventRepeatType.WEEKLY, new Integer(1), new Date(),  new Integer(52), 
-				daysOfWeek, excludeDays,  "summary", dateStart2, dateEnd2, new Integer(10), instructor1, 
+				daysOfWeek, excludeDays,  "summary", dateStart2, dateEnd2, new Boolean(false), new Integer(10), instructor1, 
 				eventCategory1, eventAttribute1);
 		
 		eventDao.save(ev1);
@@ -323,7 +319,7 @@ public class EventServiceTest extends TestBase {
 		List<Integer> daysOfWeek = Arrays.asList(1);
 		
 		Event ev1 = new Event(calendar1, true, EventRepeatType.DAILY, new Integer(1), finalDate,  null, 
-			daysOfWeek, null,  "summary", dateStart, dateEnd, new Integer(10), instructor1, 
+			daysOfWeek, null,  "summary", dateStart, dateEnd, new Boolean(false), new Integer(10), instructor1, 
 			eventCategory1, eventAttribute1);
 		
 		eventDao.save(ev1);
@@ -363,7 +359,7 @@ public class EventServiceTest extends TestBase {
 		List<Integer> daysOfWeek = Arrays.asList(1);
 		
 		Event ev1 = new Event(calendar1, true, EventRepeatType.WEEKLY, new Integer(1), finalDate,  null, 
-			daysOfWeek, null,  "summary", dateStart, dateEnd, new Integer(10), instructor1, 
+			daysOfWeek, null,  "summary", dateStart, dateEnd, new Boolean(false), new Integer(10), instructor1, 
 			eventCategory1, eventAttribute1);
 		
 		eventDao.save(ev1);
@@ -409,7 +405,7 @@ public class EventServiceTest extends TestBase {
 		List<Date> excludeDays = Arrays.asList(date1, date2);
 		
 		Event ev1 = new Event(calendar1, true, EventRepeatType.WEEKLY, new Integer(1), finalDate,  null, 
-			daysOfWeek, excludeDays,  "summary", dateStart, dateEnd, new Integer(10), instructor1, 
+			daysOfWeek, excludeDays,  "summary", dateStart, dateEnd, new Boolean(false), new Integer(10), instructor1, 
 			eventCategory1, eventAttribute1);
 		
 		eventDao.save(ev1);
@@ -451,7 +447,7 @@ public class EventServiceTest extends TestBase {
 		List<Date> excludeDays = null;
 		
 		Event ev1 = new Event(calendar1, true, EventRepeatType.WEEKLY, new Integer(1), finalDate,  null, 
-			daysOfWeek, excludeDays,  "summary", dateStart, dateEnd, new Integer(10), instructor1, 
+			daysOfWeek, excludeDays,  "summary", dateStart, dateEnd, new Boolean(false), new Integer(10), instructor1, 
 			eventCategory1, eventAttribute1);
 		
 		eventDao.save(ev1);
@@ -491,7 +487,7 @@ public class EventServiceTest extends TestBase {
 		List<Integer> daysOfWeek = Arrays.asList(1,2,3,4,5,6,7);
 		
 		Event ev1 = new Event(calendar1, true, EventRepeatType.MONTHLY, new Integer(1), finalDate,  null, 
-			daysOfWeek, null,  "summary", dateStart, dateEnd, new Integer(10), instructor1, 
+			daysOfWeek, null,  "summary", dateStart, dateEnd,  new Boolean(false), new Integer(10), instructor1, 
 			eventCategory1, eventAttribute1);
 		
 		eventDao.save(ev1);

@@ -56,7 +56,7 @@ module.exports = {
       'src/bower_components/angular-bootstrap/ui-bootstrap.js',
       'src/bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
       'src/bower_components/angular-ui-router/release/angular-ui-router.js',
-      'src/bower_components/restangular/dist/restangular.js',
+      'src/bower_components/checklist-model/checklist-model.js',
       'src/bower_components/lodash/dist/lodash.js'
     ],
     css: [

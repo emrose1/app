@@ -139,7 +139,7 @@ public class EventServiceTestingServlet extends HttpServlet {
 
 		
 		Event ev2 = new Event(calendar1, true, EventRepeatType.MONTHLY, new Integer(1), finalDate,  null, 
-			daysOfWeek, null,  "summary", dateStart, dateEnd, new Integer(10), instructor1, 
+			daysOfWeek, null,  "summary", dateStart, dateEnd, new Boolean("false"), new Integer(10), instructor1, 
 			eventCategory1, eventAttribute1);
 		
 		eventDao.save(ev2);

@@ -19,7 +19,7 @@ angular.module('application.account.calendar.event', [
                     controller: 'calendarCtrl'
                 },
                 'content': {
-                    templateUrl: 'app/account/calendar/schedule/event/event.tpl.html',
+                    templateUrl: 'app/account/calendar/event/event.tpl.html',
                     controller: 'eventCtrl'
                 }
             }
@@ -31,20 +31,20 @@ angular.module('application.account.calendar.event', [
         function($rootScope, $scope, Event, session) {
 
         var getEvents = function() {
-
+            console.log('get events');
             Event.query({
                 account_id: session.getAccount(),
                 calendar_id: session.getCalendar(),
-                date_range_start: new Date().getTime()
+                date_range_start: new Date("Sun Aug 10 2014 08:57:06 GMT+0100 (BST)").getTime()
 
             }, function(data){
                 $scope.events = data;
             });
         };
 
-        if(session.getAccount() && session.getCalendar()) {
-            getEvents();
-        }
+        // if(session.getAccount() && session.getCalendar()) {
+        //     getEvents();
+        // }
 
         $scope.newEvent = function() {
             $scope.event = new Event();
@@ -77,6 +77,7 @@ angular.module('application.account.calendar.event', [
 
         $rootScope.$on('calendarLoaded', function(event, args) {
             getEvents();
+            console.log('calendarLoaded');
             $scope.$emit('eventsLoaded', {});
         });
 

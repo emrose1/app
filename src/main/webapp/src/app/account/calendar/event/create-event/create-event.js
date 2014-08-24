@@ -16,58 +16,41 @@
 @Named("eventAttribute") Long eventAttribute*/
 
 
-angular.module('application.account.calendar.event.createEvent', [])
+angular.module('application.account.calendar.event.createEvent', [
+	'application.account.calendar.event.service',
+	'application.account.calendar.event.createEventModal'
+])
 
 .config([
   '$stateProvider',
   function config( $stateProvider ) {
-    $stateProvider
-        .state('addevent', {
-            url: '/addevent',
+	$stateProvider
+		.state('addevent', {
+			url: '/addevent',
 
-            views: {
-                'accounts': {
-                    templateUrl: 'app/account/account-dropdown.tpl.html',
-                    controller: 'AccountCtrl'
-                },
-                'calendars': {
-                    templateUrl: 'app/account/calendar/calendar-dropdown.tpl.html',
-                    controller: 'calendarCtrl'
-                },
-                'content': {
+			views: {
+				'accounts': {
+					templateUrl: 'app/account/account-dropdown.tpl.html',
+					controller: 'AccountCtrl'
+				},
+				'content': {
 					templateUrl: 'app/account/calendar/event/create-event/create-event.tpl.html',
 					controller: 'addEventCtrl'
-                }
-            }
-        });
-    }
+				}
+			}
+		});
+	}
 ])
 
-.controller('addEventCtrl', ['$rootScope', '$scope',
-	function($rootScope,$scope) {
+.controller('addEventCtrl', ['$rootScope', '$scope', '$modal', 'Calendar', 'Event', 'sessionService',
+	function($rootScope, $scope, $modal, Calendar, Event, session) {
 
 	// ------------- DATE PICKER ------------------------- //
 
-	$scope.today = function() {
-		$scope.startDate = new Date();
-	};
-	$scope.today();
-
 	$scope.clear = function () {
-		$scope.startDate = null;
-		$scope.startTime = null;
-		$scope.endTime = null;
+		$scope.startDateTime = null;
+		$scope.endDateTime = null;
 	};
-
-	// Disable weekend selection
-	$scope.disabled = function(date, mode) {
-		return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
-	};
-
-	$scope.toggleMin = function() {
-		$scope.minDate = $scope.minDate ? null : new Date();
-	};
-	$scope.toggleMin();
 
 	$scope.openDatePicker = function($event) {
 		$event.preventDefault();
@@ -80,52 +63,75 @@ angular.module('application.account.calendar.event.createEvent', [])
 		startingDay: 1
 	};
 
-	$scope.initDate = new Date('2016-15-20');
-	$scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
+	$scope.formats = ['dd MMMM yyyy', 'dd/MM/yyyy', 'dd.MM.yyyy', 'shortDate'];
 	$scope.format = $scope.formats[0];
 
 
 	// ------------- TIME PICKER ------------------------- //
 
-	$scope.startTime = new Date();
-	$scope.endTime = new Date();
-
 	$scope.hstep = 1;
 	$scope.mstep = 15;
-
-	$scope.options = {
-	hstep: [1, 2, 3],
-	mstep: [1, 5, 10, 15, 25, 30]
-	};
-
 	$scope.ismeridian = true;
-	$scope.toggleMode = function() {
-		$scope.ismeridian = ! $scope.ismeridian;
+
+	// ------------- EVENT ------------------------- //
+
+	$scope.newEvent = function() {
+        $scope.event = new Event();
+		$scope.event.repeatEvent = "false";
+		$scope.event.eventRepeatType = "";
+		$scope.event.eventRepeatInterval = 0;
+		$scope.event.finalRepeatDate = 0;
+		$scope.event.eventRepeatCount = 0;
+		$scope.event.repeatDaysOfWeek = [];
+		$scope.event.excludeDays = [];
+
+		$scope.startDateTime = new Date().setMinutes(0);
+		$scope.endDateTime = new Date().setMinutes(0);
+    };
+
+    $scope.editEvent = function(event) {
+        $scope.event = event;
+        $scope.editing = true;
+    };
+
+	$scope.save = function(event) {
+		if (event.id) {
+			event.$update({calendar_id: session.getCalendar()}, function(){
+				//getEvents();
+			});
+		} else {
+			event.startDateTime = $scope.startDateTime.getTime();
+			event.endDateTime = $scope.endDateTime.getTime();
+			event.$save({account_id: session.getAccount(), calendar_id: event.calendar_id}, function(){
+				//getEvents();
+			});
+		}
+		$scope.newEvent();
 	};
 
-	$scope.update = function() {
-		var d = new Date();
-		d.setHours( 14 );
-		d.setMinutes( 0 );
-		$scope.mytime = d;
+	$scope.openRepeatEventModal = function (event) {
+		$scope.modalInstance = $modal.open({
+			templateUrl: 'app/account/calendar/event/create-event-modal/create-event-modal.tpl.html',
+			scope: $scope,
+			controller: 'RepeatEventModalCtrl',
+			resolve: {
+				event: function () {
+					return event;
+				}
+			}
+		});
+		$scope.modalInstance.result.then(function (formData) {
+			$scope.acceptOrder(order, formData);
+		}, function () {
+			$scope.cancelOrderAcceptance = true;
+		});
 	};
 
-	$scope.changed = function () {
-		console.log('StartTime changed to: ' + $scope.startTime);
-		console.log('EndTime changed to: ' + $scope.endTime);
-	};
+	$scope.newEvent();
 
+    $rootScope.$on('accountLoaded', function(event, args) {
 
-
-	// ------------- ALL DAY SWITCH ------------------------- //
-
-	$scope.myOptions = ["Off", "On"];
-    $scope.allDay = "Off";
-
-    $scope.$watch('allDay', function(v){
-        console.log('changed', v);
-    });
-
+	});
 
 }])
 ;

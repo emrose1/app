@@ -125,6 +125,9 @@ public class Event {
 	
    	@Getter @Setter
    	private Date endDateTime;
+   	
+   	@Getter @Setter
+   	private Boolean allDay;
     
 	@Getter @Setter
 	private Integer maxAttendees;
@@ -143,6 +146,7 @@ public class Event {
 			String title, 
 			Date startDateTime, 
 			Date endDateTime, 
+			Boolean allDay,
 			Integer maxAttendees, 
 			Person instructor, 
 			EventCategory eventCategory, 
@@ -178,6 +182,7 @@ public class Event {
 		this.title = event.getTitle();
 		this.startDateTime = event.getStartDateTime();
 		this.endDateTime = event.getEndDateTime();
+		this.allDay = event.getAllDay();
 		this.maxAttendees = event.getMaxAttendees();
 		this.instructorRef = Ref.create(event.getInstructor());
 		this.eventCategoryRef = Ref.create(event.getEventCategory());

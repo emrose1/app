@@ -15,6 +15,7 @@ Application.Domains = angular.module('application.domains', [
     'application.controllers.application',
     'application.account',
     'application.account.calendar',
+    'application.account.person',
     'application.account.calendar.eventAttribute',
     'application.account.calendar.eventCategory',
     'application.account.calendar.event',
