@@ -337,4 +337,127 @@ public class EventService extends BaseService {
         }
         return excludeDays.contains(date);
     }
+    
+    //http://www.craigburke.com/2012/02/18/google-calendar-in-grails-part3-creating-and-modifying-events.html
+    // Final repeat date based on count
+    /*
+    // Set recurUntil date based on the recurCount value
+    if (recurCount && !recurUntil) {
+       Date recurCountDate = startTime
+
+       for (int i in 1..recurCount) {
+           recurCountDate = eventService.findNextOccurrence(this, new DateTime(recurCountDate).plusMinutes(1).toDate())
+       }
+
+       recurUntil = new DateTime(recurCountDate).plusMinutes(durationMinutes).toDate()
+    }*/
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    // Update Delete Event
+    
+    /*def updateEvent(Event eventInstance, String editType, def params) {
+        def result = [:]
+
+        try {
+            if (!eventInstance) {
+                result = [error: 'not.found']
+            }
+            else if (!eventInstance.isRecurring) {
+                eventInstance.properties = params
+
+                if (eventInstance.hasErrors() || !eventInstance.save(flush: true)) {
+                    result = [error: 'has.errors']
+                }
+            }
+            else {
+                Date startTime = params.date('startTime', ['MM/dd/yyyy hh:mm a'])
+                Date endTime = params.date('endTime', ['MM/dd/yyyy hh:mm a'])
+
+                // Using the date from the original startTime and endTime with the update time from the form
+                int updatedDuration = Minutes.minutesBetween(new DateTime(startTime), new DateTime(endTime)).minutes
+
+                Date updatedStartTime = new DateTime(eventInstance.startTime).withTime(startTime.hours, startTime.minutes, 0, 0).toDate()
+                Date updatedEndTime = new DateTime(updatedStartTime).plusMinutes(updatedDuration).toDate()
+
+                if (editType == "occurrence") {
+                    // Add an exclusion
+                    eventInstance.with {
+                        addToExcludeDays(new DateTime(startTime).withTime(0, 0, 0, 0).toDate())
+                        save(flush: true)
+                    }
+
+                    // single event
+                    new Event(params).with {
+                        startTime = updatedStartTime
+                        endTime = updatedEndTime
+                        isRecurring = false // ignore recurring options this is a single event
+                        save(flush: true)
+                    }
+                }
+                else if (editType == "following") {
+                    // following event
+                    new Event(params).with {
+                        recurUntil = eventInstance.recurUntil
+                        save(flush: true)
+                    }
+
+                    eventInstance.with {
+                        recurUntil = startTime
+                        save(flush: true)
+                    }
+                }
+                else if (editType == "all") {
+                    eventInstance.properties = params
+                    eventInstance.startTime = updatedStartTime
+                    eventInstance.endTime = updatedEndTime
+
+                    if (eventInstance.hasErrors() || !eventInstance.save()) {
+                        result = [error: 'has.errors']
+                    }
+                }
+            }
+        }
+        catch (Exception ex) {
+            result = [error: 'has.errors']
+        }
+
+        result
+    }
+
+    def deleteEvent(Event eventInstance, Date occurrenceStart, String deleteType) {
+
+        def result = [:]
+
+        try {
+            if (!eventInstance) {
+                result = [error: 'not.found']
+            }
+            if (!eventInstance.isRecurring || deleteType == "all") {
+                eventInstance.delete(flush: true)
+            }
+            else if (eventInstance && deleteType) {
+                if (deleteType == "occurrence") {
+                    // Add an exclusion
+                    eventInstance.addToExcludeDays(new DateTime(occurrenceStart).withTime(0, 0, 0, 0).toDate())
+                    eventInstance.save(flush: true);
+                }
+                else if (deleteType == "following") {
+                    eventInstance.recurUntil = occurrenceStart
+                    eventInstance.save(flush: true)
+                }
+            }
+        }
+        catch (Exception ex) {
+            result = [error: 'has.errors']
+        }
+
+        result
+    }*/
 }

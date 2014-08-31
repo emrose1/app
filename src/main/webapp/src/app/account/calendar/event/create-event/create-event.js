@@ -109,14 +109,14 @@ angular.module('application.account.calendar.event.createEvent', [
 		$scope.newEvent();
 	};
 
-	$scope.openRepeatEventModal = function (event) {
+	$scope.openRepeatEventModal = function (startDateTime) {
 		$scope.modalInstance = $modal.open({
 			templateUrl: 'app/account/calendar/event/create-event-modal/create-event-modal.tpl.html',
 			scope: $scope,
 			controller: 'RepeatEventModalCtrl',
 			resolve: {
-				event: function () {
-					return event;
+				eventTime: function () {
+					return startDateTime;
 				}
 			}
 		});

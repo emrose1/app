@@ -6204,3 +6204,14 @@ button.close {
 .drop-down-button button {
   width: 200px;
 }
+@media (min-width: 992px) {
+  .repeat-ends-form-section .col-sm-offset-3 {
+    margin-left: 26.5%;
+  }
+  .repeat-ends-form-section .control-label {
+    padding-right: 23px;
+  }
+  .repeat-ends-form-section label.radio-inline {
+    width: 62px;
+  }
+}

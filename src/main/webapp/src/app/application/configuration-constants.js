@@ -28,11 +28,4 @@ angular.module('application.constants.configuration', [])
     RESPONSE_TYPE : 'token id_token'
 })
 
-.constant('EVENT_REPEAT_TYPES', {
-    DAILY: 'Daily',
-    WEEKLY: 'Weekly',
-    MONTHLY: 'Monthly',
-    YEARLY: 'Yearly'
-})
-
 ;

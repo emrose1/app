@@ -1,89 +1,112 @@
- <div class="form-horizontal" role="form">
+<div class="modal-header">
+    <h3 class="modal-title">Repeat Event</h3>
+</div>
+<div class="modal-body">
 
-  <div class="form-group">
-    <label for="inputEmail3" class="col-sm-2 control-label">Repeat:</label>
-    <div class="col-sm-10">
-      <select class="form-control" eventRepeatTypes>
-        <option>Weekly</option>
-      </select>
-    </div>
-  </div>
+   <div class="form-horizontal" role="form">
 
-  <div class="form-group">
-    <label for="inputEmail3" class="col-sm-2 control-label">Repeat every:</label>
-    <div class="col-sm-6">
-      <div class="input-group">
-        <input type="number" placeholder="1" class="form-control">
-        <div class="input-group-btn">
-          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Weeks <span class="caret"></span></button>
-          <ul class="dropdown-menu pull-right">
-            <li><a href="#">Weeks</a></li>
-            <li><a href="#">Feet</a></li>
-            <li><a href="#">mm</a></li>
-          </ul>
-        </div><!-- /btn-group -->
+    <div class="form-group">
+      <label for="inputEmail3" class="col-sm-3 control-label">Repeat:</label>
+      <div class="col-sm-9">
+        <select ng-model="formData.eventRepeatType" class="form-control" ng-change="setRepeatType(formData.eventRepeatType)"
+        ng-options="type.id as type.name for type in eventRepeatTypes"></select>
       </div>
     </div>
-  </div>
 
-  <div class="form-group">
-    <label for="inputEmail3" class="col-sm-2 control-label">Repeat on:{{event.repeatDaysOfWeek}}</label>
-    <div class="col-sm-10">
-      <label ng-repeat="day in daysOfWeek">
-        <input type="checkbox" checklist-model="event.repeatDaysOfWeek" checklist-value="day.id"> {{day.text}}
-      </label>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <label for="inputPassword3" class="col-sm-2 control-label">Starts on:</label>
-    <div class="col-sm-10">
-      <input type="date" class="form-control" id="" placeholder="Start Date">
-    </div>
-  </div>
-
-</div>
-
-<div class="well">
-
-  <div class="form-horizontal" role="form">
     <div class="form-group">
-      <label for="inputPassword3" class="col-sm-2 control-label">Ends:</label>
-      <div class="col-sm-10">
-        <label class="radio-inline">
-          <input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3"> Never
+      <label for="inputEmail3" class="col-sm-3 control-label">Repeat every:</label>
+      <div class="col-sm-9">
+        <div class="input-group">
+          <input type="number" placeholder="1" class="form-control" ng-model="formData.repeatInterval">
+          <span class="input-group-addon" ng-bind="repeatType"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group" ng-show="repeatType === 'Weeks'">
+      <label for="inputEmail3" class="col-sm-3 control-label">Repeat on:</label>
+      <div class="col-sm-9">
+        <label ng-repeat="day in daysOfWeek" class="checkbox-inline">
+          <input type="checkbox" ng-click="setSummary()" checklist-model="formData.repeatDaysOfWeek"
+            checklist-value="day.id"> {{day.value | limitTo:1}}
         </label>
       </div>
     </div>
+
+    <div class="form-group">
+      <label for="inputPassword3" class="col-sm-3 control-label">Starts on:</label>
+      <div class="col-sm-9">
+        <input type="text" disabled class="form-control" value="{{startDate | date:'dd/MM/yyyy'}}">
+      </div>
+    </div>
+
   </div>
 
-  <div class="col-sm-offset-2  form-group form-inline">
-    <div class="form-group">
-      <label class="radio-inline">
-        <input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3"> After
-      </label>
-      <div class="input-group">
-        <input type="number" class="form-control" id="" placeholder="number">
-        <span class="input-group-addon">occurrences</span>
+  <div class="well repeat-ends-form-section">
+
+    <div class="form-horizontal" role="form">
+      <div class="form-group">
+        <label for="" class="col-sm-3 col-xs-12 control-label">Ends:</label>
+        <div class="col-sm-9 col-xs-12">
+          <label class="radio-inline">
+            <input ng-model="repeatEndType" ng-click="setRepeatEndType('never')" checked value="never" type="radio"> Never
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-offset-3  form-group form-inline">
+      <div class="form-group">
+        <label class="radio-inline">
+          <input  ng-model="repeatEndType" ng-click="setRepeatEndType('after')" value="after" type="radio"> After
+        </label>
+        <div class="input-group">
+          <input type="number" class="form-control" ng-model="formData.eventRepeatCount" placeholder="number">
+          <span class="input-group-addon">occurrences</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-offset-3  form-group form-inline">
+      <div class="form-group">
+        <label class="radio-inline">
+          <input  ng-model="repeatEndType" ng-change="setRepeatEndType('on')" value="on" type="radio"> On
+        </label>
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="Date"
+            datepicker-popup="{{format}}" ng-model="formData.finalRepeatDate" is-open="openedDatePicker"
+            min-date="minDate" datepicker-options="dateOptions"
+            date-disabled="disabled(date, mode)"
+            ng-required="true" ng-change="setEndDate()" close-text="Close" ng-click="openDatePicker($event)" />
+
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="openDatePicker($event)">
+              <i class="glyphicon glyphicon-calendar"></i>
+            </button>
+          </span>
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="col-sm-offset-2  form-group form-inline">
+  <div class="form-horizontal" role="form">
+
     <div class="form-group">
-      <label class="radio-inline">
-        <input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3"> On
-      </label>
-      <input type="date" class="form-control" id="" placeholder="End Date">
+      <label for="inputEmail3" class="col-sm-3 control-label">Summary:</label>
+      <div class="col-sm-9">
+        <strong ng-bind="summary"></strong>
+      </div>
     </div>
   </div>
+
 </div>
 
-<div class="col-sm-offset-2  form-group form-inline">
-  <div class="form-group">
-    <button type="submit" class="btn btn-default btn-block btn-primary">Save</button>
-  </div>
-  <div class="form-group">
-    <button type="submit" class="btn btn-default btn-block btn-default">Cancel</button>
-  </div>
+<div class="modal-footer">
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <button type="submit" class="btn btn-default btn-primary" ng-click="save()">Save</button>
+        <button type="submit" class="btn btn-default btn-default" ng-click="cancel()">Cancel</button>
+      </div>
+    </div>
 </div>
+
