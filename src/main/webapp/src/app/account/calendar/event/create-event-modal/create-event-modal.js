@@ -3,7 +3,6 @@ angular.module('application.account.calendar.event.createEventModal', [
 	'checklist-model'
 ])
 
-
 /*
 @Named("eventRepeatType") String eventRepeatType, x
 @Named("eventRepeatInterval") Integer repeatInterval, x
@@ -69,7 +68,7 @@ angular.module('application.account.calendar.event.createEventModal', [
 
 	$scope.save = function () {
 		console.log($scope.formData);
-      //$modalInstance.close($scope.formData);
+     	$modalInstance.close($scope.formData);
     };
 
     $scope.cancel = function () {

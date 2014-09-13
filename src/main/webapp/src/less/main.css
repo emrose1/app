@@ -6204,6 +6204,9 @@ button.close {
 .drop-down-button button {
   width: 200px;
 }
+.add-option-btn {
+  width: 100%;
+}
 @media (min-width: 992px) {
   .repeat-ends-form-section .col-sm-offset-3 {
     margin-left: 26.5%;

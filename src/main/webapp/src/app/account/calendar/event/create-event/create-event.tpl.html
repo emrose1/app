@@ -1,13 +1,13 @@
-<form role="form" class="form" ng-submit="save(event)">
+<form role="form" class="form" ng-submit="saveEvent(event)">
 <div class="well bs-component" style="float:left">
 	<div class="form-group form-group-lg col-sm-12">
-		<input type="text" class="form-control input-lg" ng-model="event.title" placeholder="Untitled Session">
+		<input type="text" class="form-control input-lg" ng-model="event.title" placeholder="Untitled Session" required>
 	</div>
 	<div class="form-group">{{event.startDateTime}}</div>
 	<div class="form-group">{{event.startDateTime | date:'medium'}}</div>
 	<div class="form-group">{{event.endDateTime | date:'medium'}}</div>
-	<div class="form-group form-inline col-sm-12" role="form">
 
+	<div class="form-group form-inline col-sm-12" role="form">
 		<div class="form-group event-date-picker">
 			<div class="input-group datepicker">
 				<input type="text" class="form-control" placeholder="Date"
@@ -20,10 +20,13 @@
 						<i class="glyphicon glyphicon-calendar"></i>
 					</button>
 				</span>
+
+
 			</div>
 		</div>
 
 		<div class="form-group">
+		<span class="error" ng-show="startDateTime.$error.required">Required!</span>
 			<div class="input-group timepicker">
 				<timepicker ng-model="startDateTime" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian">
 				</timepicker>
@@ -37,10 +40,9 @@
 				</timepicker>
 			</div>
 		</div>
-
 	</div>
 
-	<div class="form-group form-inline col-sm-12" role="form">
+	<div class="form-group form-inline col-sm-10 col-sm-offset-2" role="form">
 		<div class="form-group">
 			<label class="checkbox-inline">
 				<input ng-model="allDay" ng-value="true" type="checkbox"> All Day
@@ -56,80 +58,68 @@
 	<div class="form-horizontal col-sm-12" role="form">
 		<div class="form-group">
 			<label for="inputEmail3" class="col-sm-2 control-label">Max attendees</label>
-			<div class="col-sm-10">
+			<div class="col-sm-6">
 				<input type="number" ng-model="event.maxAttendees" class="form-control" id="inputEmail3" placeholder="Number of attendees">
 			</div>
 		</div>
 
 		<div class="form-group">
 			<label for="" class="col-sm-2 control-label">Schedule</label>
-			<div class="col-sm-10">
-				<div class="input-group" ng-controller="calendarCtrl">
-					<select ng-model="event.calendar_id" class="form-control"
-						ng-options="calendar.id as calendar.description for calendar in calendars">
-						<option value="">-- Choose Schedule --</option>
-					</select>
-					<div class="input-group-btn drop-down-button">
-						<button type="submit" class="btn btn-primary">
-							<span class="glyphicon glyphicon-plus"></span>
-							Add Schedule
-						</button>
-					</div>
-				</div>
+			<div class="col-sm-6" ng-controller="calendarCtrl">
+				<select ng-model="event.calendar_id" class="form-control"
+					ng-options="calendar.id as calendar.description for calendar in calendars">
+					<option value="">-- Choose Schedule --</option>
+				</select>
+			</div>
+			<div class="col-sm-3">
+				<button type="submit" class="btn btn-info add-option-btn">
+					Add Schedule
+				</button>
 			</div>
 		</div>
 
 		<div class="form-group">
 			<label for="inputPassword3" class="col-sm-2 control-label">Instructor</label>
-			<div class="col-sm-10">
-				<div class="input-group" ng-controller="personCtrl">
-					<select ng-model="event.instructor_id" class="form-control"
-						ng-options="person.id as person.username for person in persons">
-						<option value="">-- Choose Instructor --</option>
-					</select>
-					<div class="input-group-btn drop-down-button">
-						<button type="submit" class="btn btn-primary">
-							<span class="glyphicon glyphicon-plus"></span>
-							Add Instructor
-						</button>
-					</div>
-				</div>
+			<div class="col-sm-6" ng-controller="personCtrl">
+				<select ng-model="event.instructor_id" class="form-control"
+					ng-options="person.id as person.username for person in persons">
+					<option value="">-- Choose Instructor --</option>
+				</select>
+			</div>
+			<div class="col-sm-3">
+				<button type="submit" class="btn btn-info add-option-btn">
+					Add Instructor
+				</button>
 			</div>
 		</div>
 
 		<div class="form-group">
 			<label for="" class="col-sm-2 control-label">Session Type</label>
-			<div class="col-sm-10">
-				<div class="input-group" ng-controller="eventAttributeCtrl">
-					<select ng-model="event.eventAttribute" class="form-control"
-						ng-options="attribute.id as attribute.name for attribute in eventAttributes">
-						<option value="">-- Choose Session Type --</option>
-					</select>
-					<div class="input-group-btn drop-down-button">
-						<button type="submit" class="btn btn-primary">
-							<span class="glyphicon glyphicon-plus"></span>
-							Add Session Type
-						</button>
-					</div>
-				</div>
+			<div class="col-sm-6" ng-controller="eventAttributeCtrl">
+				<select ng-model="event.eventAttribute" class="form-control"
+					ng-options="attribute.id as attribute.name for attribute in eventAttributes">
+					<option value="">-- Choose Session Type --</option>
+				</select>
+			</div>
+			<div class="col-sm-3">
+				<button type="submit" class="btn btn-info add-option-btn">
+					Add Session Type
+				</button>
 			</div>
 		</div>
 
 		<div class="form-group">
 			<label for="inputPassword3" class="col-sm-2 control-label">Price Category</label>
-			<div class="col-sm-10">
-				<div class="input-group" ng-controller="eventCategoryCtrl">
-					<select ng-model="event.eventCategory" class="form-control"
-						ng-options="category.id as category.name for category in eventCategorys">
-						<option value="">-- Choose Price Category --</option>
-					</select>
-					<div class="input-group-btn drop-down-button">
-						<button type="submit" class="btn btn-primary">
-							<span class="glyphicon glyphicon-plus"></span>
-							Add Price Group
-						</button>
-					</div>
-				</div>
+			<div class="col-sm-6" ng-controller="eventCategoryCtrl">
+				<select ng-model="event.eventCategory" class="form-control"
+					ng-options="category.id as category.name for category in eventCategorys">
+					<option value="">-- Choose Price Category --</option>
+				</select>
+			</div>
+			<div class="col-sm-3">
+				<button type="submit" class="btn btn-info add-option-btn">
+					Add Price Group
+				</button>
 			</div>
 		</div>
 

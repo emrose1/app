@@ -128,6 +128,17 @@ public class Event {
    	
    	@Getter @Setter
    	private Boolean allDay;
+   	
+   	private Integer durationMinutes;
+   	
+   	public void setDurationMinutes() {
+		this.durationMinutes = Minutes.minutesBetween(new DateTime(startDateTime), 
+				new DateTime(endDateTime)).getMinutes();
+	}
+   	
+   	public Integer getDurationMinutes() {
+		return this.durationMinutes;
+	}
     
 	@Getter @Setter
 	private Integer maxAttendees;
@@ -167,10 +178,10 @@ public class Event {
 		this.instructorRef = Ref.create(instructor);
 		this.eventCategoryRef = Ref.create(eventCategory);
 		this.eventAttributeRef = Ref.create(eventAttribute);
+		this.setDurationMinutes();
 	};
 	
 	public Event(Event event) {
-		
 		this.setCalendar(event.getCalendar());
 		this.repeatEvent = event.getRepeatEvent();
 		this.repeatType = event.getRepeatType();
@@ -187,11 +198,8 @@ public class Event {
 		this.instructorRef = Ref.create(event.getInstructor());
 		this.eventCategoryRef = Ref.create(event.getEventCategory());
 		this.eventAttributeRef = Ref.create(event.getEventAttribute());
+		this.setDurationMinutes();
 	};
-	
-	public  int getDurationMinutes() {
-		return Minutes.minutesBetween(new DateTime(startDateTime), new DateTime(endDateTime)).getMinutes();
-	}
 	
 	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	public Key<Event> getKey() {

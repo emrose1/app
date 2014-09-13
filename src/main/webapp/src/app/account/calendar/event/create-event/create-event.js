@@ -94,7 +94,7 @@ angular.module('application.account.calendar.event.createEvent', [
         $scope.editing = true;
     };
 
-	$scope.save = function(event) {
+	$scope.saveEvent = function(event) {
 		if (event.id) {
 			event.$update({calendar_id: session.getCalendar()}, function(){
 				//getEvents();
@@ -102,6 +102,7 @@ angular.module('application.account.calendar.event.createEvent', [
 		} else {
 			event.startDateTime = $scope.startDateTime.getTime();
 			event.endDateTime = $scope.endDateTime.getTime();
+			console.log(event.startDateTime + " " + event.endDateTime);
 			event.$save({account_id: session.getAccount(), calendar_id: event.calendar_id}, function(){
 				//getEvents();
 			});
@@ -121,9 +122,11 @@ angular.module('application.account.calendar.event.createEvent', [
 			}
 		});
 		$scope.modalInstance.result.then(function (formData) {
-			$scope.acceptOrder(order, formData);
+			console.log($scope.event);
+			$scope.event = _.assign($scope.event, formData);
+			console.log($scope.event);
 		}, function () {
-			$scope.cancelOrderAcceptance = true;
+			//reset repeat
 		});
 	};
 
