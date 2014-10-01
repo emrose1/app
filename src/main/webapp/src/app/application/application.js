@@ -31,17 +31,25 @@ angular.module('application', [
     'ui.router',
     'ngResource',
     'ui.bootstrap',
+    'application.constants',
     'application.filters',
     'application.services',
     'application.directives',
-    'application.constants',
     'application.domains'
 ])
 
-.run(function ($state, $rootScope, AUTH_EVENTS, auth, sessionService, $window, $location, alerts) {
-    /*$rootScope.$on('$stateChangeStart', function (event, next) {
-        if(next.data && next.data.authorizedRoles) {
-            var authorizedRoles = next.data.authorizedRoles;
+.run(function ($state, $rootScope, AUTH_EVENTS, auth, sessionService, $window, $location, alerts, Account) {
+    $rootScope.$on('$stateChangeStart', function (event, next) {
+
+        if(!sessionService.getAccount()) {
+            event.preventDefault();
+            Account.query({}, function(data) {
+                sessionService.setAccount(data[0].id);
+                $state.transitionTo(next);
+            });
+        }
+
+            /*var authorizedRoles = next.data.authorizedRoles;
             if (!auth.isAuthorized(authorizedRoles)) {
                 event.preventDefault();
                 if (auth.isAuthenticated()) {
@@ -50,9 +58,9 @@ angular.module('application', [
                 } else {
                     $rootScope.$broadcast(AUTH_EVENTS.notAuthenticated);
                 }
-            }
-        }
-    });*/
+            }*/
+       // }
+    });
 
     $rootScope.$on('$stateChangeSuccess', function (event, next) {
     });

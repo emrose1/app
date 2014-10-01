@@ -14,27 +14,31 @@ angular.module('application.account.calendar.eventCategory', [
                         controller: 'eventCategoryCtrl',
                         templateUrl: 'app/account/calendar/event-category/event-category.tpl.html'
                     }
+                },
+            resolve: {
+                eventCategories: function() {
+                    return EventCategory.query({'account_id' : session.getAccount()});
                 }
+            }
         });
     }
 ])
-.controller('eventCategoryCtrl', ['$rootScope', '$scope', 'EventCategory', 'sessionService',
-        function($rootScope, $scope, EventCategory, session) {
+.controller('eventCategoryCtrl', ['$rootScope', '$scope', '$state', 'EventCategory', 'sessionService',
+        function($rootScope, $scope, $state, EventCategory, session) {
 
         $scope.eventCategory = new EventCategory();
 
-        var getEventCategorys = function() {
-            EventCategory.query({'account_id' : session.getAccount()}, function(data) {
-                $scope.eventCategorys = data;
-              });
+        $scope.reload = function() {
+            $state.reload();
         };
-/*
-        if(session.getAccount()) {
-            getEventCategorys();
-        } else {
-            console.log('get Account to list Event Cats');
-        }
-*/
+
+        $scope.$state = $state;
+        $scope.$watch('$state.$current.locals.globals.eventCategories', function (eventCategories) {
+            $scope.event.eventCategory = eventCategories[0].id;
+            $scope.eventCategorys = eventCategories;
+        });
+
+
         $scope.newEventCategory = function() {
                 $scope.eventCategory = new EventCategory();
                 $scope.editing = false;

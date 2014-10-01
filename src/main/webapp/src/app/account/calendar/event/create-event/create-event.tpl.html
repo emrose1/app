@@ -1,20 +1,23 @@
-<form role="form" class="form" ng-submit="saveEvent(event)">
+<form role="form" class="form" name="addEventForm" ng-submit="saveEvent(addEventForm.$valid)"  novalidate>
 <div class="well bs-component" style="float:left">
 	<div class="form-group form-group-lg col-sm-12">
-		<input type="text" class="form-control input-lg" ng-model="event.title" placeholder="Untitled Session" required>
+		<input type="text" class="form-control input-lg" ng-model="event.title" placeholder="Untitled Session">
 	</div>
-	<div class="form-group">{{event.startDateTime}}</div>
-	<div class="form-group">{{event.startDateTime | date:'medium'}}</div>
-	<div class="form-group">{{event.endDateTime | date:'medium'}}</div>
 
 	<div class="form-group form-inline col-sm-12" role="form">
 		<div class="form-group event-date-picker">
 			<div class="input-group datepicker">
-				<input type="text" class="form-control" placeholder="Date"
-					datepicker-popup="{{format}}" ng-model="startDateTime" is-open="openedDatePicker"
-					min-date="minDate" datepicker-options="dateOptions"
-					date-disabled="disabled(date, mode)"
-					ng-required="true" ng-change="setEndDate()" close-text="Close" ng-click="openDatePicker($event)" />
+				<input type="text"
+					class="form-control"
+					name="startDateTime"
+					placeholder="Date"
+					datepicker-popup="{{format}}"
+					ng-model="startDateTime"
+					is-open="openedDatePicker"
+					datepicker-options="dateOptions"
+					ng-change="setEndDate()"
+					close-text="Close"
+					ng-click="openDatePicker($event)" />
 				<span class="input-group-btn">
 					<button type="button" class="btn btn-default" ng-click="openDatePicker($event)">
 						<i class="glyphicon glyphicon-calendar"></i>
@@ -26,7 +29,6 @@
 		</div>
 
 		<div class="form-group">
-		<span class="error" ng-show="startDateTime.$error.required">Required!</span>
 			<div class="input-group timepicker">
 				<timepicker ng-model="startDateTime" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian">
 				</timepicker>
@@ -63,13 +65,18 @@
 			</div>
 		</div>
 
-		<div class="form-group">
-			<label for="" class="col-sm-2 control-label">Schedule</label>
-			<div class="col-sm-6" ng-controller="calendarCtrl">
-				<select ng-model="event.calendar_id" class="form-control"
-					ng-options="calendar.id as calendar.description for calendar in calendars">
-					<option value="">-- Choose Schedule --</option>
+		<div class="form-group" ng-class="{'has-error': addEventForm.calendar_id.$invalid && addEventForm.calendar_id.$dirty || showValidationErrors && addEventForm.calendar_id.$invalid  }">
+
+			<label for="" class="col-sm-2 control-label">Schedule {{addEventForm.$valid}}</label>
+			<div class="col-sm-6">
+				<select  name="calendar_id" ng-model="event.calendar_id" class="form-control"
+					ng-options="calendar.id as calendar.description for calendar in calendars" required>
+ 					<option value="">-- Choose Schedule --</option>
 				</select>
+				<p class="help-block error" ng-show="addEventForm.calendar_id.$dirty &&
+				addEventForm.calendar_id.$error.required || showValidationErrors && addEventForm.calendar_id.$invalid">please select a schedule
+				</p>
+
 			</div>
 			<div class="col-sm-3">
 				<button type="submit" class="btn btn-info add-option-btn">
@@ -80,9 +87,9 @@
 
 		<div class="form-group">
 			<label for="inputPassword3" class="col-sm-2 control-label">Instructor</label>
-			<div class="col-sm-6" ng-controller="personCtrl">
+			<div class="col-sm-6">
 				<select ng-model="event.instructor_id" class="form-control"
-					ng-options="person.id as person.username for person in persons">
+					ng-options="instructor.id as instructor.username for instructor in instructors">
 					<option value="">-- Choose Instructor --</option>
 				</select>
 			</div>
@@ -95,7 +102,7 @@
 
 		<div class="form-group">
 			<label for="" class="col-sm-2 control-label">Session Type</label>
-			<div class="col-sm-6" ng-controller="eventAttributeCtrl">
+			<div class="col-sm-6">
 				<select ng-model="event.eventAttribute" class="form-control"
 					ng-options="attribute.id as attribute.name for attribute in eventAttributes">
 					<option value="">-- Choose Session Type --</option>
@@ -109,11 +116,11 @@
 		</div>
 
 		<div class="form-group">
-			<label for="inputPassword3" class="col-sm-2 control-label">Price Category</label>
-			<div class="col-sm-6" ng-controller="eventCategoryCtrl">
+			<label for="inputPassword3" class="col-sm-2 control-label">Price Group</label>
+			<div class="col-sm-6">
 				<select ng-model="event.eventCategory" class="form-control"
 					ng-options="category.id as category.name for category in eventCategorys">
-					<option value="">-- Choose Price Category --</option>
+					<option value="">-- Price Group --</option>
 				</select>
 			</div>
 			<div class="col-sm-3">

@@ -35,12 +35,6 @@ angular.module('application.account.person', [
               });
         };
 
-/*        if(session.getAccount()) {
-            getPersons();
-        } else {
-            console.log('get Account to list Persons');
-        }
-*/
         $scope.newPerson = function() {
             $scope.person = new Person();
             $scope.editing = false;

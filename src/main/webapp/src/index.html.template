@@ -4,7 +4,6 @@
     <base href='' />
     <title ng-bind="pageTitle"></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
     <!-- compiled CSS --><% styles.forEach( function ( file ) { %>
     <link rel="stylesheet" type="text/css" href="<%= file %>" /><% }); %>
 
@@ -29,7 +28,7 @@
 
 <!--         <section ui-view  ng-if="!backendReady" class="animate-fade-up"></section>
  -->
-        <section ui-view></section>
+        <section class="container" ui-view></section>
         <div class="container">
           <div ui-view="accounts"></div>
           <div ui-view="calendars"></div>
