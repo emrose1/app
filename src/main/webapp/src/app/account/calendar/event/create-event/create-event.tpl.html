@@ -1,7 +1,8 @@
-<form role="form" class="form" name="addEventForm" ng-submit="saveEvent(addEventForm.$valid)"  novalidate>
+<form role="form" class="form" name="addEventForm" novalidate>
 <div class="well bs-component" style="float:left">
 	<div class="form-group form-group-lg col-sm-12">
-		<input type="text" class="form-control input-lg" ng-model="event.title" placeholder="Untitled Session">
+		<input type="text" class="form-control input-lg" ng-model="event.title" placeholder="Untitled Session"
+		validator="required" name="sessionTitle" required-error-message="Please enter a session title">
 	</div>
 
 	<div class="form-group form-inline col-sm-12" role="form">
@@ -17,6 +18,8 @@
 					datepicker-options="dateOptions"
 					ng-change="setEndDate()"
 					close-text="Close"
+					show-button-bar="false"
+					required
 					ng-click="openDatePicker($event)" />
 				<span class="input-group-btn">
 					<button type="button" class="btn btn-default" ng-click="openDatePicker($event)">
@@ -59,24 +62,19 @@
 
 	<div class="form-horizontal col-sm-12" role="form">
 		<div class="form-group">
-			<label for="inputEmail3" class="col-sm-2 control-label">Max attendees</label>
+			<label for="maxAttendees" class="col-sm-2 control-label">Max attendees</label>
 			<div class="col-sm-6">
-				<input type="number" ng-model="event.maxAttendees" class="form-control" id="inputEmail3" placeholder="Number of attendees">
+				<input type="number" ng-model="event.maxAttendees" class="form-control" id="maxAttendees" name="maxAttendees"
+				placeholder="Number of attendees" validator="number" number-error-message="Please enter a number">
 			</div>
 		</div>
 
-		<div class="form-group" ng-class="{'has-error': addEventForm.calendar_id.$invalid && addEventForm.calendar_id.$dirty || showValidationErrors && addEventForm.calendar_id.$invalid  }">
-
-			<label for="" class="col-sm-2 control-label">Schedule {{addEventForm.$valid}}</label>
+		<div class="form-group">
+			<label for="schedule" class="col-sm-2 control-label">Schedule</label>
 			<div class="col-sm-6">
-				<select  name="calendar_id" ng-model="event.calendar_id" class="form-control"
-					ng-options="calendar.id as calendar.description for calendar in calendars" required>
+				<select id="schedule" name="schedule" ng-model="event.calendar_id" class="form-control" ng-options="calendar.id as calendar.description for calendar in calendars" validator="required" required-error-message="Please choose a schedule">
  					<option value="">-- Choose Schedule --</option>
 				</select>
-				<p class="help-block error" ng-show="addEventForm.calendar_id.$dirty &&
-				addEventForm.calendar_id.$error.required || showValidationErrors && addEventForm.calendar_id.$invalid">please select a schedule
-				</p>
-
 			</div>
 			<div class="col-sm-3">
 				<button type="submit" class="btn btn-info add-option-btn">
@@ -86,10 +84,9 @@
 		</div>
 
 		<div class="form-group">
-			<label for="inputPassword3" class="col-sm-2 control-label">Instructor</label>
+			<label for="instructor" class="col-sm-2 control-label">Instructor</label>
 			<div class="col-sm-6">
-				<select ng-model="event.instructor_id" class="form-control"
-					ng-options="instructor.id as instructor.username for instructor in instructors">
+				<select name="instructor" id="instructor" ng-model="event.instructor_id" class="form-control" validator="required" required-error-message="Please choose an instructor" ng-options="instructor.id as instructor.username for instructor in instructors">
 					<option value="">-- Choose Instructor --</option>
 				</select>
 			</div>
@@ -101,10 +98,9 @@
 		</div>
 
 		<div class="form-group">
-			<label for="" class="col-sm-2 control-label">Session Type</label>
+			<label for="sessionType" class="col-sm-2 control-label">Session Type</label>
 			<div class="col-sm-6">
-				<select ng-model="event.eventAttribute" class="form-control"
-					ng-options="attribute.id as attribute.name for attribute in eventAttributes">
+				<select name="sessionType" id="sessionType" ng-model="event.eventAttribute" class="form-control" validator="required" required-error-message="Please choose a session type" ng-options="attribute.id as attribute.name for attribute in eventAttributes">
 					<option value="">-- Choose Session Type --</option>
 				</select>
 			</div>
@@ -116,9 +112,9 @@
 		</div>
 
 		<div class="form-group">
-			<label for="inputPassword3" class="col-sm-2 control-label">Price Group</label>
+			<label for="priceGroup" class="col-sm-2 control-label">Price Group</label>
 			<div class="col-sm-6">
-				<select ng-model="event.eventCategory" class="form-control"
+				<select name="priceGroup" id="priceGroup" ng-model="event.eventCategory" class="form-control" validator="required" required-error-message="Please choose a price group"
 					ng-options="category.id as category.name for category in eventCategorys">
 					<option value="">-- Price Group --</option>
 				</select>
@@ -132,8 +128,8 @@
 
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-10">
-					<button type="button" class="btn btn-default">Back</button>
-					<button type="submit" class="btn btn-danger">Save</button>
+					<button type="button" class="btn btn-default" ng-click="reload()">Back</button>
+					<button type="submit" class="btn btn-danger" ng-click="form.submit()" validation-submit="addEventForm">Save</button>
 					<button type="button" class="btn btn-default">
 							<span class="glyphicon glyphicon-trash"></span>
 					</button>

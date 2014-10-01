@@ -28,3 +28,5 @@ src/main/webapp/src/bower_components/*
 src/main/webapp/src/index.html
 
 src/main/webapp/.DS_Store
+
+*.css

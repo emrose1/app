@@ -21,53 +21,58 @@ angular.module('application.account.calendar.event.createEvent', [
 ])
 
 .config([
-  '$stateProvider',
-  function config( $stateProvider ) {
-	$stateProvider
-		.state('addevent', {
-			url: '/addevent',
-			controller: 'AddEventCtrl',
-			templateUrl: 'app/account/calendar/event/create-event/create-event.tpl.html',
-			resolve: {
+  '$stateProvider', '$validationProvider', function config( $stateProvider, $validationProvider) {
 
-				calendars: function($q, Calendar, sessionService) {
-                	var deferred = $q.defer();
-                	Calendar.query({'account_id' : sessionService.getAccount()}, function(data) {
-						deferred.resolve(data);
-					});
-					return deferred.promise;
-                },
-                eventCategories: function($q, EventCategory, sessionService) {
-                	var deferred = $q.defer();
-                	EventCategory.query({'account_id' : sessionService.getAccount()}, function(data) {
-						deferred.resolve(data);
-					});
-					return deferred.promise;
-                },
+    $validationProvider.showSuccessMessage = false; // or true(default)
 
-                eventAttributes: function($q, EventAttribute, sessionService) {
-                	var deferred = $q.defer();
-                	EventAttribute.query({'account_id' : sessionService.getAccount()}, function(data) {
-						deferred.resolve(data);
-					});
-					return deferred.promise;
-                },
+    $validationProvider.setErrorHTML(function (msg) {
+        return  "<label class=\"control-label has-error\">" + msg + "</label>";
+    });
 
-                instructors: function($q, Person, sessionService) {
-                	var deferred = $q.defer();
-                	Person.query({'account_id' : sessionService.getAccount()}, function(data) {
-						deferred.resolve(data);
-					});
-					return deferred.promise;
-                }
+	$stateProvider.state('addevent', {
+		url: '/addevent',
+		controller: 'AddEventCtrl',
+		templateUrl: 'app/account/calendar/event/create-event/create-event.tpl.html',
+		resolve: {
 
+			calendars: function($q, Calendar, sessionService) {
+            	var deferred = $q.defer();
+            	Calendar.query({'account_id' : sessionService.getAccount()}, function(data) {
+					deferred.resolve(data);
+				});
+				return deferred.promise;
+            },
+            eventCategories: function($q, EventCategory, sessionService) {
+            	var deferred = $q.defer();
+            	EventCategory.query({'account_id' : sessionService.getAccount()}, function(data) {
+					deferred.resolve(data);
+				});
+				return deferred.promise;
+            },
+
+            eventAttributes: function($q, EventAttribute, sessionService) {
+            	var deferred = $q.defer();
+            	EventAttribute.query({'account_id' : sessionService.getAccount()}, function(data) {
+					deferred.resolve(data);
+				});
+				return deferred.promise;
+            },
+
+            instructors: function($q, Person, sessionService) {
+            	var deferred = $q.defer();
+            	Person.query({'account_id' : sessionService.getAccount()}, function(data) {
+					deferred.resolve(data);
+				});
+				return deferred.promise;
             }
-		});
+
+        }
+	});
 	}
 ])
 
-.controller('AddEventCtrl', ['$rootScope', '$scope', '$state', '$modal', 'Calendar', 'Event', 'sessionService',
-	function($rootScope, $scope, $state, $modal, Calendar, Event, session) {
+.controller('AddEventCtrl', ['$rootScope', '$scope', '$injector', '$state', '$modal', 'Calendar', 'Event', 'sessionService', 'alerts',
+	function($rootScope, $scope, $injector, $state, $modal, Calendar, Event, session, alerts) {
 
 
 	// ------------- DATE PICKER ------------------------- //
@@ -141,48 +146,63 @@ angular.module('application.account.calendar.event.createEvent', [
 		$scope.event.repeatDaysOfWeek = [];
 		$scope.event.excludeDays = [];
 
-
 		$scope.startDateTime = getNewEventTime.startTime();
 		$scope.endDateTime = getNewEventTime.endTime();
 
-		$scope.showValidationErrors = false;
     };
 
-    $scope.$watch('startDateTime', function () {
-        console.log($scope.startDateTime);
-        console.log($scope.endDateTime);
-    });
 
     $scope.editEvent = function(event) {
         $scope.event = event;
         $scope.editing = true;
     };
 
-	$scope.saveEvent = function(isValid) {
 
-/*		$scope.event.startDateTime = $scope.startDateTime.getTime();
-		$scope.event.endDateTime = $scope.endDateTime.getTime();
+    // ---------- FORM -------------------------- //
 
-*/
-		var date = new Date($scope.startDateTime);
-		console.log(date);
-
-		//if(isValid) {
-			$scope.event.startDateTime = $scope.startDateTime.getTime();
-			$scope.event.endDateTime = $scope.endDateTime.getTime();
-
-			console.log($scope.event);
-
-
-			$scope.event.$save({account_id: session.getAccount(), calendar_id: $scope.event.calendar_id}, function(){
-				$scope.reload();
-			});
-					//}$scope.newEvent();
-/*		} else {
-			$scope.showValidationErrors = true;
+    var validateDate = function(date) {
+    	if ( Object.prototype.toString.call(date) === "[object Date]" ) {
+			if ( isNaN( date.getTime() ) ) {  // d.valueOf() could also work
+			return false
+			}
+			else {
+				return true
+			}
 		}
-*/	};
+		else {
+			return false
+		}
+    };
 
+    var saveEvent = function() {
+    	$scope.event.startDateTime = $scope.startDateTime.getTime();
+		$scope.event.endDateTime = $scope.endDateTime.getTime();
+		$scope.event.$save({account_id: session.getAccount(), calendar_id: $scope.event.calendar_id}, function(){
+			//$scope.reload();
+			$state.transitionTo('schedule');
+		});
+	};
+
+    var $validationProvider = $injector.get('$validation');
+
+    $scope.form = {
+        requiredCallback: 'required',
+        checkValid: $validationProvider.checkValid,
+        submit: function () {
+        	if (validateDate($scope.startDateTime) && validateDate($scope.endDateTime)) {
+	        	saveEvent();
+        	} else {
+        		alerts.setAlert({
+		            'alertMessage': "Please enter a valid date",
+		            'alertType': 'alert-error'
+		        });
+        	}
+        },
+        reset: function () {
+        }
+    };
+
+// ---- Add attributes
 	$scope.openRepeatEventModal = function (startDateTime) {
 		$scope.modalInstance = $modal.open({
 			templateUrl: 'app/account/calendar/event/create-event-modal/create-event-modal.tpl.html',

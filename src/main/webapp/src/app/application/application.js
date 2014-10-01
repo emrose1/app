@@ -31,6 +31,8 @@ angular.module('application', [
     'ui.router',
     'ngResource',
     'ui.bootstrap',
+    'validation',
+    'validation.rule',
     'application.constants',
     'application.filters',
     'application.services',

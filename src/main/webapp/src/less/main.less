@@ -15,7 +15,14 @@
 
 
 body {
-  // general stuff
+
+	.ng-invalid.ng-dirty {
+	    .has-error .form-control;
+	}
+
+	label.has-error.control-label {
+	    .has-error .control-label;
+	}
 }
 
 @import 'test-module.less';
