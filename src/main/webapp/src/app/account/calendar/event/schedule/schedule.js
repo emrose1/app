@@ -28,7 +28,6 @@ angular.module( 'application.account.calendar.event.schedule', [
   function($rootScope,$scope, Event, session) {
 
     var getEvents = function() {
-
       Event.query({
           account_id: session.getAccount(),
           calendar_id: session.getCalendar(),
@@ -38,10 +37,6 @@ angular.module( 'application.account.calendar.event.schedule', [
           $scope.events = data;
       });
     };
-
-/*    if(session.getAccount() && session.getCalendar()) {
-        getEvents();
-    }*/
 
     $scope.selectedWeekNumber = 0;
 
@@ -57,7 +52,7 @@ angular.module( 'application.account.calendar.event.schedule', [
       if(hours<10){hours='0'+hours;}
       if(min<10){min='0'+min;}
 
-      return  yyyy + mm  + dd;
+      return  "" + yyyy + mm  + dd;
     };
 
     var getDatesOfCurrentWeek = function() {

@@ -6175,6 +6175,29 @@ button.close {
     display: none !important;
   }
 }
+body .ng-invalid.ng-dirty {
+  border-color: #a94442;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+body .ng-invalid.ng-dirty:focus {
+  border-color: #843534;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #ce8483;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #ce8483;
+}
+body label.has-error.control-label {
+  color: #a94442;
+}
+body .alert {
+  width: 600px;
+  position: absolute;
+  top: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  z-index: 1;
+}
 /*.form {
 	border-color: #ddd;
 	border-width: 1px;
