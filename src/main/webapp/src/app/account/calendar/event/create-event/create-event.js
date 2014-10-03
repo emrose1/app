@@ -149,6 +149,10 @@ angular.module('application.account.calendar.event.createEvent', [
 		$scope.startDateTime = getNewEventTime.startTime();
 		$scope.endDateTime = getNewEventTime.endTime();
 
+		alerts.setAlert({
+            'alertMessage': "Please enter a valid date",
+            'alertType': 'alert-warning'
+        });
     };
 
     $scope.editEvent = function(event) {
