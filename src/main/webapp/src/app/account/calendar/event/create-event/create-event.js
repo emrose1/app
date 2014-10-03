@@ -151,7 +151,6 @@ angular.module('application.account.calendar.event.createEvent', [
 
     };
 
-
     $scope.editEvent = function(event) {
         $scope.event = event;
         $scope.editing = true;
@@ -178,7 +177,10 @@ angular.module('application.account.calendar.event.createEvent', [
     	$scope.event.startDateTime = $scope.startDateTime.getTime();
 		$scope.event.endDateTime = $scope.endDateTime.getTime();
 		$scope.event.$save({account_id: session.getAccount(), calendar_id: $scope.event.calendar_id}, function(){
-			//$scope.reload();
+			alerts.setAlert({
+	            'alertMessage': "You're session " +  $scope.event.title + " has been added",
+	            'alertType': 'alert-success'
+	        });
 			$state.transitionTo('schedule');
 		});
 	};
@@ -194,7 +196,7 @@ angular.module('application.account.calendar.event.createEvent', [
         	} else {
         		alerts.setAlert({
 		            'alertMessage': "Please enter a valid date",
-		            'alertType': 'alert-error'
+		            'alertType': 'alert-warning'
 		        });
         	}
         },
@@ -202,7 +204,7 @@ angular.module('application.account.calendar.event.createEvent', [
         }
     };
 
-// ---- Add attributes
+// ---- Repeat Event
 	$scope.openRepeatEventModal = function (startDateTime) {
 		$scope.modalInstance = $modal.open({
 			templateUrl: 'app/account/calendar/event/create-event-modal/create-event-modal.tpl.html',
@@ -222,6 +224,8 @@ angular.module('application.account.calendar.event.createEvent', [
 			//reset repeat
 		});
 	};
+
+// ---- Add attributes
 /*
 	$scope.openAddCategoryModal = function (startDateTime) {
 		$scope.modalInstance = $modal.open({
@@ -235,6 +239,8 @@ angular.module('application.account.calendar.event.createEvent', [
 			}
 		});
 		$scope.modalInstance.result.then(function (formData) {
+						//$scope.reload();
+
 			console.log($scope.event);
 			$scope.event = _.assign($scope.event, formData);
 			console.log($scope.event);
