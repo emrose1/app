@@ -53,8 +53,8 @@
 				<input ng-model="allDay" ng-value="true" type="checkbox"> All Day
 			</label>
 			<label class="checkbox-inline">
-				<input type="checkbox" id="" value="true"> Repeat
-				<span class="btn-link" ng-click="openRepeatEventModal(startDateTime)">edit</span>
+				<input type="checkbox" ng-model="repeatEvent" ng-checked=""> Repeat
+				<span class="btn-link" ng-click="openRepeatEventModal()">edit</span>
 			</label>
 		</div>
 
@@ -63,7 +63,7 @@
 	<div class="form-horizontal col-sm-12" role="form">
 		<div class="form-group">
 			<label for="maxAttendees" class="col-sm-2 control-label">Max attendees</label>
-			<div class="col-sm-6">
+			<div class="col-sm-3">
 				<input type="number" ng-model="event.maxAttendees" class="form-control" id="maxAttendees" name="maxAttendees"
 				placeholder="Number of attendees" validator="number" number-error-message="Please enter a number">
 			</div>

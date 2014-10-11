@@ -22,65 +22,59 @@ angular.module('application.account.calendar.event.createEventModal', [
 	};
 
 	$scope.daysOfWeek = [
-		{id: 1, value: 'Monday'},
-		{id: 2, value: 'Tuesday'},
-		{id: 3, value: 'Wednesday'},
-		{id: 4, value: 'Thursday'},
-		{id: 5, value: 'Friday'},
-		{id: 6, value: 'Saturday'},
-		{id: 0, value: 'Sunday'}
+		{'id': 1, 'value': 'Monday'},
+		{'id': 2, 'value': 'Tuesday'},
+		{'id': 3, 'value': 'Wednesday'},
+		{'id': 4, 'value': 'Thursday'},
+		{'id': 5, 'value': 'Friday'},
+		{'id': 6, 'value': 'Saturday'},
+		{'id': 0, 'value': 'Sunday'}
 	];
 
 	$scope.eventRepeatTypes = [
-		{ id : 'DAILY', name : 'Daily', shortname : 'Days' },
-		{ id : 'WEEKLY', name : 'Weekly', shortname : 'Weeks' },
-		{ id : 'MONTHLY', name : 'Monthly', shortname : 'Months' },
-		{ id : 'YEARLY', name : 'Yearly', shortname : 'Years' }
+		{ 'id' : 'DAILY', 'name' : 'Daily', 'shortname' : 'Days' },
+		{ 'id' : 'WEEKLY', 'name' : 'Weekly', 'shortname' : 'Weeks' },
+		{ 'id' : 'MONTHLY', 'name' : 'Monthly', 'shortname' : 'Months' },
+		{ 'id' : 'YEARLY', 'name' : 'Yearly', 'shortname' : 'Years' }
 	];
 
-	$scope.setSummary = function() {
-		var repeatDays = [];
-		var days = ['Sunday', 'Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-		console.log($scope.formData.repeatDaysOfWeek);
+	var setSummary = function() {
+		var repeatDaysOfWeek = _.map($filter('filter')($scope.daysOfWeek, {checked: true}), 'value');
+		$scope.summary = $filter('lowercase')($scope.formData.eventRepeatType) + ' on ' + repeatDaysOfWeek.join(", ");
+	}
 
-		console.log($scope.formData.repeatDaysOfWeek.length);
+	$scope.setRepeatDays = function() {
+		$scope.formData.repeatDaysOfWeek = _.map($filter('filter')($scope.daysOfWeek, {checked: true}), 'id');
+		setSummary();
+    };
 
-		for (var i = 0; i < $scope.formData.repeatDaysOfWeek.length; i++) {
-			repeatDays.push(days[$scope.formData.repeatDaysOfWeek[i]]);
-		}
-    	$scope.summary = $filter('lowercase')($scope.formData.eventRepeatType) + ' on ' + repeatDays.join(", ");
+    var checkTodaysAsRepeatDay = function() {
+    	var dayOfWeek = _.find($scope.daysOfWeek, { 'id':  new Date(eventTime).getUTCDay()});
+		var i = _.indexOf($scope.daysOfWeek, dayOfWeek);
+		$scope.daysOfWeek[i].checked = true;
     };
 
 	var init = function() {
-		console.log(new Date(eventTime).getUTCDay());
-
 		$scope.formData.repeatInterval = 1;
 		$scope.formData.eventRepeatType = $scope.eventRepeatTypes[1].id;
-		$scope.formData.repeatDaysOfWeek[0] = new Date(eventTime).getUTCDay();
 
 		$scope.startDate = new Date(eventTime);
 		$scope.repeatType = $scope.eventRepeatTypes[1].shortname;
 		$scope.repeatEndType = "never";
-		//$scope.setSummary();
-	}
+
+		checkTodaysAsRepeatDay();
+		setSummary();
+	};
 
 	init();
 
 	$scope.save = function () {
-		console.log($scope.formData);
      	$modalInstance.close($scope.formData);
     };
 
     $scope.cancel = function () {
       $modalInstance.dismiss('cancel');
     };
-
-    var getDaysOfWeek = function() {
-    	var daysOfWeek = [];
-    	for(var i = 0; i < $scope.repeatDaysOfWeek.length; i++) {
-    		daysOfWeek.push()
-    	}
-    }
 
 	$scope.setRepeatType = function(repeatType){
 		var repeatItem = _.find($scope.eventRepeatTypes, function(repeat) {
@@ -109,7 +103,6 @@ angular.module('application.account.calendar.event.createEventModal', [
 			$scope.formData.finalRepeatDate = initFinalDate();
 			$scope.formData.eventRepeatCount = null;
 		}
-		console.log($scope.formData);
 	};
 
 

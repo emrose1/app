@@ -149,10 +149,6 @@ angular.module('application.account.calendar.event.createEvent', [
 		$scope.startDateTime = getNewEventTime.startTime();
 		$scope.endDateTime = getNewEventTime.endTime();
 
-		alerts.setAlert({
-            'alertMessage': "Please enter a valid date",
-            'alertType': 'alert-warning'
-        });
     };
 
     $scope.editEvent = function(event) {
@@ -209,14 +205,19 @@ angular.module('application.account.calendar.event.createEvent', [
     };
 
 // ---- Repeat Event
-	$scope.openRepeatEventModal = function (startDateTime) {
+
+	$scope.$watch('repeatEvent', function(repeatEvent) {
+     	var result = repeatEvent ? $scope.openRepeatEventModal() : false;
+    });
+
+	$scope.openRepeatEventModal = function () {
 		$scope.modalInstance = $modal.open({
 			templateUrl: 'app/account/calendar/event/create-event-modal/create-event-modal.tpl.html',
 			scope: $scope,
 			controller: 'RepeatEventModalCtrl',
 			resolve: {
 				eventTime: function () {
-					return startDateTime;
+					return $scope.startDateTime;
 				}
 			}
 		});
