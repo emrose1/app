@@ -10,6 +10,7 @@ import org.joda.time.DateTimeConstants;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import com.google.api.server.spi.config.Named;
 import com.google.appengine.api.oauth.OAuthRequestException;
 import com.google.appengine.api.oauth.OAuthService;
 import com.google.appengine.api.oauth.OAuthServiceFactory;
@@ -30,6 +31,15 @@ import com.studio.bookings.util.TestBase;
 public class EventServiceTest extends TestBase {
 	
 	static Permission permission = Permission.EVENT;
+	static Account account;
+	static Calendar calendar1;
+	static Calendar calendar2;
+	static Person instructor1;
+	static Person instructor2;
+	static EventCategory eventCategory1;
+	static EventCategory eventCategory2;
+	static EventAttribute eventAttribute1;
+	static EventAttribute eventAttribute2; 
 	
 	public User setUpUser() {
 		OAuthService oauth = OAuthServiceFactory.getOAuthService();
@@ -43,52 +53,57 @@ public class EventServiceTest extends TestBase {
 		return user;
 	}
 	
-	public void setUp(Account userAccount, User user) {
+	public void setUpUserAndAccount(Account userAccount, User user) {
 		AccessControlList acl = new AccessControlList(permission.toString(), "true", "true", "true", "true", "true", "SUPERADMIN");
 		aclDao.save(acl);
 		Person p = new Person(userAccount, user.getUserId(), "test1", "email", "SUPERADMIN");
 		personDao.save(p);
 	}
 	
+	
+	public void setUpCalendar(Account account) {
+		calendar1 = new Calendar("Testing Calendar1", account);
+		calendar2 = new Calendar("Testing Calendar2", account);
+		calendarDao.save(calendar1);
+		calendarDao.save(calendar2);
+	}
+	
+	 public void setUp(User user) {
+		
+		account = new Account("Account1");
+		accountDao.save(account);
+		
+		this.setUpUserAndAccount(account, user);
+		this.setUpCalendar(account);
+		
+		instructor1 = new Person( account, "0", "testing1", "testing1@test.com", "INSTRUCTOR"); 
+		personDao.save(instructor1);
+		
+		instructor2 = new Person( account, "0", "testing2", "testing2@test.com", "INSTRUCTOR"); 
+		personDao.save(instructor2);
+		
+		eventCategory1 = new EventCategory("Event Category1", account);
+		eventCategoryDao.save(eventCategory1);
+		
+		eventCategory2 = new EventCategory("Event Category2", account);
+		eventCategoryDao.save(eventCategory2);
+		
+		eventAttribute1 = new EventAttribute("Event Attribute1", account);
+		eventAttributeDao.save(eventAttribute1);
+		
+		eventAttribute2 = new EventAttribute("Event Attribute2", account);
+		eventAttributeDao.save(eventAttribute2);
+	 }
 
 	@Test
 	public void insertAdHocEvent() throws ParseException, NotFoundException {
 		
-		User user = this.setUpUser();
-		
-		Account account = new Account("Account1");
-		accountDao.save(account);
-		
-		this.setUp(account, user);
-		
-		Calendar calendar1 = new Calendar("Testing Calendar1", account);
-		Calendar calendar2 = new Calendar("Testing Calendar2", account);
-		calendarDao.save(calendar1);
-		calendarDao.save(calendar2);
-		
-		Person instructor1 = new Person( account, "0", "testing1", "testing1@test.com", "INSTRUCTOR"); 
-		personDao.save(instructor1);
-		
-		Person instructor2 = new Person( account, "0", "testing2", "testing2@test.com", "INSTRUCTOR"); 
-		personDao.save(instructor2);
-		
-		EventCategory eventCategory1 = new EventCategory("Event Category1", account);
-		eventCategoryDao.save(eventCategory1);
-		
-		EventCategory eventCategory2 = new EventCategory("Event Category2", account);
-		eventCategoryDao.save(eventCategory2);
-		
-		EventAttribute eventAttribute1 = new EventAttribute("Event Attribute1", account);
-		eventAttributeDao.save(eventAttribute1);
-		
-		EventAttribute eventAttribute2 = new EventAttribute("Event Attribute2", account);
-		eventAttributeDao.save(eventAttribute2);
+		User user;
+		user = this.setUpUser();
+		this.setUp(user);
 		
 		Event event1 = null;
 		Event event2 = null;
-		
-		List<Integer> daysOfWeek = Arrays.asList(1, 2, 3);
-		List<Date> excludeDays = Arrays.asList(new Date(), new Date());
 		
 		String[] excludeDaysArray = { 
 				"10:00 01 12 2015",
@@ -96,14 +111,9 @@ public class EventServiceTest extends TestBase {
 			};
 		
 		Integer[] daysOfWeekArray = { 
-			    1, 2, 3
-			};
+		    1, 2, 3
+		};
 		
-		Event ev = new Event(calendar1, true, EventRepeatType.WEEKLY, new Integer(1), new Date(),  new Integer(52), 
-			daysOfWeek, excludeDays,  "summary", new Date(), new Date(),  new Boolean(false), new Integer(10), 
-			instructor1, eventCategory1, eventAttribute1);
-		
-		eventDao.save(ev);
 		Long fromDate = new DateTime().toDate().getTime();
 		Long toDate = new DateTime().plusHours(1).toDate().getTime();
 	
@@ -112,7 +122,7 @@ public class EventServiceTest extends TestBase {
 		
 		event1 = eventService.insertEvent(
 				account.getId(), calendar1.getId(), "false", "", 
-				new Integer(0), null, new Integer(0), daysOfWeekArray, 
+				new Integer(0), null, new Integer(10), daysOfWeekArray, 
 				excludeDaysArray, "Event Summary 1", fromDate, toDate, "false",
 				new Integer(10), instructor1.getId(), eventCategory1.getId(), eventAttribute1.getId()
 		);
@@ -149,8 +159,8 @@ public class EventServiceTest extends TestBase {
 		Assert.assertEquals(eventFetched1.getRepeatDaysOfWeek().size(), 0);
 		Assert.assertEquals(eventFetched1.getExcludeDays().size(), 0);
 		Assert.assertEquals(eventFetched1.getRepeatCount(),  new Integer(0));
-		Assert.assertNull(eventFetched1.getRepeatFinalDate());
-		
+		Assert.assertEquals(eventFetched1.getRepeatCount(),  new Integer(0));
+		Assert.assertEquals(new DateTime(eventFetched1.getRepeatFinalDate()).getYear(), new DateTime(new Date()).plusYears(3000).getYear());
 		Assert.assertNotEquals(eventFetched1.getId(), eventFetched2.getId());
 		Assert.assertNotEquals(eventFetched1.getTitle(), eventFetched2.getTitle());
 		Assert.assertNotEquals(eventFetched1.getStartDateTime(), eventFetched2.getStartDateTime());
@@ -163,106 +173,154 @@ public class EventServiceTest extends TestBase {
 	@Test
 	public void insertRepeatEvent() throws ParseException, NotFoundException {
 		
-		User user = this.setUpUser();
-		
-		Account account = new Account("Account1");
-		accountDao.save(account);
-		
-		this.setUp(account, user);
-		
-		Calendar calendar1 = new Calendar("Testing Calendar1", account);
-		calendarDao.save(calendar1);
-		
-		Person instructor1 = new Person( account, "0", "testing1", "testing1@test.com", "INSTRUCTOR"); 
-		personDao.save(instructor1);
-
-		
-		EventCategory eventCategory1 = new EventCategory("Event Category1", account);
-		eventCategoryDao.save(eventCategory1);
-
-		EventAttribute eventAttribute1 = new EventAttribute("Event Attribute1", account);
-		eventAttributeDao.save(eventAttribute1);
+		User user;
+		user = this.setUpUser();
+		this.setUp(user);
 		
 		Event event1 = null;
 		
-		List<Integer> daysOfWeek = Arrays.asList(1, 2, 3);
-		List<Date> excludeDays = Arrays.asList(new Date(), new Date());
-		
-		
-		Event ev = new Event(calendar1, true, EventRepeatType.WEEKLY, new Integer(1), new Date(),  new Integer(52), 
-			daysOfWeek, excludeDays,  "summary", new Date(), new Date(),  new Boolean(false), new Integer(10), instructor1, 
-			eventCategory1, eventAttribute1);
-		
-		eventDao.save(ev);
-		
 		String[] excludeDates = { 
-				"10:00 01 12 2015",
-				"10:00 01 13 2015"
-			};
+			"10:00 01 12 2015",
+			"10:00 01 13 2015"
+		};
 		
 		Integer[] daysOfWeeks = { 
 			    1, 2, 3
 			};
 		
 		Long fromDate = new DateTime().toDate().getTime();
-		Long toDate = new DateTime().plusHours(1).toDate().getTime();
-		Long finalDate = new DateTime().plusYears(1).plusHours(2).toDate().getTime();
+		Long toDate = new DateTime().plusHours(2).toDate().getTime();
+		Long finalDate = new DateTime().plusYears(1).plusHours(4).toDate().getTime();
 					
 		event1 = eventService.insertEvent(account.getId(), calendar1.getId(), "true", "WEEKLY", new Integer(0), finalDate, 
-				new Integer(10), daysOfWeeks, excludeDates, "Event Summary 1", fromDate, toDate, "false",
+				new Integer(0), daysOfWeeks, excludeDates, "Event Summary 1", fromDate, toDate, "false",
 				new Integer(10), instructor1.getId(), eventCategory1.getId(), eventAttribute1.getId());
 		
 		Event eventFetched1 = eventDao.retrieveAncestor(event1.getId(), calendar1);
 		
 		Assert.assertNotNull(event1);
-
-		assert event1.getId().equals(eventFetched1.getId());
-		assert event1.getRepeatEvent().equals(eventFetched1.getRepeatEvent());
-		assert event1.getRepeatType().equals(eventFetched1.getRepeatType());
-		assert event1.getRepeatDaysOfWeek().equals(eventFetched1.getRepeatDaysOfWeek());
-		assert event1.getExcludeDays().equals(eventFetched1.getExcludeDays());
-		assert event1.getTitle().equals(eventFetched1.getTitle());
-		assert event1.getStartDateTime().equals(eventFetched1.getStartDateTime());
-		assert event1.getEndDateTime().equals(eventFetched1.getEndDateTime());
-		assert event1.getRepeatFinalDate().equals(eventFetched1.getRepeatFinalDate());
-		assert event1.getMaxAttendees().equals(eventFetched1.getMaxAttendees());
-		assert event1.getInstructor().equals(eventFetched1.getInstructor());
-		assert event1.getEventCategory().equals(eventFetched1.getEventCategory());
-		assert event1.getEventAttribute().equals(eventFetched1.getEventAttribute());
+		Assert.assertEquals(event1.getId(), eventFetched1.getId());
+		Assert.assertEquals(event1.getRepeatEvent(), eventFetched1.getRepeatEvent());
+		Assert.assertEquals(event1.getRepeatType(), eventFetched1.getRepeatType());
+		Assert.assertEquals(event1.getRepeatDaysOfWeek(), eventFetched1.getRepeatDaysOfWeek());
+		Assert.assertEquals(event1.getExcludeDays(), eventFetched1.getExcludeDays());
+		Assert.assertEquals(event1.getTitle(), eventFetched1.getTitle());
+		Assert.assertEquals(event1.getStartDateTime(), eventFetched1.getStartDateTime());
+		Assert.assertEquals(event1.getEndDateTime(), eventFetched1.getEndDateTime());
+		Assert.assertEquals(event1.getRepeatFinalDate(), eventFetched1.getRepeatFinalDate());
+		Assert.assertEquals(event1.getMaxAttendees(), eventFetched1.getMaxAttendees());
+		Assert.assertEquals(event1.getInstructor(), eventFetched1.getInstructor());
+		Assert.assertEquals(event1.getEventCategory(), eventFetched1.getEventCategory());
+		Assert.assertEquals(event1.getEventAttribute(), eventFetched1.getEventAttribute());
+	}
+	
+	@Test
+	public void insertRepeatEventWithRepeatCount() throws ParseException, NotFoundException {
+		User user;
+		user = this.setUpUser();
+		this.setUp(user);
+		
+		Event event1 = null;
+		
+		String[] excludeDates = { 
+			"10:00 01 12 2015",
+			"10:00 01 13 2015"
+		};
+		
+		Integer[] daysOfWeeks = { 
+			    1, 2, 3
+			};
+		
+		Long fromDate = new DateTime().toDate().getTime();
+		Long toDate = new DateTime().plusHours(2).toDate().getTime();
+		Long finalDate = null;
+		Integer repeatCount = 20;
+					
+		event1 = eventService.insertEvent(account.getId(), calendar1.getId(), "true", "WEEKLY", new Integer(1), finalDate, 
+				repeatCount, daysOfWeeks, excludeDates, "Event Summary 1", fromDate, toDate, "false",
+				new Integer(10), instructor1.getId(), eventCategory1.getId(), eventAttribute1.getId());
+		
+		Event eventFetched1 = eventDao.retrieveAncestor(event1.getId(), calendar1);
+		
+		Assert.assertNotNull(event1);
+		Assert.assertEquals(event1.getId(), eventFetched1.getId());
+		Assert.assertEquals(event1.getRepeatEvent(), eventFetched1.getRepeatEvent());
+		Assert.assertEquals(event1.getRepeatType(), eventFetched1.getRepeatType());
+		Assert.assertEquals(event1.getRepeatDaysOfWeek(), eventFetched1.getRepeatDaysOfWeek());
+		Assert.assertEquals(event1.getExcludeDays(), eventFetched1.getExcludeDays());
+		Assert.assertEquals(event1.getTitle(), eventFetched1.getTitle());
+		Assert.assertEquals(event1.getStartDateTime(), eventFetched1.getStartDateTime());
+		Assert.assertEquals(event1.getEndDateTime(), eventFetched1.getEndDateTime());
+		Assert.assertEquals(event1.getRepeatFinalDate(), eventFetched1.getRepeatFinalDate());
+		Assert.assertEquals(event1.getRepeatCount(), eventFetched1.getRepeatCount());
+		Assert.assertEquals(event1.getMaxAttendees(), eventFetched1.getMaxAttendees());
+		Assert.assertEquals(event1.getInstructor(), eventFetched1.getInstructor());
+		Assert.assertEquals(event1.getEventCategory(), eventFetched1.getEventCategory());
+		Assert.assertEquals(event1.getEventAttribute(), eventFetched1.getEventAttribute());
+	
+	}
+	
+	@Test
+	public void insertRepeatEventWithFinalRepeatDateAndRepeatCount() throws ParseException, NotFoundException {
+		User user;
+		user = this.setUpUser();
+		this.setUp(user);
+		
+		Event event1 = null;
+		
+		String[] excludeDates = {};
+		
+		Integer[] daysOfWeeks = {1};
+	
+		Long fromDate = calcNextMonday(new DateTime()).withTime(0, 0, 0, 0).toDate().getTime();
+		Long toDate = new DateTime(fromDate).plusHours(2).toDate().getTime();
+		Date expectedFromDate = new DateTime(fromDate).plusWeeks(10).toDate();
+		
+		Long finalDate = new DateTime().plusYears(1).plusHours(4).toDate().getTime();
+		Integer repeatCount = 10;
+					
+		event1 = eventService.insertEvent(account.getId(), calendar1.getId(), "true", "WEEKLY", new Integer(1), finalDate, 
+				repeatCount, daysOfWeeks, excludeDates, "Event Summary 1", fromDate, toDate, "false",
+				new Integer(10), instructor1.getId(), eventCategory1.getId(), eventAttribute1.getId());
+		
+		Event eventFetched1 = eventDao.retrieveAncestor(event1.getId(), calendar1);
+		
+		Assert.assertNotNull(event1);
+		Assert.assertEquals(event1.getId(), eventFetched1.getId());
+		
+		Assert.assertEquals(event1.getRepeatEvent(), eventFetched1.getRepeatEvent());
+		Assert.assertTrue(eventFetched1.getRepeatEvent());
+		
+		Assert.assertEquals(event1.getRepeatType(), eventFetched1.getRepeatType());
+		Assert.assertEquals(event1.getRepeatType(), EventRepeatType.WEEKLY);
+		
+		Assert.assertEquals(event1.getRepeatDaysOfWeek(), eventFetched1.getRepeatDaysOfWeek());
+		Assert.assertEquals(event1.getExcludeDays(), eventFetched1.getExcludeDays());
+		
+		Assert.assertEquals(event1.getTitle(), eventFetched1.getTitle());
+		Assert.assertEquals(event1.getTitle(), "Event Summary 1");
+		
+		Assert.assertEquals(event1.getStartDateTime(), eventFetched1.getStartDateTime());
+		Date eventStart = new Date();
+		eventStart.setTime(fromDate);
+		Assert.assertEquals(event1.getStartDateTime(), eventStart);
+		
+		Assert.assertEquals(event1.getEndDateTime(), eventFetched1.getEndDateTime());
+		Assert.assertEquals(event1.getRepeatFinalDate(), eventFetched1.getRepeatFinalDate());
+		Assert.assertEquals(event1.getRepeatCount(), eventFetched1.getRepeatCount());
+		Assert.assertEquals(event1.getMaxAttendees(), eventFetched1.getMaxAttendees());
+		Assert.assertEquals(event1.getInstructor(), eventFetched1.getInstructor());
+		Assert.assertEquals(event1.getEventCategory(), eventFetched1.getEventCategory());
+		Assert.assertEquals(event1.getEventAttribute(), eventFetched1.getEventAttribute());
+		Assert.assertEquals(event1.getRepeatFinalDate(), expectedFromDate);
 	}
 	
 	@Test
 	public void listAdHocEvents() throws Exception {
 		
-		User user = this.setUpUser();
-		
-		Account account = new Account("Account1");
-		accountDao.save(account);
-		
-		this.setUp(account, user);
-		
-		Calendar calendar1 = new Calendar("Testing Calendar1", account);
-		Calendar calendar2 = new Calendar("Testing Calendar2", account);
-		calendarDao.save(calendar1);
-		calendarDao.save(calendar2);
-		
-		Person instructor1 = new Person( account, "0", "testing1", "testing1@test.com", "INSTRUCTOR"); 
-		personDao.save(instructor1);
-		
-		Person instructor2 = new Person( account, "0", "testing2", "testing2@test.com", "INSTRUCTOR"); 
-		personDao.save(instructor2);
-		
-		EventCategory eventCategory1 = new EventCategory("Event Category1", account);
-		eventCategoryDao.save(eventCategory1);
-		
-		EventCategory eventCategory2 = new EventCategory("Event Category2", account);
-		eventCategoryDao.save(eventCategory2);
-		
-		EventAttribute eventAttribute1 = new EventAttribute("Event Attribute1", account);
-		eventAttributeDao.save(eventAttribute1);
-		
-		EventAttribute eventAttribute2 = new EventAttribute("Event Attribute2", account);
-		eventAttributeDao.save(eventAttribute2);
+		User user;
+		user = this.setUpUser();
+		this.setUp(user);
 		
 		Date dateStart1 = new DateTime().toDate();
 		Date dateEnd1 = new DateTime(dateStart1).plusHours(1).toDate();
@@ -288,37 +346,21 @@ public class EventServiceTest extends TestBase {
 		
 	    List<EventItem> events = eventService.listEvents(account.getId(), calendar1.getId(), fromDate);
 		Assert.assertNotNull(events);
-		assert events.size() == 2;	
+		Assert.assertEquals(events.size(), 2);
 	}
 	
 	@Test
 	public void listRepeatDailyEvents() throws Exception {
-		
-		User user = this.setUpUser();
-		
-		Account account = new Account("Account1");
-		accountDao.save(account);
-		
-		this.setUp(account, user);
-		
-		Calendar calendar1 = new Calendar("Testing Calendar1", account);
-		calendarDao.save(calendar1);
-		
-		Person instructor1 = new Person( account, "0", "testing1", "testing1@test.com", "INSTRUCTOR"); 
-		personDao.save(instructor1);
-		
-		EventCategory eventCategory1 = new EventCategory("Event Category1", account);
-		eventCategoryDao.save(eventCategory1);
-		
-		EventAttribute eventAttribute1 = new EventAttribute("Event Attribute1", account);
-		eventAttributeDao.save(eventAttribute1);
+		User user;
+		user = this.setUpUser();
+		this.setUp(user);
 		
 		Date dateStart = new DateTime().plusDays(1).toDate();
-		Date dateEnd = new DateTime(dateStart).plusHours(1).toDate();
+		Date dateEnd = new DateTime(dateStart).plusHours(2).toDate();
 		Date finalDate = new DateTime().plusWeeks(1).plusHours(1).toDate();
 		List<Integer> daysOfWeek = Arrays.asList(1);
 		
-		Event ev1 = new Event(calendar1, true, EventRepeatType.DAILY, new Integer(1), finalDate,  null, 
+		Event ev1 = new Event(calendar1, true, EventRepeatType.DAILY, new Integer(1), finalDate,  new Integer(0), 
 			daysOfWeek, null,  "summary", dateStart, dateEnd, new Boolean(false), new Integer(10), instructor1, 
 			eventCategory1, eventAttribute1);
 		
@@ -328,37 +370,21 @@ public class EventServiceTest extends TestBase {
 		
 	    List<EventItem> events = eventService.listEvents(account.getId(), calendar1.getId(), fromDate);
 		Assert.assertNotNull(events);
-	    assert events.size() == 7;
+		Assert.assertEquals(events.size(), 7);
 	}
 	
 	@Test
 	public void listRepeatWeeklyEvents() throws Exception {
-		
-		User user = this.setUpUser();
-		
-		Account account = new Account("Account1");
-		accountDao.save(account);
-		
-		this.setUp(account, user);
-		
-		Calendar calendar1 = new Calendar("Testing Calendar1", account);
-		calendarDao.save(calendar1);
-		
-		Person instructor1 = new Person( account, "0", "testing1", "testing1@test.com", "INSTRUCTOR"); 
-		personDao.save(instructor1);
-		
-		EventCategory eventCategory1 = new EventCategory("Event Category1", account);
-		eventCategoryDao.save(eventCategory1);
-		
-		EventAttribute eventAttribute1 = new EventAttribute("Event Attribute1", account);
-		eventAttributeDao.save(eventAttribute1);
+		User user;
+		user = this.setUpUser();
+		this.setUp(user);
 
 		Date dateStart = calcNextMonday(new DateTime()).withTime(0, 0, 0, 0).plusHours(1).toDate();
 		Date dateEnd = new DateTime(dateStart).plusHours(2).toDate();
 		Date finalDate = new DateTime(dateEnd).plusWeeks(5).plusDays(1).toDate();
 		List<Integer> daysOfWeek = Arrays.asList(1);
 		
-		Event ev1 = new Event(calendar1, true, EventRepeatType.WEEKLY, new Integer(1), finalDate,  null, 
+		Event ev1 = new Event(calendar1, true, EventRepeatType.WEEKLY, new Integer(1), finalDate,  new Integer(0), 
 			daysOfWeek, null,  "summary", dateStart, dateEnd, new Boolean(false), new Integer(10), instructor1, 
 			eventCategory1, eventAttribute1);
 		
@@ -368,30 +394,14 @@ public class EventServiceTest extends TestBase {
 		
 	    List<EventItem> events = eventService.listEvents(account.getId(), calendar1.getId(), fromDate);
 		Assert.assertNotNull(events);
-	    assert events.size() == 6;
+		Assert.assertEquals(events.size(), 6);
 	}
 		
 	@Test
 	public void listRepeatWeeklyEventsWithExcludedDates() throws Exception {
-		
-		User user = this.setUpUser();
-		
-		Account account = new Account("Account1");
-		accountDao.save(account);
-		
-		this.setUp(account, user);
-		
-		Calendar calendar1 = new Calendar("Testing Calendar1", account);
-		calendarDao.save(calendar1);
-		
-		Person instructor1 = new Person( account, "0", "testing1", "testing1@test.com", "INSTRUCTOR"); 
-		personDao.save(instructor1);
-		
-		EventCategory eventCategory1 = new EventCategory("Event Category1", account);
-		eventCategoryDao.save(eventCategory1);
-		
-		EventAttribute eventAttribute1 = new EventAttribute("Event Attribute1", account);
-		eventAttributeDao.save(eventAttribute1);
+		User user;
+		user = this.setUpUser();
+		this.setUp(user);
 		
 		Date dateStart = calcNextMonday(new DateTime()).withTime(0, 0, 0, 0).toDate();
 		Date dateEnd = new DateTime(dateStart).plusHours(2).toDate();
@@ -404,7 +414,7 @@ public class EventServiceTest extends TestBase {
 		//Date date2 = (new DateTime(dateEnd)).withTime(0, 0, 0, 0).toDate();
 		List<Date> excludeDays = Arrays.asList(date1, date2);
 		
-		Event ev1 = new Event(calendar1, true, EventRepeatType.WEEKLY, new Integer(1), finalDate,  null, 
+		Event ev1 = new Event(calendar1, true, EventRepeatType.WEEKLY, new Integer(1), finalDate,  new Integer(0), 
 			daysOfWeek, excludeDays,  "summary", dateStart, dateEnd, new Boolean(false), new Integer(10), instructor1, 
 			eventCategory1, eventAttribute1);
 		
@@ -414,30 +424,14 @@ public class EventServiceTest extends TestBase {
 		
 	    List<EventItem> events = eventService.listEvents(account.getId(), calendar1.getId(), fromDate);
 		Assert.assertNotNull(events);
-	    assert events.size() == 4;
+		Assert.assertEquals(events.size(), 4);
 	}
 	
 	@Test
 	public void listRepeatWeeklyEventsOnMondaysAndTuesday() throws Exception {
-		
-		User user = this.setUpUser();
-		
-		Account account = new Account("Account1");
-		accountDao.save(account);
-		
-		this.setUp(account, user);
-		
-		Calendar calendar1 = new Calendar("Testing Calendar1", account);
-		calendarDao.save(calendar1);
-		
-		Person instructor1 = new Person( account, "0", "testing1", "testing1@test.com", "INSTRUCTOR"); 
-		personDao.save(instructor1);
-		
-		EventCategory eventCategory1 = new EventCategory("Event Category1", account);
-		eventCategoryDao.save(eventCategory1);
-		
-		EventAttribute eventAttribute1 = new EventAttribute("Event Attribute1", account);
-		eventAttributeDao.save(eventAttribute1);
+		User user;
+		user = this.setUpUser();
+		this.setUp(user);
 		
 		Date dateStart = calcNextMonday(new DateTime()).withTime(0, 0, 0, 0).plusHours(1).toDate();
 		Date dateEnd = new DateTime(dateStart).plusHours(2).toDate();
@@ -446,7 +440,7 @@ public class EventServiceTest extends TestBase {
 		List<Integer> daysOfWeek = Arrays.asList(1, 2);
 		List<Date> excludeDays = null;
 		
-		Event ev1 = new Event(calendar1, true, EventRepeatType.WEEKLY, new Integer(1), finalDate,  null, 
+		Event ev1 = new Event(calendar1, true, EventRepeatType.WEEKLY, new Integer(1), finalDate,  new Integer(0), 
 			daysOfWeek, excludeDays,  "summary", dateStart, dateEnd, new Boolean(false), new Integer(10), instructor1, 
 			eventCategory1, eventAttribute1);
 		
@@ -456,37 +450,21 @@ public class EventServiceTest extends TestBase {
 		
 	    List<EventItem> events = eventService.listEvents(account.getId(), calendar1.getId(), fromDate);
 		Assert.assertNotNull(events);
-	    assert events.size() == 12;
+		Assert.assertEquals(events.size(), 12);
 	}
 	
 	@Test
 	public void listRepeatMonthlyEvents() throws Exception {
-		
-		User user = this.setUpUser();
-		
-		Account account = new Account("Account1");
-		accountDao.save(account);
-		
-		this.setUp(account, user);
-		
-		Calendar calendar1 = new Calendar("Testing Calendar1", account);
-		calendarDao.save(calendar1);
-		
-		Person instructor1 = new Person( account, "0", "testing1", "testing1@test.com", "INSTRUCTOR"); 
-		personDao.save(instructor1);
-		
-		EventCategory eventCategory1 = new EventCategory("Event Category1", account);
-		eventCategoryDao.save(eventCategory1);
-		
-		EventAttribute eventAttribute1 = new EventAttribute("Event Attribute1", account);
-		eventAttributeDao.save(eventAttribute1);
+		User user;
+		user = this.setUpUser();
+		this.setUp(user);
 		
 		Date dateStart = calcNextMonday(new DateTime()).withTime(0, 0, 0, 0).toDate();
-		Date dateEnd = new DateTime(dateStart).plusHours(1).toDate();
+		Date dateEnd = new DateTime(dateStart).plusHours(2).toDate();
 		Date finalDate = new DateTime(dateStart).plusMonths(4).plusDays(1).toDate();
 		List<Integer> daysOfWeek = Arrays.asList(1,2,3,4,5,6,7);
 		
-		Event ev1 = new Event(calendar1, true, EventRepeatType.MONTHLY, new Integer(1), finalDate,  null, 
+		Event ev1 = new Event(calendar1, true, EventRepeatType.MONTHLY, new Integer(1), finalDate,  new Integer(0), 
 			daysOfWeek, null,  "summary", dateStart, dateEnd,  new Boolean(false), new Integer(10), instructor1, 
 			eventCategory1, eventAttribute1);
 		
@@ -496,7 +474,47 @@ public class EventServiceTest extends TestBase {
 		
 		List<EventItem> events = eventService.listEvents(account.getId(), calendar1.getId(), fromDate);
 		Assert.assertNotNull(events);
-    	assert events.size() == 5;
+		Assert.assertEquals(events.size(), 5);
+	}
+	
+	@Test
+	public void listRepeatMonthlyEventsWithNoFinalRepeatDate() throws Exception {
+		User user;
+		user = this.setUpUser();
+		this.setUp(user);
+		
+		Date dateStart = calcNextMonday(new DateTime()).withTime(0, 0, 0, 0).plusHours(1).toDate();
+		Date dateEnd = new DateTime(dateStart).plusHours(2).toDate();
+		Date finalDate = null;
+		List<Integer> daysOfWeek = Arrays.asList(1);
+		
+		Event ev1 = new Event(calendar1, true, EventRepeatType.MONTHLY, new Integer(1), finalDate,  new Integer(0), 
+			daysOfWeek, null,  "summary", dateStart, dateEnd, new Boolean(false), new Integer(10), instructor1, 
+			eventCategory1, eventAttribute1);
+		
+		eventDao.save(ev1);
+		
+		Long fromDate = new DateTime().minusMonths(1).toDate().getTime();
+		
+	    List<EventItem> events = eventService.listEvents(account.getId(), calendar1.getId(), fromDate);
+		Assert.assertNotNull(events);
+		Assert.assertEquals(events.size(), 5);
+	}
+	
+	@Test
+	public void listRepeatMonthlyEventsWithRepeatCount() throws Exception {
+		User user;
+		user = this.setUpUser();
+		this.setUp(user);
+		
+	}
+	
+	@Test
+	public void listRepeatMonthlyEventsWithRepeatCountAndFinalRepeatDate() throws Exception {
+		User user;
+		user = this.setUpUser();
+		this.setUp(user);
+		
 	}
 
     private DateTime calcNextMonday(DateTime dateTime) {

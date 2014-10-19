@@ -1,12 +1,12 @@
 /*@Named("account_id") Long accountId,
 @Named("calendar_id") Long calendarId,
 @Named("repeatEvent") String repeatEvent,
-@Named("eventRepeatType") String eventRepeatType,
-@Named("eventRepeatInterval") Integer repeatInterval,
-@Named("finalRepeatDate") String finalRepeatDate,
-@Named("eventRepeatCount") Integer eventRepeatCount,
-@Named("repeatDaysOfWeek") Integer[] repeatDaysOfWeek,
-@Named("excludeDays") String[] excludeDays,
+@Named("eventRepeatType") String eventRepeatType, <- WEEKLY
+@Named("eventRepeatInterval") Integer repeatInterval, <- min 1
+@Named("finalRepeatDate") String finalRepeatDate, <- null or Long
+@Named("eventRepeatCount") Integer eventRepeatCount, <- 0 ++
+@Named("repeatDaysOfWeek") Integer[] repeatDaysOfWeek, <- []
+@Named("excludeDays") String[] excludeDays, <- []
 @Named("title") String title,
 @Named("startDateTime") String startDateTime,
 @Named("endDateTime") String endDateTime,
@@ -138,10 +138,10 @@ angular.module('application.account.calendar.event.createEvent', [
 
 	$scope.newEvent = function() {
         $scope.event = new Event();
-		$scope.event.repeatEvent = "false";
+		$scope.event.repeatEvent = false;
 		$scope.event.eventRepeatType = "";
-		$scope.event.eventRepeatInterval = 0;
-		$scope.event.finalRepeatDate = 0;
+		$scope.event.eventRepeatInterval = 1;
+		$scope.event.finalRepeatDate = null;
 		$scope.event.eventRepeatCount = 0;
 		$scope.event.repeatDaysOfWeek = [];
 		$scope.event.excludeDays = [];
@@ -206,13 +206,13 @@ angular.module('application.account.calendar.event.createEvent', [
 
 // ---- Repeat Event
 
-	$scope.$watch('repeatEvent', function(repeatEvent) {
+	$scope.$watch('event.repeatEvent', function(repeatEvent) {
      	var result = repeatEvent ? $scope.openRepeatEventModal() : false;
     });
 
 	$scope.openRepeatEventModal = function () {
 		$scope.modalInstance = $modal.open({
-			templateUrl: 'app/account/calendar/event/create-event-modal/create-event-modal.tpl.html',
+			templateUrl: 'app/account/calendar/event/create-event/create-event-modal/create-event-modal.tpl.html',
 			scope: $scope,
 			controller: 'RepeatEventModalCtrl',
 			resolve: {

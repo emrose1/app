@@ -23,6 +23,7 @@ import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.annotation.Load;
 import com.googlecode.objectify.annotation.Parent;
 import com.studio.bookings.enums.EventRepeatType;
+import com.studio.bookings.service.EventService;
 
 @EqualsAndHashCode
 @Entity
@@ -66,11 +67,38 @@ public class Event {
 	@Getter @Setter
 	Integer repeatInterval;
 	
-	@Getter @Setter
+	@Getter
 	Date repeatFinalDate;
 	
-	@Getter @Setter
+	public void setRepeatFinalDate(Date finalRepeatDate){
+		if(finalRepeatDate != null) {
+			this.repeatFinalDate = finalRepeatDate;
+		} else {
+			this.repeatFinalDate = new DateTime(new Date()).plusYears(3000).toDate();
+		}
+	}
+	
+	@Getter
 	Integer repeatCount;
+	
+	public void setRepeatCount(Integer eventRepeatCount) {
+		EventService es = new EventService();
+		
+		if (eventRepeatCount != 0 && eventRepeatCount != null) {
+	       Date repeatCountDate = this.startDateTime;
+	       
+	       this.repeatFinalDate = null;
+
+	       for (int i = 0; i < eventRepeatCount; i++) {
+	           repeatCountDate = es.findNextOccurrence(this, new DateTime(repeatCountDate).plusMinutes(1).toDate());
+	       }
+	       this.repeatCount = eventRepeatCount;
+	       this.repeatFinalDate = new DateTime(repeatCountDate).plusMinutes(durationMinutes).toDate();
+	    }
+		else {
+			this.repeatCount = 0;
+		}
+	}
 	
 	@Getter @Setter
 	List<Integer> repeatDaysOfWeek = new ArrayList<Integer>();
@@ -163,12 +191,11 @@ public class Event {
 			EventCategory eventCategory, 
 			EventAttribute eventAttribute) {
 		
+		this.setDurationMinutes();
 		this.setCalendar(calendar);
 		this.repeatEvent = repeatEvent;
 		this.repeatType = eventRepeatType;
 		this.repeatInterval = repeatInterval;
-		this.repeatFinalDate = eventFinalRepeatDate;
-		this.repeatCount = eventRepeatCount;
 		this.repeatDaysOfWeek = repeatDaysOfWeek;
 		this.excludeDays =  excludeDays;
 		this.title = title;
@@ -178,7 +205,9 @@ public class Event {
 		this.instructorRef = Ref.create(instructor);
 		this.eventCategoryRef = Ref.create(eventCategory);
 		this.eventAttributeRef = Ref.create(eventAttribute);
-		this.setDurationMinutes();
+		setRepeatFinalDate(eventFinalRepeatDate);
+		setRepeatCount(eventRepeatCount);
+		
 	};
 	
 	public Event(Event event) {

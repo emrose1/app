@@ -97,22 +97,39 @@ public class EventService extends BaseService {
 		List<Date> repeatExcludeDays = new ArrayList<Date>();
 		Integer repeatCount = 0;
 		Date eventFinalRepeatDate = null;
+		Integer eventRepeatInterval = 0;
 		
 		if (repeatBoolean) {
 			repeatType = EventRepeatType.valueOf(eventRepeatType);
 			daysOfWeek = Arrays.asList(repeatDaysOfWeek);
 			repeatCount = eventRepeatCount;
-			eventFinalRepeatDate = new Date();
-			eventFinalRepeatDate.setTime(finalRepeatDate);
+			
+			if(repeatInterval != 0 && repeatInterval != null) {
+				eventRepeatInterval = repeatInterval;
+			}
+			
+			if(finalRepeatDate != null && finalRepeatDate != 0){
+				eventFinalRepeatDate = new Date();
+				eventFinalRepeatDate.setTime(finalRepeatDate);
+			} 
+			
 			for (int i = 0; i < excludeDays.length; i++) {
 				repeatExcludeDays.add(new DateTime(formatter.parse(excludeDays[i])).toDate());
 			}
 		}
 
 		Event event = new Event(
-				calendar, repeatBoolean, repeatType, repeatInterval, 
-				eventFinalRepeatDate, repeatCount, daysOfWeek, repeatExcludeDays, 
-				title, eventStart, eventEnd, allDayBoolean, maxAttendees, 
+				calendar, 
+				repeatBoolean, 
+				repeatType, 
+				eventRepeatInterval, 
+				eventFinalRepeatDate, 
+				repeatCount, 
+				daysOfWeek, 
+				repeatExcludeDays, 
+				title, 
+				eventStart, 
+				eventEnd, allDayBoolean, maxAttendees, 
 				instructor, eventCategoryFetched, eventAttributeFetched);
 		
 		eventDao.save(event);    
@@ -170,13 +187,13 @@ public class EventService extends BaseService {
 	}
 
 	
-	private Date findNextOccurrence(Event event, Date afterDate) {
+	public Date findNextOccurrence(Event event, Date afterDate) {
         Date nextOccurrence = null;
 
         if (!event.getRepeatEvent()) {
             // non-repeating event
             nextOccurrence = null;
-        } else if (event.getRepeatEvent() && afterDate.after(event.getRepeatFinalDate())) {
+        } else if (event.getRepeatEvent() && event.getRepeatFinalDate() != null && afterDate.after(event.getRepeatFinalDate())) {
             // Event is already over
             nextOccurrence = null;
         } else if (afterDate.before(event.getStartDateTime())) {
@@ -213,7 +230,7 @@ public class EventService extends BaseService {
             // Skip this occurrence and go to the next one
             nextOccurrence = findNextOccurrence(event, nextOccurrence);
         }
-        else if (event.getRepeatFinalDate() != null && nextOccurrence != null) {
+        else if (nextOccurrence != null && event.getRepeatFinalDate() != null) {
         	if (event.getRepeatFinalDate().before(nextOccurrence) || event.getRepeatFinalDate().equals(nextOccurrence)) {
         		// Next occurrence happens after recurUntil date
         		nextOccurrence = null;
@@ -342,15 +359,7 @@ public class EventService extends BaseService {
     // Final repeat date based on count
     /*
     // Set recurUntil date based on the recurCount value
-    if (recurCount && !recurUntil) {
-       Date recurCountDate = startTime
-
-       for (int i in 1..recurCount) {
-           recurCountDate = eventService.findNextOccurrence(this, new DateTime(recurCountDate).plusMinutes(1).toDate())
-       }
-
-       recurUntil = new DateTime(recurCountDate).plusMinutes(durationMinutes).toDate()
-    }*/
+    */
     
     
     
