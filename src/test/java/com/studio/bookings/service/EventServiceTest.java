@@ -507,6 +507,23 @@ public class EventServiceTest extends TestBase {
 		user = this.setUpUser();
 		this.setUp(user);
 		
+		Date dateStart = calcNextMonday(new DateTime()).withTime(0, 0, 0, 0).plusHours(1).toDate();
+		Date dateEnd = new DateTime(dateStart).plusHours(2).toDate();
+		Date finalDate = null;
+		Integer repeatCount = new Integer(4);
+		List<Integer> daysOfWeek = Arrays.asList(1);
+		
+		Event ev1 = new Event(calendar1, true, EventRepeatType.MONTHLY, new Integer(1), finalDate, repeatCount, 
+			daysOfWeek, null,  "summary", dateStart, dateEnd, new Boolean(false), new Integer(10), instructor1, 
+			eventCategory1, eventAttribute1);
+		
+		eventDao.save(ev1);
+		
+		Long fromDate = new DateTime().minusMonths(1).toDate().getTime();
+		
+	    List<EventItem> events = eventService.listEvents(account.getId(), calendar1.getId(), fromDate);
+		Assert.assertNotNull(events);
+		Assert.assertEquals(events.size(), 4);
 	}
 	
 	@Test
@@ -515,8 +532,75 @@ public class EventServiceTest extends TestBase {
 		user = this.setUpUser();
 		this.setUp(user);
 		
+		Date dateStart = calcNextMonday(new DateTime()).withTime(0, 0, 0, 0).plusHours(1).toDate();
+		Date dateEnd = new DateTime(dateStart).plusHours(2).toDate();
+		Date finalDate =  new DateTime(dateStart).plusMonths(4).plusDays(1).toDate();
+		Integer repeatCount = new Integer(2);
+		List<Integer> daysOfWeek = Arrays.asList(1);
+		
+		Event ev1 = new Event(calendar1, true, EventRepeatType.MONTHLY, new Integer(1), finalDate,  repeatCount, 
+			daysOfWeek, null,  "summary", dateStart, dateEnd, new Boolean(false), new Integer(10), instructor1, 
+			eventCategory1, eventAttribute1);
+		
+		eventDao.save(ev1);
+		
+		Long fromDate = new DateTime().minusMonths(1).toDate().getTime();
+		
+	    List<EventItem> events = eventService.listEvents(account.getId(), calendar1.getId(), fromDate);
+		Assert.assertNotNull(events);
+		Assert.assertEquals(events.size(), 2);
 	}
 
+	@Test
+	public void listRepeatWeeklyEventsWithRepeatCountAndFinalRepeatDate() throws Exception {
+		User user;
+		user = this.setUpUser();
+		this.setUp(user);
+		
+		Date dateStart = calcNextMonday(new DateTime()).withTime(0, 0, 0, 0).plusHours(1).toDate();
+		Date dateEnd = new DateTime(dateStart).plusHours(2).toDate();
+		Date finalDate =  new DateTime(dateStart).plusWeeks(8).plusDays(1).toDate();
+		Integer repeatCount = new Integer(4);
+		List<Integer> daysOfWeek = Arrays.asList(1);
+		
+		Event ev1 = new Event(calendar1, true, EventRepeatType.WEEKLY, new Integer(1), finalDate, repeatCount, 
+			daysOfWeek, null,  "summary", dateStart, dateEnd, new Boolean(false), new Integer(10), instructor1, 
+			eventCategory1, eventAttribute1);
+		
+		eventDao.save(ev1);
+		
+		Long fromDate = new DateTime().minusMonths(1).toDate().getTime();
+		
+	    List<EventItem> events = eventService.listEvents(account.getId(), calendar1.getId(), fromDate);
+		Assert.assertNotNull(events);
+		Assert.assertEquals(events.size(), 4);
+	}
+
+	@Test
+	public void listRepeatDailyEventsWithRepeatCountAndFinalRepeatDate() throws Exception {
+		User user;
+		user = this.setUpUser();
+		this.setUp(user);
+		
+		Date dateStart = calcNextMonday(new DateTime()).withTime(0, 0, 0, 0).plusHours(1).toDate();
+		Date dateEnd = new DateTime(dateStart).plusHours(2).toDate();
+		Date finalDate =  new DateTime(dateStart).plusWeeks(8).plusDays(1).toDate();
+		Integer repeatCount = new Integer(4);
+		List<Integer> daysOfWeek = Arrays.asList(1);
+		
+		Event ev1 = new Event(calendar1, true, EventRepeatType.DAILY, new Integer(1), finalDate, repeatCount, 
+			daysOfWeek, null,  "summary", dateStart, dateEnd, new Boolean(false), new Integer(10), instructor1, 
+			eventCategory1, eventAttribute1);
+		
+		eventDao.save(ev1);
+		
+		Long fromDate = new DateTime().minusMonths(1).toDate().getTime();
+		
+	    List<EventItem> events = eventService.listEvents(account.getId(), calendar1.getId(), fromDate);
+		Assert.assertNotNull(events);
+		Assert.assertEquals(events.size(), 4);
+	}
+	
     private DateTime calcNextMonday(DateTime dateTime) {
         if (dateTime.getDayOfWeek() >= DateTimeConstants.MONDAY) {
             dateTime = dateTime.plusWeeks(1);

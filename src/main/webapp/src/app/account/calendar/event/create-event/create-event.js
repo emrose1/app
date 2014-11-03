@@ -1,6 +1,6 @@
 /*@Named("account_id") Long accountId,
 @Named("calendar_id") Long calendarId,
-@Named("repeatEvent") String repeatEvent,
+@Named("repeatEvent") String repeatEvent, <- boolean
 @Named("eventRepeatType") String eventRepeatType, <- WEEKLY
 @Named("eventRepeatInterval") Integer repeatInterval, <- min 1
 @Named("finalRepeatDate") String finalRepeatDate, <- null or Long
@@ -8,8 +8,8 @@
 @Named("repeatDaysOfWeek") Integer[] repeatDaysOfWeek, <- []
 @Named("excludeDays") String[] excludeDays, <- []
 @Named("title") String title,
-@Named("startDateTime") String startDateTime,
-@Named("endDateTime") String endDateTime,
+@Named("startDateTime") String startDateTime, <- date.getTime()
+@Named("endDateTime") String endDateTime, <- date.getTime()
 @Named("maxAttendees") Integer maxAttendees,
 @Named("instructor_id") Long instructorId,
 @Named("eventCategory") Long eventCategory,
