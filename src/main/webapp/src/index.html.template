@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="application" ng-controller="AppCtrl">
+<html ng-app="app" ng-controller="AppCtrl">
   <head>
     <base href='' />
     <title ng-bind="pageTitle"></title>

@@ -23,6 +23,7 @@ import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.annotation.Load;
 import com.googlecode.objectify.annotation.Parent;
 import com.studio.bookings.enums.EventRepeatType;
+import com.studio.bookings.service.EventRepeatService;
 import com.studio.bookings.service.EventService;
 
 @EqualsAndHashCode
@@ -82,7 +83,7 @@ public class Event {
 	Integer repeatCount;
 	
 	public void setRepeatCount(Integer eventRepeatCount) {
-		EventService es = new EventService();
+		EventRepeatService eventRepeatService = new EventRepeatService();
 		
 		if (eventRepeatCount != 0 && eventRepeatCount != null) {
 	       Date repeatCountDate = this.startDateTime;
@@ -90,7 +91,7 @@ public class Event {
 	       this.repeatFinalDate = null;
 
 	       for (int i = 0; i < eventRepeatCount; i++) {
-	           repeatCountDate = es.findNextOccurrence(this, new DateTime(repeatCountDate).plusMinutes(1).toDate());
+	           repeatCountDate = eventRepeatService.findNextOccurrence(this, new DateTime(repeatCountDate).plusMinutes(1).toDate());
 	       }
 	       this.repeatCount = eventRepeatCount;
 	       this.repeatFinalDate = new DateTime(repeatCountDate).plusMinutes(durationMinutes).toDate();

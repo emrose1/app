@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="application" ng-controller="AppCtrl">
+<html ng-app="app" ng-controller="AppCtrl">
   <head>
     <base href='' />
     <title ng-bind="pageTitle"></title>
@@ -17,34 +17,34 @@
     <script type="text/javascript" src="bower_components/angular-validation/dist/angular-validation-rule.js"></script>
     <script type="text/javascript" src="bower_components/checklist-model/checklist-model.js"></script>
     <script type="text/javascript" src="bower_components/lodash/dist/lodash.js"></script>
-    <script type="text/javascript" src="app/account/account-resource.js"></script>
-    <script type="text/javascript" src="app/account/account.js"></script>
-    <script type="text/javascript" src="app/account/calendar/calendar-resource.js"></script>
-    <script type="text/javascript" src="app/account/calendar/calendar.js"></script>
-    <script type="text/javascript" src="app/account/calendar/event-attribute/event-attribute-resource.js"></script>
-    <script type="text/javascript" src="app/account/calendar/event-attribute/event-attribute.js"></script>
-    <script type="text/javascript" src="app/account/calendar/event-category/event-category-resource.js"></script>
-    <script type="text/javascript" src="app/account/calendar/event-category/event-category.js"></script>
-    <script type="text/javascript" src="app/account/calendar/event/create-event/create-event-modal/create-event-modal.js"></script>
-    <script type="text/javascript" src="app/account/calendar/event/create-event/create-event.js"></script>
-    <script type="text/javascript" src="app/account/calendar/event/event-resource.js"></script>
-    <script type="text/javascript" src="app/account/calendar/event/event.js"></script>
-    <script type="text/javascript" src="app/account/calendar/event/schedule/schedule.js"></script>
-    <script type="text/javascript" src="app/account/person/person-resource.js"></script>
-    <script type="text/javascript" src="app/account/person/person.js"></script>
-    <script type="text/javascript" src="app/alerts/alert-directive.js"></script>
-    <script type="text/javascript" src="app/alerts/alert-service.js"></script>
-    <script type="text/javascript" src="app/application/application-controller.js"></script>
-    <script type="text/javascript" src="app/application/application.js"></script>
-    <script type="text/javascript" src="app/application/configuration-constants.js"></script>
-    <script type="text/javascript" src="app/authentication/auth-service.js"></script>
-    <script type="text/javascript" src="app/authentication/session-service.js"></script>
+    <script type="text/javascript" src="app/app.js"></script>
+    <script type="text/javascript" src="app/components/alerts/alert-directive.js"></script>
+    <script type="text/javascript" src="app/components/alerts/alert-service.js"></script>
+    <script type="text/javascript" src="app/components/authentication/auth-service.js"></script>
+    <script type="text/javascript" src="app/components/authentication/session-service.js"></script>
+    <script type="text/javascript" src="app/components/menu/menu-controller.js"></script>
+    <script type="text/javascript" src="app/components/menu/menu-item-directive.js"></script>
+    <script type="text/javascript" src="app/components/menu/menu-service.js"></script>
+    <script type="text/javascript" src="app/components/progressbar/progressbar-directive.js"></script>
+    <script type="text/javascript" src="app/components/progressbar/progressbar-service.js"></script>
+    <script type="text/javascript" src="app/constants.js"></script>
+    <script type="text/javascript" src="app/controller.js"></script>
     <script type="text/javascript" src="app/login/login-controller.js"></script>
-    <script type="text/javascript" src="app/menu/menu-controller.js"></script>
-    <script type="text/javascript" src="app/menu/menu-item-directive.js"></script>
-    <script type="text/javascript" src="app/menu/menu-service.js"></script>
-    <script type="text/javascript" src="app/progressbar/progressbar-directive.js"></script>
-    <script type="text/javascript" src="app/progressbar/progressbar-service.js"></script>
+    <script type="text/javascript" src="app/schedule/calendar/calendar-resource.js"></script>
+    <script type="text/javascript" src="app/schedule/calendar/calendar.js"></script>
+    <script type="text/javascript" src="app/schedule/event-attribute/event-attribute-model.js"></script>
+    <script type="text/javascript" src="app/schedule/event-attribute/event-attribute.js"></script>
+    <script type="text/javascript" src="app/schedule/event-category/event-category-model.js"></script>
+    <script type="text/javascript" src="app/schedule/event-category/event-category.js"></script>
+    <script type="text/javascript" src="app/schedule/event-list/schedule.js"></script>
+    <script type="text/javascript" src="app/schedule/event/create-event.js"></script>
+    <script type="text/javascript" src="app/schedule/event/event-model.js"></script>
+    <script type="text/javascript" src="app/schedule/event/event-service.js"></script>
+    <script type="text/javascript" src="app/schedule/event/repeat-event-modal/repeat-event-modal.js"></script>
+    <script type="text/javascript" src="app/user-account/account-model.js"></script>
+    <script type="text/javascript" src="app/user-account/account.js"></script>
+    <script type="text/javascript" src="app/user-account/person/person-model.js"></script>
+    <script type="text/javascript" src="app/user-account/person/person.js"></script>
   </head>
   <body>
     <div ng-controller="AppCtrl">

@@ -16,7 +16,7 @@ public class ChildBaseDao<T, S> extends BaseDao<T> {
 		this.t = t;
 		this.s = s;
 	}
-
+	
 	public T retrieveAncestor(Long tId, S e) {
 		return (T) ofy().load().type(t).parent(e).id(tId).now();
 	}
